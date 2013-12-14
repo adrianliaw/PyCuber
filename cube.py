@@ -105,6 +105,115 @@ def Mi(cube):
 def M2(cube):
 	return M(M(cube))
 
+def S(cube):
+	result = [[[z for z in y] for y in x] for x in cube]
+	(result[0][0][1], result[0][1][1], result[0][2][1]) = cube[3][1]
+	result[1][1] = [cube[0][2][1], cube[0][1][1], cube[0][0][1]]
+	(result[4][0][1], result[4][1][1], result[4][2][1]) = cube[1][1]
+	result[3][1] = [cube[4][2][1], cube[4][1][1], cube[4][0][1]]
+	return result
+
+def Si(cube):
+	return S(S(S(cube)))
+
+def S2(cube):
+	return S(S(cube))
+
+def E(cube):
+	result = [[[z for z in y] for y in x] for x in cube]
+	result[0][1] = cube[5][1]
+	result[2][1] = cube[0][1]
+	result[4][1] = cube[2][1]
+	result[5][1] = cube[4][1]
+	return result
+
+def Ei(cube):
+	return E(E(E(cube)))
+
+def E2(cube):
+	return E(E(cube))
+
+def f(cube):
+	return S(F(cube))
+
+def fi(cube):
+	return f(f(f(cube)))
+
+def f2(cube):
+	return f(f(cube))
+
+def b(cube):
+	return Si(B(cube))
+
+def bi(cube):
+	return b(b(b(cube)))
+
+def b2(cube):
+	return b(b(cube))
+
+def l(cube):
+	return M(L(cube))
+
+def li(cube):
+	return l(l(l(cube)))
+
+def l2(cube):
+	return l(l(cube))
+
+def r(cube):
+	return Mi(R(cube))
+
+def ri(cube):
+	return r(r(r(cube)))
+
+def r2(cube):
+	return r(r(cube))
+
+def u(cube):
+	return Ei(U(cube))
+
+def ui(cube):
+	return u(u(u(cube)))
+
+def u2(cube):
+	return u(u(cube))
+
+def d(cube):
+	return E(D(cube))
+
+def di(cube):
+	return d(d(d(cube)))
+
+def d2(cube):
+	return d(d(cube))
+
+def x(cube):
+	return li(R(cube))
+
+def xi(cube):
+	return x(x(x(cube)))
+
+def x2(cube):
+	return x(x(cube))
+
+def y(cube):
+	return u(Di(cube))
+
+def yi(cube):
+	return y(y(y(cube)))
+
+def y2(cube):
+	return y(y(cube))
+
+def z(cube):
+	return f(Bi(cube))
+
+def zi(cube):
+	return z(z(z(cube)))
+
+def z2(cube):
+	return z(z(cube))
+
 def show(cube):
 	for i in range(len(cube)):
 		for l in range(len(cube[i])):
@@ -112,6 +221,5 @@ def show(cube):
 		print "\n"
 	print "--------------------------------"
 
-
-
-show(U2(M(U(M(U(M(U2(Mi(U(Mi(U(Mi(initial_cube())))))))))))))
+c = initial_cube()
+show(R(U(Ri(yi(R2(ui(R(Ui(Ri(U(Ri(u(R2(c))))))))))))))
