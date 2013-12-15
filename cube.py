@@ -220,6 +220,3 @@ def show(cube):
 			print cube[i][l]
 		print "\n"
 	print "--------------------------------"
-
-c = initial_cube()
-show(R(U(Ri(yi(R2(ui(R(Ui(Ri(U(Ri(u(R2(c))))))))))))))

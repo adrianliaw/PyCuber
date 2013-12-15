@@ -15,6 +15,9 @@ def color_convert(l):
 		for j in range(3):
 			result[i].append([])
 			for k in range(3):
-				result[i][j].append(colors[l[index]])
+				if isinstance(l, str):
+					result[i][j].append(colors[int(l[index])])
+				else:
+					result[i][j].append(colors[l[index]])
 				index += 1
 	return result
