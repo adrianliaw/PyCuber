@@ -128,6 +128,10 @@ def Gd_perm(c):
 	"""
 	return R2(u(Ri(U(Ri(Ui(R(ui(R2(yi(Ri(U(R(c)))))))))))))
 
+def None_perm(c):
+	""
+	return c
+
 #cc = color_converter.color_convert
 
 #Aa_test = cc("405000000111111111020222222333333333244444444552555555")
