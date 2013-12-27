@@ -232,6 +232,13 @@ def zi(cube):
 def z2(cube):
 	return z(z(cube))
 
+
+def sequence(alg, cube):
+	alg = alg.split()
+	for m in alg:
+		cube = eval("%s(cube)" % m)
+	return cube
+
 def show(cube):
 	for i in range(len(cube)):
 		for l in range(len(cube[i])):

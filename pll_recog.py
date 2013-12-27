@@ -1,9 +1,7 @@
 from cube import *
 from pll import *
-from color_converter import color_convert as cc
 
 def look_around(cube, goal, f):
-	#notations = {"U":"U", "Ui":"U'", "U2":"U2", "x":"x", "xi":"x'", "x2":"x2"}
 	for U_orient in [None, U, Ui, U2]:
 		for cube_rotate in [None, y, y2, yi]:
 			if U_orient:
@@ -20,7 +18,6 @@ def look_around(cube, goal, f):
 				cr_notation = cube_rotate.__name__ if cube_rotate else ""
 				uo_notation = (" " if cr_notation and U_orient else "") + (U_orient.__name__ if U_orient else "")
 				pll_algo = (" " if cr_notation + uo_notation else "") + f.__doc__.replace("\n\t", "", 2)
-				#print cr_notation + uo_notation + pll_algo
 				return cr_notation + uo_notation + pll_algo
 
 def recog_pattern(cube, **matchset):
@@ -103,5 +100,3 @@ def solve_pll(cube):
 		if result:
 			return result
 	raise ValueError("Not a solvable pll case.")
-
-print solve_pll(cc("502222222111111111450444444333333333225555555044000000"))

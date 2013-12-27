@@ -1,5 +1,4 @@
 from cube import *
-import color_converter
 
 
 def Aa_perm(c):
