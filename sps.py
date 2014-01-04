@@ -8,7 +8,6 @@ def shortest_path_search(start, successors, is_goal):
     explored = [] # set of states we have visited
     frontier = [ [start] ] # ordered list of paths we have blazed
     while frontier:
-        print frontier
         path = frontier.pop(0)
         s = path[-1]
         for (action, state) in successors(s, path_actions(path)[-1] if len(path) != 1 else None).items():
@@ -47,4 +46,4 @@ def cube_successors(state, last_action = None):
         successors[action] = eval("cube.%s(%s)" % (action, str(state)))
     return successors
 
-print shortest_path_search(color_converter.color_convert("003003002115115000222222111444332332144144544355355355"), cube_successors, solved)
+#print shortest_path_search(color_converter.color_convert("003003002115115000222222111444332332144144544355355355"), cube_successors, solved)

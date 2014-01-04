@@ -1,24 +1,3 @@
-from cube import *
-from pll import *
-
-def look_around(cube, goal, f):
-	for U_orient in [None, U, Ui, U2]:
-		for cube_rotate in [None, y, y2, yi]:
-			if U_orient:
-				if cube_rotate:
-					new = U_orient(cube_rotate(cube))
-				else:
-					new = U_orient(cube)
-			else:
-				if cube_rotate:
-					new = cube_rotate(cube)
-				else:
-					new = [[[p for p in q] for q in r] for r in cube]
-			if goal(new):
-				cr_notation = cube_rotate.__name__ if cube_rotate else ""
-				uo_notation = (" " if cr_notation and U_orient else "") + (U_orient.__name__ if U_orient else "")
-				pll_algo = (" " if cr_notation + uo_notation else "") + f.__doc__.replace("\n\t", "", 2)
-				return cr_notation + uo_notation + pll_algo
 
 def recog_pattern(cube, **matchset):
 	states = {'L':0, 'U':1, 'F':2, 'D':3, 'R':4, 'B':5}
@@ -94,9 +73,3 @@ def Gc_recog(cube):
 def Gd_recog(cube):
 	return recog_pattern(cube, L=[(2, 0), (5, 1), (4, 2)], F=[(5, 0), (0, 1), (2, 2)], R=[(4, 0), (4, 1), (5, 2)], B=[(0, 0), (2, 1), (0, 2)])
 
-def solve_pll(cube):
-	for p in ["None", "Aa", "Ab", "E", "Ua", "Ub", "H", "Z", "Ja", "Jb", "T", "Ra", "Rb", "F", "V", "Na", "Nb", "Y", "Ga", "Gb", "Gc", "Gd"]:
-		result = eval("look_around(%s, %s_recog, %s_perm)" % (str(cube), p, p))
-		if result:
-			return result
-	raise ValueError("Not a solvable pll case.")
