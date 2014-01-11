@@ -54,6 +54,10 @@ def is_solved_oll(cube):
 
 def scramble(cube):
 	import random
+	last_move = ""
+	actions = []
+	#for i in range(25):
+
 	
 
 def solve_oll(c):
@@ -81,4 +85,4 @@ def solve_ll(cube):
 	except:
 		raise Exception("Wrong in the solving.")
 
-print solve_ll(cc("412000000520415002114222222333333333111444444511555555"))
+print solve_ll(cc("011000000242015525410222222333333333114444444111555555"))

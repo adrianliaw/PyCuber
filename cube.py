@@ -1,3 +1,28 @@
+"""
+
+This module simulates the rubik's cube, 
+simulates every move, twisting a layer, twisting two layers, or cube rotations.
+
+Every move is represented by a symbol:
+
+	L is the left face, 
+	U is the top face, 
+	F is the front face, 
+	D is the bottom face, 
+	R is the right face, 
+	B is the back face
+
+	Uppercase letters means to twist one layer, lowercase letters means to twist two layers.
+
+	Nothing added in the end means to twist it clockwise. ex: L, U, F etc.
+	Add "i" in the end means to twist it counter-clockwise. ex: Li, Ui, Fi etc.
+	Add "2" in the end means to twist it 180 degrees. ex: L2, U2, F2 etc.
+
+	The middle layers, which is the layer between 
+
+"""
+
+
 def initial_cube():
 	return [[[c, c, c], [c, c, c], [c, c, c]] for c in ["red", "yellow", "green", "white", "orange", "blue"]]
 
