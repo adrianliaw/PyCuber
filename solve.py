@@ -56,7 +56,7 @@ def scramble(cube):
 	import random
 	last_move = ""
 	actions = []
-	#for i in range(25):
+	
 
 	
 

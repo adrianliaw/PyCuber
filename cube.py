@@ -18,7 +18,17 @@ Every move is represented by a symbol:
 	Add "i" in the end means to twist it counter-clockwise. ex: Li, Ui, Fi etc.
 	Add "2" in the end means to twist it 180 degrees. ex: L2, U2, F2 etc.
 
-	The middle layers, which is the layer between 
+	The middle layers are the layers between U and D (E), F and B (S), L and R (M)
+	M action's direction is as same as L, 
+	S action's direction is as same as F, 
+	E action's direction is as same as D.
+
+	For the cube rotations, imagine there are xyz axis, 
+	x point towards right, y point towards up, z point towards front.
+	So "x" is to turn the x axis of the cube clockwise, "xi" is to turn the x axis of the cube counter-clockwise etc.
+
+	Every inverse action (action that named "-i"), will set the __name__ attribute to "-'", 
+	because of the official notation.
 
 """
 
@@ -259,6 +269,10 @@ def z2(cube):
 
 
 def sequence(alg, cube):
+	"""
+	This function takes two arguments, algorithm and the cube, 
+	algorithm is a sequence of symbols like "R U Ri Ui".
+	"""
 	alg = alg.split()
 	for m in alg:
 		cube = eval("%s(cube)" % m)
