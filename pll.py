@@ -1,3 +1,10 @@
+"""
+Nothing fancy here, all PLL algorithms.
+
+Algorithms from: http://www.cubewhiz.com/pll.php
+
+"""
+
 from cube import *
 
 

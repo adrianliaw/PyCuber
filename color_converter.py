@@ -6,8 +6,9 @@ def color_convert(l):
 	3 : white
 	4 : orange
 	5 : blue
+	(6 : unknown)
 	"""
-	colors = ["red", "yellow", "green", "white", "orange", "blue"]
+	colors = ["red", "yellow", "green", "white", "orange", "blue", "unknown"]
 	result = []
 	index = 0
 	for i in range(6):

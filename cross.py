@@ -47,15 +47,38 @@ def cross_goal(state):
 				return False
 	return True
 
+def cube_successors(state, last_action = None):
+    successors = {}
+    acts = ["F", "Fi", "F2", "U", "Ui", "U2", "R", "Ri", "R2", "L", "Li", "L2", "B", "Bi", "B2", "D", "Di", "D2"]
+    if last_action:
+        acts.remove(last_action[0])
+        acts.remove(last_action[0] + "i")
+        acts.remove(last_action[0] + "2")
+    for action in acts:
+        successors[action] = eval("%s(%s)" % (action, str(state)))
+    return successors
 
+def cross_state_value(state):
+	edgeset = state[1]
+	value = 0
+	relative_pos = [state[0][i] for i in [0, 2, 4, 5]]
+	for edge in edgeset:
+		white_pos = edge[0][1]
+		if white_pos[0] in [0, 2, 4, 5]:
+			if white_pos[1] == 1:
+				value += 1
+			if white_pos[1] == 0:
+				value += 2
+			if white_pos[1] == 2:
+				value += 3
+		if white_pos[0] == 1:
+			value += 1
+	return value
+	
 
 
 #from color_converter import color_convert as cc
 
 #print path_actions(shortest_path_search(fetch_edges(cc("034005145340215131545321304422130405042542310122155332")), cross_successors, cross_goal))
 
-
-
-
-#print cross_successors(fetch_edges(initial_cube()), "Fi")
-#print cross_goal(fetch_edges(initial_cube()))
+#print fetch_edges(cc("433300344502411412521521350231230050054044533121152542e"))

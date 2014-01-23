@@ -34,6 +34,15 @@ Every move is represented by a symbol:
 
 
 def initial_cube():
+	"""
+	initial a solved cube, with:
+		red on L face
+		yellow on U face
+		green on F face
+		white on D face
+		orange on R face
+		blue on B face
+	"""
 	return [[[c, c, c], [c, c, c], [c, c, c]] for c in ["red", "yellow", "green", "white", "orange", "blue"]]
 
 def U(cube):
@@ -279,6 +288,9 @@ def sequence(alg, cube):
 	return cube
 
 def show(cube):
+	"""
+	This show function makes the cube object more readable.
+	"""
 	for i in range(len(cube)):
 		for l in range(len(cube[i])):
 			print cube[i][l]

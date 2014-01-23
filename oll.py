@@ -1,3 +1,10 @@
+"""
+Nothing fancy here, all OLL algorithms.
+
+Algorithms from: http://www.cubewhiz.com/oll.php
+
+"""
+
 from cube import *
 
 

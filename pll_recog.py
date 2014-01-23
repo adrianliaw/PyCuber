@@ -1,6 +1,22 @@
+"""
+
+This module is to recognize all the PLL patterns.
+Every recognize function is named by "--_recog", 
+take a cube as an input, return True if it is the --_perm pattern, False otherwise.
+
+"""
+
 
 def recog_pattern(cube, **matchset):
-	states = {'L':0, 'U':1, 'F':2, 'D':3, 'R':4, 'B':5}
+	"""
+	This function is to recognize the PLL patterns, 
+	matchset is the keyword arguments, tell the function where is the cubie (color).
+
+	Every kw_arg is a list of tuples, every tuple contains two numbers, 
+	first one is the side which the color is located, second one is the column.
+	Every kw is represented by a letter, which is as same as the action symbol.
+	"""
+	states = {'L':0, 'F':2, 'R':4, 'B':5}
 	for side in matchset:
 		color_pos = matchset[side]
 		if [cube[color_pos[x][0]][0][color_pos[x][1]] for x in range(len(color_pos))] != [cube[states[side]][1][1]] * 3:

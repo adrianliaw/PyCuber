@@ -34,7 +34,7 @@ def O04_recog(c): return side_recog(c, "110110110010")
 
 def O05_recog(c): return side_recog(c, "011000001011")
 
-def O06_recog(c): return side_recog(c, "110110001000")
+def O06_recog(c): return side_recog(c, "110110100000")
 
 def O07_recog(c): return side_recog(c, "000011011001")
 
