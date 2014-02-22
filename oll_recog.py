@@ -74,9 +74,9 @@ def O24_recog(c): return side_recog(c, "000100000001")
 
 def O25_recog(c): return side_recog(c, "100001000000")
 
-def O26_recog(c): return side_recog(c, "000100100100")
+def O26_recog(c): return side_recog(c, "100100100000")
 
-def O27_recog(c): return side_recog(c, "001001000001")
+def O27_recog(c): return side_recog(c, "000001001001")
 
 def O28_recog(c): return side_recog(c, "010000000010")
 

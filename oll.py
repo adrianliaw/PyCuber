@@ -164,15 +164,15 @@ def O25(c):
 
 def O26(c):
 	"""
-	R' U' R U' R' U2 R
+	R U2 R' U' R U' R'
 	"""
-	return sequence("Ri Ui R Ui Ri U2 R", c)
+	return sequence("R U2 Ri Ui R Ui Ri", c)
 
 def O27(c):
 	"""
-	L U L' U L U2 L'
+	R U R' U R U2 R'
 	"""
-	return sequence("L U Li U L U2 Li", c)
+	return sequence("R U Ri U R U2 Ri", c)
 
 def O28(c):
 	"""

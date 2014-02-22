@@ -10,15 +10,15 @@ from cube import *
 
 def Aa_perm(c):
 	"""
-	L' B L' F2 L B' L' F2 L2
+	x R' U R' D2 R U' R' D2 R2
 	"""
-	return L2(F2(Li(Bi(L(F2(Li(B(Li(c)))))))))
+	return R2(D2(Ri(Ui(R(D2(Ri(U(Ri(x(c))))))))))
 
 def Ab_perm(c):
 	"""
-	R B' R F2 R' B R F2 R2
+	x R2 D2 R U R' D2 R U' R
 	"""
-	return R2(F2(R(B(Ri(F2(R(Bi(R(c)))))))))
+	return R(Ui(R(D2(Ri(U(R(D2(R2(x(c))))))))))
 
 def E_perm(c):
 	"""
