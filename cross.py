@@ -17,8 +17,10 @@ def fetch_edges(cube):
 				 ((3, 1, 2), (4, 2, 1))]
 	result = set()
 	for ((x, y, z), (p, q, r)) in all_edges:
-		if cube[x][y][z] == D_face_color or cube[p][q][r] == D_face_color:
+		if cube[x][y][z] == D_face_color:
 			result.add(((cube[x][y][z], (x, y, z)), (cube[p][q][r], (p, q, r))))
+		elif cube[p][q][r] == D_face_color:
+			result.add(((cube[p][q][r], (p, q, r)), (cube[x][y][z], (x, y, z))))
 	return ([cube[0][1][1], cube[1][1][1], cube[2][1][1], cube[3][1][1], cube[4][1][1], cube[5][1][1]], result)
 
 def cross_successors(state, last_action=None):
@@ -73,12 +75,55 @@ def cross_state_value(state):
 				value += 3
 		if white_pos[0] == 1:
 			value += 1
+	edgeposes = []
+	ngedges = []
+	for edge in edgeset:
+		if edge[0][1][0] in [1, 3]:
+			print edge
+			edgeposes.append((edge[1][1][0], edge[1][0]))
+		else:
+			if edge[0][1][1] == 1:
+				edgeposes.append((edge[1][1][0], edge[1][0]))
+			else:
+				ngedges.append(edge)
+	sides = [0, 2, 4, 5]
+	for edge in ngedges:
+		idx = sides.index(edge[0][1][0])
+		for i in [-1, 1]:
+			if sides[(idx+i)%4] not in dict(edgeposes):
+				edgeposes.append((sides[(idx+i)%4], edge[1][0]))
+				break
+		else:
+			counterclockwise = [x[0] for x in edgeposes].count(sides[(idx+1)%4])
+			clockwise = [x[0] for x in edgeposes].count(sides[(idx-1)%4])
+			if counterclockwise > clockwise:
+				edgeposes.append((sides[(idx+1)%4], edge[1][0]))
+			else:
+				edgeposes.append((sides[(idx-1)%4], edge[1][0]))
+	edgeposes.sort()
+	colorpos = [x[1] for x in edgeposes]
+	indexes = [x[0] for x in edgeposes]
+	def shift(l, n):
+		new = [None] * len(l)
+		for i in range(len(l)):
+			new[(i+n)%len(l)] = l[i]
+		return new
+	if all([indexes.count(x) == 1 for x in [0, 2, 4, 5]]):
+		for i in range(4):
+			if shift(colorpos, i) == relative_pos:
+				break
+		else:
+			value += 5
+	else:
+		value += 3
 	return value
 	
 
 
-#from color_converter import color_convert as cc
+from color_converter import color_convert as cc
 
 #print path_actions(shortest_path_search(fetch_edges(cc("034005145340215131545321304422130405042542310122155332")), cross_successors, cross_goal))
 
-#print fetch_edges(cc("433300344502411412521521350231230050054044533121152542e"))
+#print a_star_search(fetch_edges(cc("666606636666616666666626636606532646666646636666656636")), cross_successors, cross_state_value, cross_goal)
+show(cc("666606636666616666666626636606532646666646636666656636"))
+#print fetch_edges(cc("626606636666316666666626636606536646666646666666656636"))
