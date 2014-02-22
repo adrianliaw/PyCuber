@@ -9,15 +9,17 @@ from pll import *
 from pll_recog import *
 from oll import *
 from oll_recog import *
+from cross import *
+from sps import *
 from color_converter import color_convert as cc
 
 def look_around(cube, goal, f):
 	"""
 	This function is to perform the algorithm if it's the given case, return None otherwise.
 
-	Walk through every cube rotation(y) and the U face turning, 
-	and check if the given cube is "goal", which is the recognize function, 
-	if it is, perform the algorithm, return the full action and the cube after performing the alg, 
+	Walk through every cube rotation(y) and the U face turning,
+	and check if the given cube is "goal", which is the recognize function,
+	if it is, perform the algorithm, return the full action and the cube after performing the alg,
 	the function f is the function of the algorithm.
 
 	This function is to use in solving the last layer, so recognize it and perform algorithm.
@@ -106,7 +108,13 @@ def scramble():
 		shuffled.append(act)
 	return ' '.join(shuffled).replace("i", "'", 25)
 
-	
+
+def solve_cross(c):
+    """
+    Solve the cross by A* searching algorithm.
+    """
+    return path_actions(a_star_search(fetch_edges(c), cross_successors, cross_state_value, cross_goal))
+
 
 def solve_oll(c):
 	"""
@@ -135,11 +143,9 @@ def solve_ll(cube):
 	"""
 	Solve the last layer, which is OLL and PLL.
 	"""
-	#try:
-	oll_solved = solve_oll(cube)
-	pll_solved = solve_pll(oll_solved[1])
-	return oll_solved[0] + " " + pll_solved[0]
-	#except:
-	#	raise Exception("Wrong in the solving.")
-
-print solve_ll(cc("154000000011111215100222222333333333144444444522555555"))
+	try:
+		oll_solved = solve_oll(cube)
+		pll_solved = solve_pll(oll_solved[1])
+		return oll_solved[0] + " " + pll_solved[0]
+	except:
+		raise Exception("Wrong in the solving.")

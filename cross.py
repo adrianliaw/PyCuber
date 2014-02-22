@@ -1,19 +1,22 @@
-from sps import *
 from cube import *
 
 def fetch_edges(cube):
+	"""
+	Fetch all four edges for the cross into the following notation:
+	([L, U, F, D, R, B], set([(D, pos), (color, pos)*4]))
+	"""
 	D_face_color = cube[3][1][1]
-	all_edges = [((1, 2, 1), (2, 0, 1)), 
-				 ((1, 1, 0), (0, 0, 1)), 
-				 ((1, 0, 1), (5, 0, 1)), 
-				 ((1, 1, 2), (4, 0, 1)), 
-				 ((0, 1, 2), (2, 1, 0)), 
-				 ((0, 1, 0), (5, 1, 2)), 
-				 ((4, 1, 2), (5, 1, 0)), 
-				 ((4, 1, 0), (2, 1, 2)), 
-				 ((3, 2, 1), (5, 2, 1)), 
-				 ((3, 1, 0), (0, 2, 1)), 
-				 ((3, 0, 1), (2, 2, 1)), 
+	all_edges = [((1, 2, 1), (2, 0, 1)),
+				 ((1, 1, 0), (0, 0, 1)),
+				 ((1, 0, 1), (5, 0, 1)),
+				 ((1, 1, 2), (4, 0, 1)),
+				 ((0, 1, 2), (2, 1, 0)),
+				 ((0, 1, 0), (5, 1, 2)),
+				 ((4, 1, 2), (5, 1, 0)),
+				 ((4, 1, 0), (2, 1, 2)),
+				 ((3, 2, 1), (5, 2, 1)),
+				 ((3, 1, 0), (0, 2, 1)),
+				 ((3, 0, 1), (2, 2, 1)),
 				 ((3, 1, 2), (4, 2, 1))]
 	result = set()
 	for ((x, y, z), (p, q, r)) in all_edges:
@@ -24,6 +27,10 @@ def fetch_edges(cube):
 	return ([cube[0][1][1], cube[1][1][1], cube[2][1][1], cube[3][1][1], cube[4][1][1], cube[5][1][1]], result)
 
 def cross_successors(state, last_action=None):
+	"""
+	All successors for the solving the cross, 
+	if the action doesn't dominate four white edges, it won't be the successor.
+	"""
 	cube = [[["unknown" for i in range(3)] for j in range(3)] for h in range(6)]
 	(colors, edges) = state
 	for edge in edges:
@@ -41,6 +48,9 @@ def cross_successors(state, last_action=None):
 	return results
 
 def cross_goal(state):
+	"""
+	The goal function for finding the shortest path of cross.
+	"""
 	for center in range(len(state[0])):
 		for edge in state[1]:
 			if edge[0][0] != state[0][3] or edge[0][1][0] != 3:
@@ -49,18 +59,12 @@ def cross_goal(state):
 				return False
 	return True
 
-def cube_successors(state, last_action = None):
-    successors = {}
-    acts = ["F", "Fi", "F2", "U", "Ui", "U2", "R", "Ri", "R2", "L", "Li", "L2", "B", "Bi", "B2", "D", "Di", "D2"]
-    if last_action:
-        acts.remove(last_action[0])
-        acts.remove(last_action[0] + "i")
-        acts.remove(last_action[0] + "2")
-    for action in acts:
-        successors[action] = eval("%s(%s)" % (action, str(state)))
-    return successors
-
 def cross_state_value(state):
+	"""
+	Compute the state value of the cross solving.
+	1. The orientation cost.
+	2. Is in the relative position.
+	"""
 	edgeset = state[1]
 	value = 0
 	relative_pos = [state[0][i] for i in [0, 2, 4, 5]]
@@ -79,7 +83,6 @@ def cross_state_value(state):
 	ngedges = []
 	for edge in edgeset:
 		if edge[0][1][0] in [1, 3]:
-			print edge
 			edgeposes.append((edge[1][1][0], edge[1][0]))
 		else:
 			if edge[0][1][1] == 1:
@@ -117,13 +120,3 @@ def cross_state_value(state):
 	else:
 		value += 3
 	return value
-	
-
-
-from color_converter import color_convert as cc
-
-#print path_actions(shortest_path_search(fetch_edges(cc("034005145340215131545321304422130405042542310122155332")), cross_successors, cross_goal))
-
-#print a_star_search(fetch_edges(cc("666606636666616666666626636606532646666646636666656636")), cross_successors, cross_state_value, cross_goal)
-show(cc("666606636666616666666626636606532646666646636666656636"))
-#print fetch_edges(cc("626606636666316666666626636606536646666646666666656636"))
