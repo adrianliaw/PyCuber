@@ -5,8 +5,8 @@ Algorithms from: http://www.cubewhiz.com/oll.php
 
 """
 
+import _import
 from cube import *
-
 
 def O00(c):
 	""

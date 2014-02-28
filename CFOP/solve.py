@@ -4,6 +4,7 @@ This is the module of solving the cube.
 Every step of solving the cube are in this module.
 """
 
+import _import
 from cube import *
 from pll import *
 from pll_recog import *

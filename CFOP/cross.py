@@ -1,3 +1,9 @@
+"""
+This module is to solve the cross, 
+which is the first step of the CFOP Friedrich Method.
+"""
+
+import _import
 from cube import *
 
 def fetch_edges(cube):

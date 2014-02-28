@@ -5,6 +5,7 @@ Algorithms from: http://www.cubewhiz.com/pll.php
 
 """
 
+import _import
 from cube import *
 
 

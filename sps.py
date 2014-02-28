@@ -1,3 +1,9 @@
+"""
+Shortest Path Search
+
+The searching algorithms.
+
+"""
 
 def shortest_path_search(start, successors, is_goal):
     """Find the shortest path from start state to a state
