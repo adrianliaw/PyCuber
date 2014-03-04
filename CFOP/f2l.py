@@ -2,6 +2,9 @@ import _import
 from cube import *
 
 
+class F2LPair:
+	def __init__(self, )
+
 def push_right(c):
 	return sequence("R Ui Ri", c)
 
