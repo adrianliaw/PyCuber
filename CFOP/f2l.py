@@ -1,9 +1,123 @@
 import _import
 from cube import *
+from solve import scramble, solve_cross
+from color_converter import color_convert as cc
+def get_3d_pos(poses):
+	"""
+	Get the cubie position in 3D.
+	(0, 0, 0) is the position of center of the cube.
+	X position is from left to right
+	Y position is from bottom to top
+	Z position is from back to front
+	"""
+	checking_pos, face = list(poses)[0][::2]
+	if face in "UD":
+		if face == "U":
+			x, y, z = 0, 1, 0
+		else:
+			x, y, z = 0, -1, 0
+		x = checking_pos[2] - 1
+		z = checking_pos[1] - 1
+		if face == "D": z *= -1
+	elif face in "RL":
+		if face == "R":
+			x, y, z = 1, 0, 0
+		else:
+			x, y, z = -1, 0, 0
+		y = (checking_pos[1] - 1) * -1
+		z = checking_pos[2] - 1
+		if face == "R": z *= -1
+	else:
+		if face == "F":
+			x, y, z = 0, 0, 1
+		else:
+			x, y, z = 0, 0, -1
+		y = (checking_pos[1] - 1) * -1
+		x = checking_pos[2] - 1
+		if face == "B": x *= -1
+	return (x, y, z)
+
+def fetch_edge(cube, colors):
+	"""
+	(set([((x, y, z), color, face, face_color), ((p, q, r), color, face, face_color)]), 3d_pos)
+	"""
+	all_edges = [((1, 2, 1), (2, 0, 1)),
+				 ((1, 1, 0), (0, 0, 1)),
+				 ((1, 0, 1), (5, 0, 1)),
+				 ((1, 1, 2), (4, 0, 1)),
+				 ((0, 1, 2), (2, 1, 0)),
+				 ((0, 1, 0), (5, 1, 2)),
+				 ((4, 1, 2), (5, 1, 0)),
+				 ((4, 1, 0), (2, 1, 2)),
+				 ((3, 2, 1), (5, 2, 1)),
+				 ((3, 1, 0), (0, 2, 1)),
+				 ((3, 0, 1), (2, 2, 1)),
+				 ((3, 1, 2), (4, 2, 1))]
+	faces = {0:"L", 1:"U", 2:"F", 3:"D", 4:"R", 5:"B"}
+	for ((x, y, z), (p, q, r)) in all_edges:
+		if set([cube[x][y][z], cube[p][q][r]]) == colors:
+			colorpair = set([((x, y, z), cube[x][y][z], faces[x], cube[x][1][1]), ((p, q, r), cube[p][q][r], faces[p], cube[p][1][1])])
+			return (colorpair, get_3d_pos(colorpair))
+
+def fetch_corner(cube, colors):
+	"""
+	(set([((x, y, z), color, face, face_color), ((a, b, c), color, face, face_color), ((p, q, r), color, face, face_color)]), 3d_pos)
+	"""
+	all_corners = [((0, 0, 2), (1, 2, 0), (2, 0, 0)), 
+				   ((0, 0, 0), (1, 0, 0), (5, 0, 2)), 
+				   ((4, 0, 2), (1, 0, 2), (5, 0, 0)), 
+				   ((2, 0, 2), (1, 2, 2), (4, 0, 0)), 
+				   ((5, 2, 2), (3, 2, 0), (0, 2, 0)), 
+				   ((3, 0, 0), (0, 2, 2), (2, 2, 0)), 
+				   ((2, 2, 2), (3, 0, 2), (4, 2, 0)), 
+				   ((3, 2, 2), (4, 2, 2), (5, 2, 0))]
+	faces = {0:"L", 1:"U", 2:"F", 3:"D", 4:"R", 5:"B"}
+	for ((x, y, z), (a, b, c), (p, q, r)) in all_corners:
+		if set([cube[x][y][z], cube[a][b][c], cube[p][q][r]]) == colors:
+			colorpair = set([((x, y, z), cube[x][y][z], faces[x], cube[x][1][1]), ((a, b, c), cube[a][b][c], faces[a], cube[a][1][1]), ((p, q, r), cube[p][q][r], faces[p], cube[p][1][1])])
+			return (colorpair, get_3d_pos(colorpair))
+
+def get_slot(cube, colors):
+	"""
+	Get the "slot" of a cubie, 
+	can be any slot of the F2L, or slot free.
+	"""
+	if len(colors) == 2:
+		edge, pos = fetch_edge(cube, colors)
+		if pos[1] == 1:
+			return None
+		else:
+			return set([e[3] for e in edge])
+	elif len(colors) == 3:
+		corner, pos = fetch_corner(cube, colors)
+		if pos[1] == 1:
+			return None
+		else:
+			return set([c[3] for c in corner if c[3] != cube[3][1][1]])
+
+def get_orientation(cube, colors):
+	slots = [(0, 2), (2, 4), (4, 5), (5, 0)]
+	slotnames = [("L", "F"), ("F", "R"), ("R", "B"), ("B", "L")]
+	if len(colors) == 2:
+		colorpair, threeDpos = fetch_edge(cube, colors)
+		if threeDpos[1] == 0:
+			for s in slots:
+				correct_orient = (cube[s[0]][1][1], cube[s[1]][1][1])
+				incorrect_orient = correct_orient[::-1]
+				
+				print correct_orient, incorrect_orient
 
 
-class F2LPair:
-	def __init__(self, )
+#class F2LPair:
+#	def __init__(self, cube, colors):
+#		self._cube = cube
+a = scramble()
+print a
+c = sequence(a, initial_cube())
+cross = solve_cross(c)
+print cross
+c = sequence(cross, c)
+print get_orientation(c, set(['green', 'red']))
 
 def push_right(c):
 	return sequence("R Ui Ri", c)

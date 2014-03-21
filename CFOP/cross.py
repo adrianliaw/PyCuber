@@ -35,7 +35,7 @@ def fetch_edges(cube):
 def cross_successors(state, last_action=None):
 	"""
 	All successors for the solving the cross, 
-	if the action doesn't dominate four white edges, it won't be the successor.
+	if the action doesn't dominate any of four white edges, it won't be the successor.
 	"""
 	cube = [[["unknown" for i in range(3)] for j in range(3)] for h in range(6)]
 	(colors, edges) = state

@@ -38,9 +38,9 @@ def look_around(cube, goal, f):
 				else:
 					new = [[[p for p in q] for q in r] for r in cube]
 			if goal(new):
-				cr_notation = cube_rotate.__name__ if cube_rotate else ""
-				uo_notation = (" " if cr_notation and U_orient else "") + (U_orient.__name__ if U_orient else "")
-				algo = (" " if cr_notation + uo_notation else "") + f.__doc__.replace("\n\t", "", 2)
+				cr_notation = [cube_rotate.__name__] if cube_rotate else []
+				uo_notation = [U_orient.__name__] if U_orient else []
+				algo = f.__doc__.replace("\n\t", "", 2).split()
 				return cr_notation + uo_notation + algo, f(new)
 
 def is_solved_cube(cube):
@@ -147,6 +147,6 @@ def solve_ll(cube):
 	try:
 		oll_solved = solve_oll(cube)
 		pll_solved = solve_pll(oll_solved[1])
-		return oll_solved[0] + " " + pll_solved[0]
+		return oll_solved[0] + pll_solved[0]
 	except:
 		raise Exception("Wrong in the solving.")
