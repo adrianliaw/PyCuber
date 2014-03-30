@@ -1,3 +1,7 @@
+"""
+This is the module for solving the F2L.
+"""
+
 import _import
 from cube import *
 from solve import scramble, solve_cross, solve_ll
@@ -143,6 +147,14 @@ def get_orientation(cube, colors):
 						return 5
 
 def get_pair(cube, colors):
+	"""
+	Get the data from the F2L pair.
+	Included:
+		colorpair (set([((x, y, z), color, face, face_color)] * 2(3) ))
+		3D position
+		Slot location
+		Orientation code
+	"""
 	pair = {'edge':{}, 'corner':{}}
 	edge, pos = get_edge(cube, colors)
 	pair['edge']['colorpair'] = edge
@@ -156,32 +168,11 @@ def get_pair(cube, colors):
 	pair['corner']['orientation'] = get_orientation(cube, colors | set([cube[3][1][1]]))
 	return pair
 
-#class F2LPair:
-#	def __init__(self, cube, colors):
-#		self._cube = cube
-
-
-
-
-
-
-
-
-def push_right(c):
-	return sequence("R Ui Ri", c)
-
-def push_left(c):
-	return sequence("Li U L", c)
-
-def pull_right(c):
-	return sequence("R U Ri", c)
-
-def pull_left(c):
-	return sequence("Li Ui L", c)
-
-
 def solve_combined(cube, colors):
-	#data = get_pair(cube, colors)
+	"""
+	Solve the combined F2L pair.
+	Included push-right, push-left, pull-right, pull-left cases.
+	"""
 	for cube_rotation in [None, "y", "yi", "y2"]:
 		if cube_rotation:
 			rotatedcube = eval(cube_rotation+"(cube)")
@@ -211,24 +202,3 @@ def solve_combined(cube, colors):
 				return result
 			except NameError:
 				continue
-
-	#if data['corner']['3dpos'] == (-1, 1, 1) and data['corner']['orientation'] == 5 and data['edge']['3dpos'] == (0, 1, 1) and data['edge']['orientation'] == 3:
-	#	return ['R', 'Ui', 'Ri']
-	#elif data['corner']['3dpos'] == (1, 1, 1) and data['corner']['orientation'] == 4 and data['edge']['3dpos'] == (0, 1, 1) and data['edge']['orientation'] == 2:
-	#	return ['Li', 'U', 'L']
-	#elif data['corner']['3dpos'] == (1, 1, 1) and data['corner']['orientation'] == 4 and data['edge']['3dpos'] == (0, 1, -1) and data['edge']['orientation'] == 3:
-	#	return ['R', 'U', 'Ri']
-	#elif data['corner']['3dpos'] == (-1, 1, 1) and data['corner']['orientation'] == 5 and data['edge']['3dpos'] == (0, 1, -1) and data['edge']['orientation'] == 2:
-	#	return ['Li', 'Ui', 'L']
-
-if __name__ == "__main__":
-	a = scramble()
-	print a
-	c = sequence(a, initial_cube())
-	cross = solve_cross(c)
-	c = sequence(cross, c)
-	print cross
-	c = cc("213555551442012550001100500433333333511222222011444444")
-	a = solve_combined(c, set(["blue", "red"]))
-	c = sequence(a, c)
-	print solve_ll(c)
