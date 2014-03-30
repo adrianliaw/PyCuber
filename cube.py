@@ -55,7 +55,6 @@ def U(cube):
 	return result
 
 def Ui(cube):
-	Ui.__name__ = "U'"
 	return U(U(U(cube)))
 
 def U2(cube):
@@ -71,7 +70,6 @@ def F(cube):
 	return result
 
 def Fi(cube):
-	Fi.__name__ = "F'"
 	return F(F(F(cube)))
 
 def F2(cube):
@@ -87,7 +85,6 @@ def L(cube):
 	return result
 
 def Li(cube):
-	Li.__name__ = "L'"
 	return L(L(L(cube)))
 
 def L2(cube):
@@ -103,7 +100,6 @@ def R(cube):
 	return result
 
 def Ri(cube):
-	Ri.__name__ = "R'"
 	return R(R(R(cube)))
 
 def R2(cube):
@@ -119,7 +115,6 @@ def B(cube):
 	return result
 
 def Bi(cube):
-	Bi.__name__ = "B'"
 	return B(B(B(cube)))
 
 def B2(cube):
@@ -135,7 +130,6 @@ def D(cube):
 	return result
 
 def Di(cube):
-	Di.__name__ = "D'"
 	return D(D(D(cube)))
 
 def D2(cube):
@@ -150,7 +144,6 @@ def M(cube):
 	return result
 
 def Mi(cube):
-	Mi.__name__ = "M'"
 	return M(M(M(cube)))
 
 def M2(cube):
@@ -165,7 +158,6 @@ def S(cube):
 	return result
 
 def Si(cube):
-	Si.__name__ = "S'"
 	return S(S(S(cube)))
 
 def S2(cube):
@@ -180,7 +172,6 @@ def E(cube):
 	return result
 
 def Ei(cube):
-	Ei.__name__ = "E'"
 	return E(E(E(cube)))
 
 def E2(cube):
@@ -190,7 +181,6 @@ def f(cube):
 	return S(F(cube))
 
 def fi(cube):
-	fi.__name__ = "f'"
 	return f(f(f(cube)))
 
 def f2(cube):
@@ -200,7 +190,6 @@ def b(cube):
 	return Si(B(cube))
 
 def bi(cube):
-	bi.__name__ = "b'"
 	return b(b(b(cube)))
 
 def b2(cube):
@@ -210,7 +199,6 @@ def l(cube):
 	return M(L(cube))
 
 def li(cube):
-	li.__name__ = "l'"
 	return l(l(l(cube)))
 
 def l2(cube):
@@ -220,7 +208,6 @@ def r(cube):
 	return Mi(R(cube))
 
 def ri(cube):
-	ri.__name__ = "r'"
 	return r(r(r(cube)))
 
 def r2(cube):
@@ -230,7 +217,6 @@ def u(cube):
 	return Ei(U(cube))
 
 def ui(cube):
-	ui.__name__ = "u'"
 	return u(u(u(cube)))
 
 def u2(cube):
@@ -240,7 +226,6 @@ def d(cube):
 	return E(D(cube))
 
 def di(cube):
-	di.__name__ = "d'"
 	return d(d(d(cube)))
 
 def d2(cube):
@@ -250,7 +235,6 @@ def x(cube):
 	return li(R(cube))
 
 def xi(cube):
-	xi.__name__ = "x'"
 	return x(x(x(cube)))
 
 def x2(cube):
@@ -260,7 +244,6 @@ def y(cube):
 	return u(Di(cube))
 
 def yi(cube):
-	yi.__name__ = "y'"
 	return y(y(y(cube)))
 
 def y2(cube):
@@ -270,7 +253,6 @@ def z(cube):
 	return f(Bi(cube))
 
 def zi(cube):
-	zi.__name__ = "z'"
 	return z(z(z(cube)))
 
 def z2(cube):

@@ -40,7 +40,7 @@ def look_around(cube, goal, f):
 			if goal(new):
 				cr_notation = [cube_rotate.__name__] if cube_rotate else []
 				uo_notation = [U_orient.__name__] if U_orient else []
-				algo = f.__doc__.replace("\n\t", "", 2).split()
+				algo = f.__doc__.replace("\n\t", "", 2).replace("'", "i", 1000).split()
 				return cr_notation + uo_notation + algo, f(new)
 
 def is_solved_cube(cube):
@@ -107,7 +107,7 @@ def scramble():
 		act = random.choice(last_act_removed)
 		last_move, before2_move = act, last_move
 		shuffled.append(act)
-	return ' '.join(shuffled).replace("i", "'", 25)
+	return ' '.join(shuffled)
 
 
 def solve_cross(c):

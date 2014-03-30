@@ -1,6 +1,6 @@
 import _import
 from cube import *
-from solve import scramble, solve_cross
+from solve import scramble, solve_cross, solve_ll
 from color_converter import color_convert as cc
 def get_3d_pos(poses):
 	"""
@@ -37,7 +37,7 @@ def get_3d_pos(poses):
 		if face == "B": x *= -1
 	return (x, y, z)
 
-def fetch_edge(cube, colors):
+def get_edge(cube, colors):
 	"""
 	(set([((x, y, z), color, face, face_color), ((p, q, r), color, face, face_color)]), 3d_pos)
 	"""
@@ -59,7 +59,7 @@ def fetch_edge(cube, colors):
 			colorpair = set([((x, y, z), cube[x][y][z], faces[x], cube[x][1][1]), ((p, q, r), cube[p][q][r], faces[p], cube[p][1][1])])
 			return (colorpair, get_3d_pos(colorpair))
 
-def fetch_corner(cube, colors):
+def get_corner(cube, colors):
 	"""
 	(set([((x, y, z), color, face, face_color), ((a, b, c), color, face, face_color), ((p, q, r), color, face, face_color)]), 3d_pos)
 	"""
@@ -83,41 +83,89 @@ def get_slot(cube, colors):
 	can be any slot of the F2L, or slot free.
 	"""
 	if len(colors) == 2:
-		edge, pos = fetch_edge(cube, colors)
+		edge, pos = get_edge(cube, colors)
 		if pos[1] == 1:
 			return None
 		else:
 			return set([e[3] for e in edge])
 	elif len(colors) == 3:
-		corner, pos = fetch_corner(cube, colors)
+		corner, pos = get_corner(cube, colors)
 		if pos[1] == 1:
 			return None
 		else:
 			return set([c[3] for c in corner if c[3] != cube[3][1][1]])
 
 def get_orientation(cube, colors):
+	"""
+	Get the orientation code of the cubie.
+	(Only for F2L edges and corners)
+	"""
 	slots = [(0, 2), (2, 4), (4, 5), (5, 0)]
-	slotnames = [("L", "F"), ("F", "R"), ("R", "B"), ("B", "L")]
 	if len(colors) == 2:
-		colorpair, threeDpos = fetch_edge(cube, colors)
+		colorpair, threeDpos = get_edge(cube, colors)
 		if threeDpos[1] == 0:
+			orient = sorted(colorpair, key=lambda x:x[0][0])
+			if orient[0][0][0] == 0 and orient[1][0][0] == 5:
+				orient = orient[::-1]
+			orient = tuple([x[1] for x in orient])
 			for s in slots:
 				correct_orient = (cube[s[0]][1][1], cube[s[1]][1][1])
 				incorrect_orient = correct_orient[::-1]
-				
-				print correct_orient, incorrect_orient
+				if orient == correct_orient: return 0
+				else: return 1
+		else:
+			for s in slots:
+				slot_color = (cube[s[0]][1][1], cube[s[1]][1][1])
+				if all(x[1] in slot_color for x in colorpair):
+					for piece in colorpair:
+						if piece[2] == "U":
+							if piece[1] == slot_color[0]: return 3
+							else: return 2
+	else:
+		colorpair, threeDpos = get_corner(cube, colors)
+		if threeDpos[1] == -1:
+			for x in colorpair:
+				if x[1] == cube[3][1][1]:
+					if x[0][0] == 3:
+						return 0
+					elif x[0][2] == 2:
+						return 1
+					elif x[0][2] == 0:
+						return 2
+		else:
+			for x in colorpair:
+				if x[1] == cube[3][1][1]:
+					if x[0][0] == 1:
+						return 3
+					elif x[0][2] == 0:
+						return 4
+					elif x[0][2] == 2:
+						return 5
 
+def get_pair(cube, colors):
+	pair = {'edge':{}, 'corner':{}}
+	edge, pos = get_edge(cube, colors)
+	pair['edge']['colorpair'] = edge
+	pair['edge']['3dpos'] = pos
+	pair['edge']['slot'] = get_slot(cube, colors)
+	pair['edge']['orientation'] = get_orientation(cube, colors)
+	corner, pos = get_corner(cube, colors | set([cube[3][1][1]]))
+	pair['corner']['colorpair'] = corner
+	pair['corner']['3dpos'] = pos
+	pair['corner']['slot'] = get_slot(cube, colors | set([cube[3][1][1]]))
+	pair['corner']['orientation'] = get_orientation(cube, colors | set([cube[3][1][1]]))
+	return pair
 
 #class F2LPair:
 #	def __init__(self, cube, colors):
 #		self._cube = cube
-a = scramble()
-print a
-c = sequence(a, initial_cube())
-cross = solve_cross(c)
-print cross
-c = sequence(cross, c)
-print get_orientation(c, set(['green', 'red']))
+
+
+
+
+
+
+
 
 def push_right(c):
 	return sequence("R Ui Ri", c)
@@ -130,3 +178,57 @@ def pull_right(c):
 
 def pull_left(c):
 	return sequence("Li Ui L", c)
+
+
+def solve_combined(cube, colors):
+	#data = get_pair(cube, colors)
+	for cube_rotation in [None, "y", "yi", "y2"]:
+		if cube_rotation:
+			rotatedcube = eval(cube_rotation+"(cube)")
+		else:
+			rotatedcube = [[[p for p in q] for q in r] for r in cube]
+		for U_rotation in [None, "U", "Ui", "U2"]:
+			if U_rotation:
+				Urotatedcube = eval(U_rotation+"(rotatedcube)")
+			else:
+				Urotatedcube = [[[p for p in q] for q in r] for r in rotatedcube]
+			data = get_pair(Urotatedcube, colors)
+			if set([Urotatedcube[0][1][1], Urotatedcube[2][1][1]]) == colors:
+				if data['corner']['3dpos'] == (1, 1, 1) and data['corner']['orientation'] == 4 and data['edge']['3dpos'] == (0, 1, 1) and data['edge']['orientation'] == 2:
+					result = ['Li', 'U', 'L']
+				elif data['corner']['3dpos'] == (-1, 1, 1) and data['corner']['orientation'] == 5 and data['edge']['3dpos'] == (0, 1, -1) and data['edge']['orientation'] == 2:
+					result = ['Li', 'Ui', 'L']
+			elif set([Urotatedcube[2][1][1], Urotatedcube[4][1][1]]) == colors:
+				if data['corner']['3dpos'] == (-1, 1, 1) and data['corner']['orientation'] == 5 and data['edge']['3dpos'] == (0, 1, 1) and data['edge']['orientation'] == 3:
+					result = ['R', 'Ui', 'Ri']
+				elif data['corner']['3dpos'] == (1, 1, 1) and data['corner']['orientation'] == 4 and data['edge']['3dpos'] == (0, 1, -1) and data['edge']['orientation'] == 3:
+					result = ['R', 'U', 'Ri']
+			try:
+				result.insert(0, U_rotation)
+				result.insert(0, cube_rotation)
+				while None in result:
+					result.remove(None)
+				return result
+			except NameError:
+				continue
+
+	#if data['corner']['3dpos'] == (-1, 1, 1) and data['corner']['orientation'] == 5 and data['edge']['3dpos'] == (0, 1, 1) and data['edge']['orientation'] == 3:
+	#	return ['R', 'Ui', 'Ri']
+	#elif data['corner']['3dpos'] == (1, 1, 1) and data['corner']['orientation'] == 4 and data['edge']['3dpos'] == (0, 1, 1) and data['edge']['orientation'] == 2:
+	#	return ['Li', 'U', 'L']
+	#elif data['corner']['3dpos'] == (1, 1, 1) and data['corner']['orientation'] == 4 and data['edge']['3dpos'] == (0, 1, -1) and data['edge']['orientation'] == 3:
+	#	return ['R', 'U', 'Ri']
+	#elif data['corner']['3dpos'] == (-1, 1, 1) and data['corner']['orientation'] == 5 and data['edge']['3dpos'] == (0, 1, -1) and data['edge']['orientation'] == 2:
+	#	return ['Li', 'Ui', 'L']
+
+if __name__ == "__main__":
+	a = scramble()
+	print a
+	c = sequence(a, initial_cube())
+	cross = solve_cross(c)
+	c = sequence(cross, c)
+	print cross
+	c = cc("213555551442012550001100500433333333511222222011444444")
+	a = solve_combined(c, set(["blue", "red"]))
+	c = sequence(a, c)
+	print solve_ll(c)
