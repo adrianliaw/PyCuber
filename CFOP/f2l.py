@@ -202,3 +202,9 @@ def solve_combined(cube, colors):
 				return result
 			except NameError:
 				continue
+
+def recog_type(cube, colors):
+	data = get_pair(cube, colors)
+
+print get_pair(initial_cube(), set(['red', 'green']))
+

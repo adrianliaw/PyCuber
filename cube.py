@@ -27,9 +27,6 @@ Every move is represented by a symbol:
 	x point towards right, y point towards up, z point towards front.
 	So "x" is to turn the x axis of the cube clockwise, "xi" is to turn the x axis of the cube counter-clockwise etc.
 
-	Every inverse action (action that named "-i"), will set the __name__ attribute to "-'",
-	because of the official notation.
-
 """
 
 
