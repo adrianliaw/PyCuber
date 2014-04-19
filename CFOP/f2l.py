@@ -103,6 +103,11 @@ def get_orientation(cube, colors):
 	"""
 	Get the orientation code of the cubie.
 	(Only for F2L edges and corners)
+
+	Corner:
+		In D layer:
+			correct: 0
+			
 	"""
 	slots = [(0, 2), (2, 4), (4, 5), (5, 0)]
 	if len(colors) == 2:
@@ -205,6 +210,51 @@ def solve_combined(cube, colors):
 
 def recog_type(cube, colors):
 	data = get_pair(cube, colors)
+	if data['corner']['slot'] != data['edge']['slot'] and None not in (data['corner']['slot'], data['edge']['slot']):
+		return "DIFSLOT"
+	elif data['corner']['slot'] == data['edge']['slot'] == colors and data['corner']['orientation'] == data['edge']['orientation'] == 0:
+		return "SOLVED"
+	elif data['corner']['slot'] == data['edge']['slot'] and data['corner']['orientation'] == data['edge']['orientation'] == 0:
+		return "WRONGSLOT"
+	elif data['corner']['slot'] == data['edge']['slot'] != None:
+		return "WRONGORIENT"
+	elif data['corner']['slot'] == data['edge']['slot'] == None:
+		return "BOTHSLOTFREE"
+	elif data['edge']['slot'] == None:
+		return "ESLOTFREE"
+	elif data['corner']['slot'] == None:
+		return "CSLOTFREE"
 
-print get_pair(initial_cube(), set(['red', 'green']))
+def difslot(cube, colors):
+	data = get_pair(cube, colors)
+	if data['edge']['slot'] == colors:
+		for cube_rotation in ["", "y", "yi", "y2"]:
+			rotatedcube = eval(cube_rotation + "(cube)")
+			if set([rotatedcube[2][1][1], rotatedcube[4][1][1]]) == data['corner']['slot']:
+				return cube_rotation.split() + ["R", "Ui", "Ri"]
+	else:
+		for cube_rotation in ["", "y", "yi", "y2"]:
+			rotatedcube = eval(cube_rotation + "(cube)")
+			if set([rotatedcube[2][1][1], rotatedcube[4][1][1]]) == data['edge']['slot']:
+				return cube_rotation.split() + ["R", "U", "Ri"]
 
+def wrongslot(cube, colors):
+	data = get_pair(cube, colors)
+	for cube_rotation in ["", "y", "yi", "y2"]:
+		rotatedcube = eval(cube_rotation + "(cube)")
+		if set([rotatedcube[2][1][1], rotatedcube[4][1][1]]) == data['corner']['slot']:
+			result = cube_rotation.split() + ["R", "U", "Ri"]
+	result += solve_combined(sequence(result, cube), colors)
+	return result
+
+
+a = scramble()
+print a
+c = sequence(a, initial_cube())
+b = solve_cross(c)
+print b
+c = sequence(b, c)
+d = recog_type(c, set(['red', 'green']))
+print d
+if d == "WRONGSLOT":
+	print wrongslot(c, set(['red', 'green']))
