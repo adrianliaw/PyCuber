@@ -4,8 +4,6 @@ This is the module for solving the F2L.
 
 import _import
 from cube import *
-from solve import scramble, solve_cross, solve_ll
-from color_converter import color_convert as cc
 def get_3d_pos(poses):
 	"""
 	Get the cubie position in 3D.
@@ -106,8 +104,20 @@ def get_orientation(cube, colors):
 
 	Corner:
 		In D layer:
-			correct: 0
-			
+			correct orientation     : 0
+			turned clockwise        : 1
+			turned counter-clockwise: 2
+		In U layer:
+			cross color on U        : 3
+			turned clockwise        : 4
+			turned counter-clockwise: 5
+	Edge:
+		In middle layer:
+			correct orientation     : 0
+			opposite orientation    : 1
+		In U layer:
+			T on left side          : 2
+			T on right side         : 3
 	"""
 	slots = [(0, 2), (2, 4), (4, 5), (5, 0)]
 	if len(colors) == 2:
@@ -120,8 +130,9 @@ def get_orientation(cube, colors):
 			for s in slots:
 				correct_orient = (cube[s[0]][1][1], cube[s[1]][1][1])
 				incorrect_orient = correct_orient[::-1]
-				if orient == correct_orient: return 0
-				else: return 1
+				if orient in (correct_orient, incorrect_orient):
+					if orient == correct_orient: return 0
+					else: return 1
 		else:
 			for s in slots:
 				slot_color = (cube[s[0]][1][1], cube[s[1]][1][1])
@@ -225,18 +236,37 @@ def recog_type(cube, colors):
 	elif data['corner']['slot'] == None:
 		return "CSLOTFREE"
 
+def order(cube):
+	p = {"SOLVED":7, "WRONGSLOT":6, "BOTHSLOTFREE":5, "CSLOTFREE":4, "ESLOTFREE":3, "WRONGORIENT":2, "DIFSLOT":1}
+	return sorted([set([cube[0][1][1], cube[2][1][1]]), set([cube[2][1][1], cube[4][1][1]]), set([cube[4][1][1], cube[5][1][1]]), set([cube[5][1][1], cube[0][1][1]])], key=lambda x:p[recog_type(cube, x)], reverse=True)
+
+def empty_slots(cube):
+	slots = []
+	for (face1, face2) in [(0, 2), (2, 4), (4, 5), (5, 0)]:
+		slot = set([cube[face1][1][1], cube[face2][1][1]])
+		_type = recog_type(cube, slot)
+		if _type != "SOLVED":
+			slots.append(slot)
+	return slots
+
 def difslot(cube, colors):
 	data = get_pair(cube, colors)
 	if data['edge']['slot'] == colors:
 		for cube_rotation in ["", "y", "yi", "y2"]:
 			rotatedcube = eval(cube_rotation + "(cube)")
 			if set([rotatedcube[2][1][1], rotatedcube[4][1][1]]) == data['corner']['slot']:
-				return cube_rotation.split() + ["R", "Ui", "Ri"]
+				result = cube_rotation.split() + ["R", "Ui", "Ri"]
+				result += cslotfree(sequence(result, cube), colors)
+				return result
 	else:
 		for cube_rotation in ["", "y", "yi", "y2"]:
 			rotatedcube = eval(cube_rotation + "(cube)")
 			if set([rotatedcube[2][1][1], rotatedcube[4][1][1]]) == data['edge']['slot']:
-				return cube_rotation.split() + ["R", "U", "Ri"]
+				result = cube_rotation.split() + ["R", "U", "Ri"]
+				result += eslotfree(sequence(result, cube), colors)
+				return result
+
+solved = lambda x, y: []
 
 def wrongslot(cube, colors):
 	data = get_pair(cube, colors)
@@ -247,14 +277,176 @@ def wrongslot(cube, colors):
 	result += solve_combined(sequence(result, cube), colors)
 	return result
 
+_wrongorient = {
+	"right-handed":{
+		"01":['R', 'Ui', 'Ri', 'd', 'Ri', 'U2', 'R'], 
+		"10":['R', 'Ui', 'Ri', 'Ui', 'R', 'U', 'Ri'], 
+		"11":['R', 'Ui', 'Ri', 'Ui', 'R', 'Ui', 'Ri']
+	}, 
+	"left-handed":{
+		"20":['Li', 'U', 'L', 'U', 'Li', 'Ui', 'L'], 
+		"21":['Li', 'U', 'L', 'U', 'Li', 'U', 'L']
+	}
+}
 
-a = scramble()
-print a
-c = sequence(a, initial_cube())
-b = solve_cross(c)
-print b
-c = sequence(b, c)
-d = recog_type(c, set(['red', 'green']))
-print d
-if d == "WRONGSLOT":
-	print wrongslot(c, set(['red', 'green']))
+def wrongorient(cube, colors):
+	data = get_pair(cube, colors)
+	slot = data['corner']['slot']
+	for cube_rotation in ["", "y", "yi", "y2"]:
+		rotatedcube = eval(cube_rotation + "(cube)")
+		if set([rotatedcube[0][1][1], rotatedcube[2][1][1]]) == slot:
+			alg = _wrongorient['left-handed'].get(str(data['corner']['orientation'])+str(data['edge']['orientation']))
+			if alg:
+				result = cube_rotation.split() + alg
+				break
+		elif set([rotatedcube[2][1][1], rotatedcube[4][1][1]]) == slot:
+			alg = _wrongorient['right-handed'].get(str(data['corner']['orientation'])+str(data['edge']['orientation']))
+			if alg:
+				result = cube_rotation.split() + alg
+				break
+	result += solve_combined(sequence(result, cube), colors)
+	return result
+
+_bothslotfree = {
+	'right-handed': {
+		"-1 -1 3 1 0 3" : ['R', 'U', 'Ri'], #F19
+		"1 1 3 1 0 3"   : ['R', 'U2', 'Ri'], #F20
+		"1 1 3 1 0 2"   : ['R', 'Ui', 'Ri', 'di', 'Li', 'Ui', 'L'], #F21
+		"-1 1 3 1 0 3"  : ['R', 'U2', 'Ri'], #F22
+		"1 -1 4 0 -1 3" : ['R', 'Ui', 'Ri'], #F29
+		"1 1 4 1 0 2"   : ['R', 'Ui', 'Ri'], #F30
+		"1 1 4 0 -1 3"  : [], #F31
+		"1 -1 5 0 1 3"  : ['R', 'U2', 'Ri'], #F37
+		"-1 1 5 0 1 3"  : [], #F38
+		"1 -1 5 0 -1 2" : ['R', 'U2', 'Ri'], #F39
+		"1 -1 5 -1 0 3" : ['R', 'U', 'Ri'], #F40
+		"1 -1 5 -1 0 2" : ['R', 'Ui', 'Ri'] #F41
+	}, 
+	'left-handed': {
+		"-1 1 3 -1 0 2" : ['Li', 'U2', 'L'], #F16
+		"-1 1 3 -1 0 3" : ['Li', 'U', 'L', 'd', 'R', 'U', 'Ri'], #F17
+		"1 1 3 -1 0 2"  : ['Li', 'U2', 'L'], #F18
+		"1 -1 3 -1 0 2" : ['Li', 'Ui', 'L'], #F23
+		"1 1 4 0 1 2"   : [], #F25
+		"-1 -1 4 0 -1 3": ['Li', 'U2', 'L'], #F26
+		"-1 -1 4 1 0 2" : ['Li', 'Ui', 'L'], #F27
+		"-1 -1 4 1 0 3" : ['Li', 'U', 'L'], #F28
+		"-1 -1 4 0 1 2" : ['Li', 'U2', 'L'], #F32
+		"-1 -1 5 0 -1 2": ['Li', 'U', 'L'], #F34
+		"-1 1 5 -1 0 3" : ['Li', 'U', 'L'], #F35
+		"-1 1 5 0 -1 2" : [] #F36
+	}
+}
+
+def bothslotfree(cube, colors):
+	empties = empty_slots(cube)
+	flag = False
+	for cube_rotation in ["", "y", "yi", "y2"]:
+		rotatedcube = eval(cube_rotation + "(cube)")
+		if set([rotatedcube[0][1][1], rotatedcube[2][1][1]]) in empties:
+			for U_rotation in ["", "U", "Ui", "U2"]:
+				Urotatedcube = eval(U_rotation + "(rotatedcube)")
+				data = get_pair(Urotatedcube, colors)
+				keydata = list(data['corner']['3dpos'][::2]) + [data['corner']['orientation']] + list(data['edge']['3dpos'][::2]) + [data['edge']['orientation']]
+				alg = _bothslotfree['left-handed'].get(' '.join(map(lambda x:str(x), keydata)))
+				if alg != None:
+					result = cube_rotation.split() + U_rotation.split() + alg
+					flag = True
+					break
+		if set([rotatedcube[2][1][1], rotatedcube[4][1][1]]) in empties:
+			for U_rotation in ["", "U", "Ui", "U2"]:
+				Urotatedcube = eval(U_rotation + "(rotatedcube)")
+				data = get_pair(Urotatedcube, colors)
+				keydata = list(data['corner']['3dpos'][::2]) + [data['corner']['orientation']] + list(data['edge']['3dpos'][::2]) + [data['edge']['orientation']]
+				alg = _bothslotfree['right-handed'].get(' '.join(map(lambda x:str(x), keydata)))
+				if alg != None:
+					result = cube_rotation.split() + U_rotation.split() + alg
+					flag = True
+					break
+		if flag: break
+	result += solve_combined(sequence(result, cube), colors)
+	return result
+
+_eslotfree = {
+	'right-handed': {
+		"0 -1 0 2" : ['R', 'Ui', 'Ri'], #F02
+		"1 1 0 3"  : ['R', 'Ui', 'Ri'], #F10
+		"2 1 0 3"  : ['R', 'U', 'Ri'] #F14
+	}, 
+	'left-handed': {
+		"0 1 0 3"  : ['Li', 'U', 'L'], #F03
+		"1 -1 0 2" : ['Li', 'Ui', 'L'], #F09
+		"2 -1 0 2" : ['Li', 'U', 'L'] #F13
+	}
+}
+
+def eslotfree(cube, colors):
+	_data = get_pair(cube, colors)
+	slot = _data['corner']['slot']
+	flag = False
+	for cube_rotation in ["", "y", "yi", "y2"]:
+		rotatedcube = eval(cube_rotation + "(cube)")
+		for U_rotation in ["", "U", "Ui", "U2"]:
+			Urotatedcube = eval(U_rotation + "(rotatedcube)")
+			data = get_pair(Urotatedcube, colors)
+			if set([rotatedcube[0][1][1], rotatedcube[2][1][1]]) == slot:
+				keydata = [data['corner']['orientation']] + list(data['edge']['3dpos'][::2]) + [data['edge']['orientation']]
+				alg = _eslotfree['left-handed'].get(' '.join(map(lambda x:str(x), keydata)))
+				if alg:
+					result = cube_rotation.split() + U_rotation.split() + alg
+					flag = True
+					break
+			elif set([rotatedcube[2][1][1], rotatedcube[4][1][1]]) == slot:
+				keydata = [data['corner']['orientation']] + list(data['edge']['3dpos'][::2]) + [data['edge']['orientation']]
+				alg = _eslotfree['right-handed'].get(' '.join(map(lambda x:str(x), keydata)))
+				if alg:
+					result = cube_rotation.split() + U_rotation.split() + alg
+					flag = True
+					break
+		if flag: break
+	result += solve_combined(sequence(result, cube), colors)
+	return result
+
+_cslotfree = {
+	'right-handed': {
+		"0 1 -1 3"  : ['R', 'U', 'Ri', 'Ui', 'R', 'U', 'Ri'], #F04
+		"0 1 -1 5"  : ['R', 'Ui', 'Ri'], #F06
+		"1 1 1 3"   : ['R', 'Ui', 'Ri'], #F15
+		"1 1 -1 5"  : ['R', 'U', 'Ri'] #F33
+	}, 
+	'left-handed' : {
+		"0 -1 -1 4" : ['Li', 'U', 'L'], #F05
+		"1 -1 -1 4" : ['Li', 'Ui', 'L'] #F24
+	}
+}
+
+def cslotfree(cube, colors):
+	_data = get_pair(cube, colors)
+	slot = _data['edge']['slot']
+	flag = False
+	for cube_rotation in ["", "y", "yi", "y2"]:
+		rotatedcube = eval(cube_rotation + "(cube)")
+		for U_rotation in ["", "U", "Ui", "U2"]:
+			Urotatedcube = eval(U_rotation + "(rotatedcube)")
+			data = get_pair(Urotatedcube, colors)
+			if set([rotatedcube[0][1][1], rotatedcube[2][1][1]]) == slot:
+				keydata = [data['edge']['orientation']] + list(data['corner']['3dpos'][::2]) + [data['corner']['orientation']]
+				alg = _cslotfree['left-handed'].get(' '.join(map(lambda x:str(x), keydata)))
+				if alg:
+					result = cube_rotation.split() + U_rotation.split() + alg
+					flag = True
+					break
+			elif set([rotatedcube[2][1][1], rotatedcube[4][1][1]]) == slot:
+				keydata = [data['edge']['orientation']] + list(data['corner']['3dpos'][::2]) + [data['corner']['orientation']]
+				alg = _cslotfree['right-handed'].get(' '.join(map(lambda x:str(x), keydata)))
+				if alg:
+					result = cube_rotation.split() + U_rotation.split() + alg
+					flag = True
+					break
+		if flag: break
+	result += solve_combined(sequence(result, cube), colors)
+	return result
+
+def solve_f2l_pair(cube, colors):
+	_type = recog_type(cube, colors)
+	return eval(_type.lower() + "(cube, colors)")

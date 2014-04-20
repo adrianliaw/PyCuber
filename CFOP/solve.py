@@ -11,6 +11,7 @@ from pll_recog import *
 from oll import *
 from oll_recog import *
 from cross import *
+from f2l import *
 from sps import *
 from color_converter import color_convert as cc
 
@@ -41,7 +42,7 @@ def look_around(cube, goal, f):
 				cr_notation = [cube_rotate.__name__] if cube_rotate else []
 				uo_notation = [U_orient.__name__] if U_orient else []
 				algo = f.__doc__.replace("\n\t", "", 2).replace("'", "i", 1000).split()
-				return cr_notation + uo_notation + algo, f(new)
+				return cr_notation + uo_notation + algo
 
 def is_solved_cube(cube):
 	"""
@@ -116,6 +117,16 @@ def solve_cross(c):
     """
     return path_actions(a_star_search(fetch_edges(c), cross_successors, cross_state_value, cross_goal))
 
+def solve_f2l(cube):
+	result = []
+	c = [[[z for z in y] for y in x] for x in cube]
+	for i in range(4):
+		_ord = order(c)
+		pair = _ord[i]
+		alg = solve_f2l_pair(c, pair)
+		result += alg
+		c = sequence(alg, c)
+	return result
 
 def solve_oll(c):
 	"""
@@ -150,3 +161,20 @@ def solve_ll(cube):
 		return oll_solved[0] + pll_solved[0]
 	except:
 		raise Exception("Wrong in the solving.")
+
+def solve_cube(cube):
+	_cube = [[[z for z in y] for y in x] for x in cube]
+	result = []
+	C = solve_cross(_cube)
+	result += C
+	_cube = sequence(C, _cube)
+	F = solve_f2l(_cube)
+	result += F
+	_cube = sequence(F, _cube)
+	O = solve_oll(_cube)
+	result += O
+	_cube = sequence(O, _cube)
+	P = solve_pll(_cube)
+	result += P
+	_cube = sequence(P, _cube)
+	return result
