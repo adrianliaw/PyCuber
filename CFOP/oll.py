@@ -122,7 +122,7 @@ def O18(c):
 
 def O19(c):
 	"""
-	r' R U R U R' U' r x R2 U R U'
+	r' R U R U R' U' r x R2 U R U' x'
 	"""
 	return sequence("ri R U R U Ri Ui r x R2 U R Ui xi", c)
 

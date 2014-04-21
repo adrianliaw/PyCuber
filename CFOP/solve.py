@@ -135,7 +135,7 @@ def solve_oll(c):
 	if is_solved_f2l(c):
 		for i in range(58):
 			result = eval("look_around(%s, O%02d_recog, O%02d)" % (str(c), i, i))
-			if result: return result
+			if result != None: return result
 		raise ValueError("Not a solvable OLL case.")
 	raise ValueError("Non-solved F2L.")
 
@@ -147,7 +147,7 @@ def solve_pll(cube):
 		raise ValueError("Non-solved OLL or F2L")
 	for p in ["None", "Aa", "Ab", "E", "Ua", "Ub", "H", "Z", "Ja", "Jb", "T", "Ra", "Rb", "F", "V", "Na", "Nb", "Y", "Ga", "Gb", "Gc", "Gd"]:
 		result = eval("look_around(%s, %s_recog, %s_perm)" % (str(cube), p, p))
-		if result:
+		if result != None:
 			return result
 	raise ValueError("Not a solvable pll case.")
 
@@ -178,3 +178,145 @@ def solve_cube(cube):
 	result += P
 	_cube = sequence(P, _cube)
 	return result
+
+wide_action = {
+	"l":["R", "xi"], 
+	"r":["L", "x"], 
+	"u":["D", "y"], 
+	"d":["U", "yi"], 
+	"f":["B", "z"], 
+	"b":["F", "zi"], 
+	"M":["R", "Li", "xi"], 
+	"S":["Fi", "B", "z"], 
+	"E":["U", "Di", "yi"]
+}
+
+def optimize_wide_action(alg):
+	result = []
+	for act in alg:
+		if act[0] in "lrudfbMSE":
+			new_action = wide_action[act[0]][:]
+			for i in range(len(new_action)):
+				if not act[1:]:
+					pass
+				elif act[1] == "i":
+					if len(new_action[i]) == 2:
+						new_action[i] = new_action[i][0]
+					elif len(new_action[i]) == 1:
+						new_action[i] += "i"
+				elif act[1] == "2":
+					new_action[i] = new_action[i][0] + "2"
+			result += new_action
+		else:
+			result.append(act)
+	return result
+
+rotationless = {
+	"x": {
+		"U":"F", 
+		"D":"B", 
+		"R":"R", 
+		"L":"L", 
+		"F":"D", 
+		"B":"U"
+	}, 
+	"y": {
+		"U":"U", 
+		"D":"D", 
+		"F":"R", 
+		"B":"L", 
+		"R":"B", 
+		"L":"F"
+	}, 
+	"z": {
+		"U":"L", 
+		"D":"R", 
+		"F":"F", 
+		"B":"B", 
+		"R":"U", 
+		"L":"D"
+	}
+}
+
+def optimize_rotationless(alg):
+	result = []
+	for i in range(len(alg)-1, -1, -1):
+		if alg[i][0] in "xyz":
+			for q in range(len(result)):
+				if not alg[i][1:]:
+					result[q] = rotationless[alg[i]][result[q][0]] + result[q][1:]
+				elif alg[i][1:] == "i":
+					for (key, value) in rotationless[alg[i][0]].items():
+						if value == result[q][0]:
+							result[q] = key + result[q][1:]
+							break
+				elif alg[i][1:] == "2":
+					result[q] = rotationless[alg[i][0]][rotationless[alg[i][0]][result[q][0]]] + result[q][1:]
+		else:
+			result.append(alg[i])
+	result.reverse()
+	return result
+
+def optimize_same_side(alg):
+	result = []
+	last_move = " "
+	before2_move = " "
+	opposite = {'L':'R', 'U':'D', 'F':'B', 'D':'U', 'R':'L', 'B':'F'}
+	for i in range(len(alg)):
+		if alg[i][0] == last_move[0]:
+			val = 0
+			for act in (alg[i], last_move):
+				if not act[1:]:
+					val += 1
+				elif act[1:] == "i":
+					val += 3
+				else:
+					val += 2
+			if val % 4 == 0:
+				del result[-1]
+				if result:
+					last_move = result[-1]
+			elif val % 4 == 1:
+				result[-1] = result[-1][0]
+				last_move = result[-1]
+			elif val % 4 == 2:
+				result[-1] = result[-1][0] + "2"
+				last_move = result[-1]
+			else:
+				result[-1] = result[-1][0] + "i"
+				last_move = result[-1]
+		elif alg[i][0] == before2_move[0] and alg[i][0] == opposite[last_move[0]]:
+			val = 0
+			for act in (alg[i], before2_move):
+				if not act[1:]:
+					val += 1
+				elif act[1:] == "i":
+					val += 3
+				else:
+					val += 2
+			if val % 4 == 0:
+				del result[-2]
+				if len(result) == 1:
+					last_move = result[-1]
+					before2_move = " "
+				else:
+					last_move, before2_move = result[-1], result[-2]
+			elif val % 4 == 1:
+				result[-2] = result[-2][0]
+				before2_move = result[-2]
+			elif val % 4 == 2:
+				result[-2] = result[-2][0] + "2"
+				before2_move = result[-2]
+			else:
+				result[-2] = result[-2][0] + "i"
+				before2_move = result[-2]
+		else:
+			result.append(alg[i])
+			last_move, before2_move = result[-1], last_move
+	return result
+
+def optimize(alg):
+	return optimize_same_side(optimize_rotationless(optimize_wide_action(alg)))
+
+def full_solve(cube):
+	return optimize(solve_cube(cube))
