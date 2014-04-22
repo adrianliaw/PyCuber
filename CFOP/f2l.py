@@ -4,6 +4,8 @@ This is the module for solving the F2L.
 
 import _import
 from cube import *
+
+
 def get_3d_pos(poses):
 	"""
 	Get the cubie position in 3D.
@@ -220,6 +222,16 @@ def solve_combined(cube, colors):
 				continue
 
 def recog_type(cube, colors):
+	"""
+	Recognize 7 types of F2L pair:
+	1. DIFSLOT, edge and corner are in diffrent slots.
+	2. SOLVED, the piar is solved.
+	3. WRONGSLOT, the pair is combined and solved, but not in the correct slot.
+	4. WRONGORIENT, both edge and corner are in the same slot, but have incorrect orientation.
+	5. BOTHSLOTFREE, both edge and corner are slot-free.
+	6. ESLOTFREE, only edge is slot-free.
+	7. CSLOTFREE, only corner is slot-free.
+	"""
 	data = get_pair(cube, colors)
 	if data['corner']['slot'] != data['edge']['slot'] and None not in (data['corner']['slot'], data['edge']['slot']):
 		return "DIFSLOT"
@@ -237,10 +249,16 @@ def recog_type(cube, colors):
 		return "CSLOTFREE"
 
 def order(cube):
-	p = {"SOLVED":7, "WRONGSLOT":6, "BOTHSLOTFREE":5, "CSLOTFREE":4, "ESLOTFREE":3, "WRONGORIENT":2, "DIFSLOT":1}
+	"""
+	Order four F2L pairs to decide which pair gonna solve first.
+	"""
+	p = {"SOLVED":7, "WRONGSLOT":6, "ESLOTFREE":5, "CSLOTFREE":4, "BOTHSLOTFREE":3, "WRONGORIENT":2, "DIFSLOT":1}
 	return sorted([set([cube[0][1][1], cube[2][1][1]]), set([cube[2][1][1], cube[4][1][1]]), set([cube[4][1][1], cube[5][1][1]]), set([cube[5][1][1], cube[0][1][1]])], key=lambda x:p[recog_type(cube, x)], reverse=True)
 
 def empty_slots(cube):
+	"""
+	Returns a list of empty slots.
+	"""
 	slots = []
 	for (face1, face2) in [(0, 2), (2, 4), (4, 5), (5, 0)]:
 		slot = set([cube[face1][1][1], cube[face2][1][1]])
@@ -250,6 +268,11 @@ def empty_slots(cube):
 	return slots
 
 def difslot(cube, colors):
+	"""
+	Solve the pair that is in diffrent slots, 
+	the way to do this is to pick up one of the edge and the corner, 
+	and then solve it by "ESLOTFREE" or "CSLOTFREE".
+	"""
 	data = get_pair(cube, colors)
 	if data['edge']['slot'] == colors:
 		for cube_rotation in ["", "y", "yi", "y2"]:
@@ -266,9 +289,17 @@ def difslot(cube, colors):
 				result += eslotfree(sequence(result, cube), colors)
 				return result
 
+
+"""
+solved(cube, colors), nothing to solve, but is one of the cases.
+"""
 solved = lambda x, y: []
 
 def wrongslot(cube, colors):
+	"""
+	Solve the F2L pair which is solved but in the incorrect slot, 
+	the way to do this is to take the pair out of slot and put it into the correct slot.
+	"""
 	data = get_pair(cube, colors)
 	for cube_rotation in ["", "y", "yi", "y2"]:
 		rotatedcube = eval(cube_rotation + "(cube)")
@@ -290,6 +321,11 @@ _wrongorient = {
 }
 
 def wrongorient(cube, colors):
+	"""
+	Solve the F2L pair that both of the edge and the corner are in the same slot, 
+	but have the incorrect orientation, 
+	_wrongorient has all these cases and algorithms.
+	"""
 	data = get_pair(cube, colors)
 	slot = data['corner']['slot']
 	for cube_rotation in ["", "y", "yi", "y2"]:
@@ -339,6 +375,10 @@ _bothslotfree = {
 }
 
 def bothslotfree(cube, colors):
+	"""
+	Solve the F2L pair that both edge and corner are slot-free, 
+	_bothslotfree has all these cases and algorithms.
+	"""
 	empties = empty_slots(cube)
 	flag = False
 	for cube_rotation in ["", "y", "yi", "y2"]:
@@ -381,6 +421,10 @@ _eslotfree = {
 }
 
 def eslotfree(cube, colors):
+	"""
+	Solve the F2L pair which only the edge is slot-free, 
+	_eslotfree has all these cases and algorithms.
+	"""
 	_data = get_pair(cube, colors)
 	slot = _data['corner']['slot']
 	flag = False
@@ -421,6 +465,10 @@ _cslotfree = {
 }
 
 def cslotfree(cube, colors):
+	"""
+	Solve the F2L pair which only the corner is slot-free, 
+	_cslotfree has all these cases and algorithms.
+	"""
 	_data = get_pair(cube, colors)
 	slot = _data['edge']['slot']
 	flag = False
@@ -448,5 +496,8 @@ def cslotfree(cube, colors):
 	return result
 
 def solve_f2l_pair(cube, colors):
+	"""
+	Given the cube and the colors of the pair, to solve a F2L pair.
+	"""
 	_type = recog_type(cube, colors)
 	return eval(_type.lower() + "(cube, colors)")

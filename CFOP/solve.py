@@ -151,18 +151,10 @@ def solve_pll(cube):
 			return result
 	raise ValueError("Not a solvable pll case.")
 
-def solve_ll(cube):
-	"""
-	Solve the last layer, which is OLL and PLL.
-	"""
-	try:
-		oll_solved = solve_oll(cube)
-		pll_solved = solve_pll(oll_solved[1])
-		return oll_solved[0] + pll_solved[0]
-	except:
-		raise Exception("Wrong in the solving.")
-
 def solve_cube(cube):
+	"""
+	Solve the scrambled cube by CFOP method.
+	"""
 	_cube = [[[z for z in y] for y in x] for x in cube]
 	result = []
 	C = solve_cross(_cube)
@@ -192,6 +184,10 @@ wide_action = {
 }
 
 def optimize_wide_action(alg):
+	"""
+	Optimize the wide action (lowercase letter action) and middle layer action 
+	into single layer and cube rotation.
+	"""
 	result = []
 	for act in alg:
 		if act[0] in "lrudfbMSE":
@@ -239,6 +235,9 @@ rotationless = {
 }
 
 def optimize_rotationless(alg):
+	"""
+	Make the solving rotationless, so in the full solve we won't see any x, y, or z.
+	"""
 	result = []
 	for i in range(len(alg)-1, -1, -1):
 		if alg[i][0] in "xyz":
@@ -258,6 +257,10 @@ def optimize_rotationless(alg):
 	return result
 
 def optimize_same_side(alg):
+	"""
+	Optimize the repeated action, 
+	ex: ["R", "R2", "U", "Di", "U"] => ["Ri", "U2", "Di"]
+	"""
 	result = []
 	last_move = " "
 	before2_move = " "
@@ -316,7 +319,42 @@ def optimize_same_side(alg):
 	return result
 
 def optimize(alg):
+	"""
+	Optimize the algorithm, including three steps.
+	"""
 	return optimize_same_side(optimize_rotationless(optimize_wide_action(alg)))
 
 def full_solve(cube):
+	"""
+	The optimized CFOP solution.
+	"""
 	return optimize(solve_cube(cube))
+
+def structured_solving(cube):
+	"""
+	Solve a cube and returns a dictionary, 
+	{"C" : [ cross solving ], 
+	 "F" : [ { "colors" : [ color1, color2 ] , "solve" : [ pair solving ] }... ], 
+	 "O" : [ OLL solving ], 
+	 "P" : [ PLL solving ]}
+	"""
+	_cube = [[[z for z in y] for y in x] for x in cube]
+	solving = {}
+	C = solve_cross(_cube)
+	_cube = sequence(C, _cube)
+	solving["C"] = C
+	solving["F"] = []
+	for i in range(4):
+		solving["F"].append({})
+		_ord = order(c)
+		pair = _ord[i]
+		solving["F"][i]["colors"] = list(pair)
+		alg = solve_f2l_pair(_cube, pair)
+		solving["F"][i]["solve"] = alg
+		_cube = sequence(alg, _cube)
+	O = solve_oll(_cube)
+	_cube = sequence(O, _cube)
+	solving["O"] = O
+	P = solve_pll(_cube)
+	solving["P"] = P
+	return solving
