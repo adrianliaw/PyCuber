@@ -13,7 +13,6 @@ from oll_recog import *
 from cross import *
 from f2l import *
 from sps import *
-from color_converter import color_convert as cc
 
 def look_around(cube, goal, f):
 	"""
@@ -346,7 +345,7 @@ def structured_solving(cube):
 	solving["F"] = []
 	for i in range(4):
 		solving["F"].append({})
-		_ord = order(c)
+		_ord = order(_cube)
 		pair = _ord[i]
 		solving["F"][i]["colors"] = list(pair)
 		alg = solve_f2l_pair(_cube, pair)
@@ -358,3 +357,41 @@ def structured_solving(cube):
 	P = solve_pll(_cube)
 	solving["P"] = P
 	return solving
+
+def scramble_and_solve(structure=False):
+	"""
+	This function is for testing and look prettier, scramble and solving are in this function.
+	"""
+	a = scramble()
+	print "SCRAMBLE:", a.replace("i", "'", 25)
+	print
+	if structure:
+		s = structured_solving(sequence(a, initial_cube()))
+		print "CROSS:   ", ' '.join(s["C"]).replace("i", "'", 10)
+		for i in range(4):
+			print "F2L#%d:   " % (i+1), ' '.join(s["F"][i]["solve"]).replace("i", "'", 10)
+		print "OLL:     ", ' '.join(s["O"]).replace("i", "'", 20)
+		print "PLL:     ", ' '.join(s["P"]).replace("i", "'", 20)
+	else:
+		s = full_solve(sequence(a, initial_cube()))
+		print "SOLVE:   ", ' '.join(s[:36]).replace("i", "'", 40)
+		print "         ", ' '.join(s[36:]).replace("i", "'", 40)
+
+def input_and_solve(cube, structure=False):
+	"""
+	This function is for testing and look prettier, only includes solving, this cube is the perameter.
+	"""
+	if type(cube) == str:
+		from color_converter import color_convert as cc
+		cube = cc(cube)
+	if structure:
+		s = structured_solving(cube)
+		print "CROSS:   ", ' '.join(s["C"]).replace("i", "'", 10)
+		for i in range(4):
+			print "F2L#%d:   " % (i+1), ' '.join(s["F"][i]["solve"]).replace("i", "'", 10)
+		print "OLL:     ", ' '.join(s["O"]).replace("i", "'", 20)
+		print "PLL:     ", ' '.join(s["P"]).replace("i", "'", 20)
+	else:
+		s = full_solve(cube)
+		print "SOLVE:   ", ' '.join(s[:36]).replace("i", "'", 40)
+		print "         ", ' '.join(s[36:]).replace("i", "'", 40)
