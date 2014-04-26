@@ -1,6 +1,6 @@
-import webapp2
+from handler import *
 
-class MainHandler(webapp2.RequestHandler):
+class MainHandler(Handler):
     def get(self):
         self.response.write('Hello world!')
 

@@ -107,7 +107,7 @@ def scramble():
 		act = random.choice(last_act_removed)
 		last_move, before2_move = act, last_move
 		shuffled.append(act)
-	return ' '.join(shuffled)
+	return shuffled
 
 
 def solve_cross(c):
@@ -362,7 +362,7 @@ def scramble_and_solve(structure=False):
 	"""
 	This function is for testing and look prettier, scramble and solving are in this function.
 	"""
-	a = scramble()
+	a = ' '.join(scramble())
 	print "SCRAMBLE:", a.replace("i", "'", 25)
 	print
 	if structure:
