@@ -6,13 +6,13 @@ Every step of solving the cube are in this module.
 
 import _import
 from cube import *
+from sps import *
 from pll import *
 from pll_recog import *
 from oll import *
 from oll_recog import *
 from cross import *
 from f2l import *
-from sps import *
 
 def look_around(cube, goal, f):
 	"""
@@ -382,8 +382,8 @@ def input_and_solve(cube, structure=False):
 	This function is for testing and look prettier, only includes solving, this cube is the perameter.
 	"""
 	if type(cube) == str:
-		from color_converter import color_convert as cc
-		cube = cc(cube)
+		from color_converter import color_convert
+		cube = color_convert(cube)
 	if structure:
 		s = structured_solving(cube)
 		print "CROSS:   ", ' '.join(s["C"]).replace("i", "'", 10)

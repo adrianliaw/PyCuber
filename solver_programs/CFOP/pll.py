@@ -8,7 +8,6 @@ Algorithms from: http://www.cubewhiz.com/pll.php
 import _import
 from cube import *
 
-
 def Aa_perm(c):
 	"""
 	x R' U R' D2 R U' R' D2 R2

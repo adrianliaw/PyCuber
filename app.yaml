@@ -1,4 +1,4 @@
-application: cube-solver
+application: cuberzsolverz
 version: 1
 runtime: python27
 api_version: 1
@@ -14,6 +14,9 @@ handlers:
 
 - url: /solver
   static_dir: solver_programs
+
+- url: /CFOPsolve
+  script: cfopsolver.app
 
 - url: .*
   script: main.app

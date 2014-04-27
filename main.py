@@ -2,7 +2,7 @@ from handler import *
 
 class MainHandler(Handler):
     def get(self):
-        self.response.write('Hello world!')
+        self.render("main.html")
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)

@@ -5,7 +5,6 @@ This is the module for solving the F2L.
 import _import
 from cube import *
 
-
 def get_3d_pos(poses):
 	"""
 	Get the cubie position in 3D.
