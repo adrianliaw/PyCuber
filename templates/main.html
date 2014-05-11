@@ -1,57 +1,34 @@
 <html>
 	<head>
 		<title>Rubik's Cube Solver!</title>
-		<script type="text/javascript" src="/lib/xhrRequest.js"></script>
+		<!--<script type="text/javascript" src="/lib/xhrRequest.js"></script>-->
 		<script type="text/javascript" src="/lib/three.js"></script>
+		<!--<script type="text/javascript" src="/statics/requestAnimFrame.js"></script>-->
+		<script type="text/javascript" src="/lib/OrbitAndPanControls.js"></script>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
 	</head>
 	<body>
-		<div id="scramble">Scramble: </div>
+		<!--<font size="6">
+		<pre id="scramble">Scramble: </pre>
 		<br><br>
-		<div id="full_solve">Solve:    </div>
+		<pre id="full_solve">Solve:    </pre>
 		<br><br>
-		<div id="cross">Cross:    </div>
+		<pre id="cross">Cross:    </pre>
 		<br>
-		<div id="f2l1">F2L#1:    </div>
+		<pre id="f2l1">F2L#1:    </pre>
 		<br>
-		<div id="f2l2">F2L#2:    </div>
+		<pre id="f2l2">F2L#2:    </pre>
 		<br>
-		<div id="f2l3">F2L#3:    </div>
+		<pre id="f2l3">F2L#3:    </pre>
 		<br>
-		<div id="f2l4">F2L#4:    </div>
+		<pre id="f2l4">F2L#4:    </pre>
 		<br>
-		<div id="oll">OLL:      </div>
+		<pre id="oll">OLL:      </pre>
 		<br>
-		<div id="pll">PLL:      </div>
-		<script type="text/javascript">
-var j = xhrRequests.JsonRequest("/CFOPsolve");
-var a, b;
-a = j.scramble;
-b = document.getElementById("scramble");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.full_solve;
-b = document.getElementById("full_solve");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.C;
-b = document.getElementById("cross");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.F[0].solve;
-b = document.getElementById("f2l1");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.F[1].solve;
-b = document.getElementById("f2l2");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.F[2].solve;
-b = document.getElementById("f2l3");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.F[3].solve;
-b = document.getElementById("f2l4");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.O;
-b = document.getElementById("oll");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.P;
-b = document.getElementById("pll");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-		</script>
+		<pre id="pll">PLL:      </pre>
+		</font>-->
+		<div id="bg"></div>
+		<div id="anim"></div>
+		<script type="text/javascript" src="/statics/cfop.js"></script>
 	</body>
 </html>
