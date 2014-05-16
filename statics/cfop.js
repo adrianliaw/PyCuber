@@ -1,4 +1,4 @@
-var j, renderer, camera, scene, bgcanvas, light, cube, material, controls;
+var j, renderer, camera, scene, bgcanvas, light, cube, material, controls, obj;
 
 
 init();
@@ -22,24 +22,36 @@ function init() {
 	renderer = new THREE.WebGLRenderer({antialias:true});
 	renderer.setSize(s.width, s.height);
 	document.getElementById("anim").appendChild(renderer.domElement);
-	camera = new THREE.PerspectiveCamera();
+	camera = new THREE.PerspectiveCamera(45, 5/3);
 	camera.position.set(7, 7, 7);
-	camera.lookAt(new THREE.Vector3(0, 0, 0));
 	scene.add(camera);
 	window.addEventListener('resize', function() {
 		var s = size();
 		renderer.setSize(s.width, s.height);
-		camera.aspect = s.width/s.height;
+		camera.aspect = s.width / s.height;
 		camera.updateProjectionMatrix();
 	});
-	renderer.setClearColor(0x333F47, 0.5);
-	light = new THREE.AmbientLight(0xFFFFFF);
-	light.position.set(100,1000,100);
+	renderer.setClearColor(0xFFFFFF, 0.5);
+	light = new THREE.AmbientLight(0x222222);
 	scene.add(light);
-	cube = new THREE.BoxGeometry(1, 2, 1, 1, 1, 1);
+	light = new THREE.DirectionalLight(0xFFFFFF, 0.7);
+	light.position.set(200, 500, 500);
+	scene.add(light);
+	light = new THREE.DirectionalLight(0xFFFFFF, 0.9);
+	light.position.set(-200, -100, -400);
+	scene.add(light);
+	obj = new THREE.Object3D();
+	cube = new THREE.BoxGeometry(1, 1, 1, 1, 1, 1);
 	material = new THREE.MeshLambertMaterial({color: 0x55B663});
-	scene.add(new THREE.Mesh(cube, material));
+	cube = new THREE.Mesh(cube, material);
+	cube.position.set(10, 0, 0);
+	obj.add(cube);
+	scene.add(obj);
 	controls = new THREE.OrbitAndPanControls(camera, renderer.domElement);
+	Coordinates.drawGrid({orientation: "y"});
+	Coordinates.drawGrid({orientation: "z"});
+	Coordinates.drawGrid();
+	Coordinates.drawAllAxes();
 }
 
 function animate() {
@@ -54,34 +66,3 @@ function animate() {
 
 
 
-/*j.open("GET", "/CFOPsolve", false);
-j.send();
-j = JSON.parse(j.responseText);*/
-/*var a, b;
-a = j.scramble;
-b = document.getElementById("scramble");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.full_solve;
-b = document.getElementById("full_solve");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.C;
-b = document.getElementById("cross");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.F[0].solve;
-b = document.getElementById("f2l1");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.F[1].solve;
-b = document.getElementById("f2l2");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.F[2].solve;
-b = document.getElementById("f2l3");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.F[3].solve;
-b = document.getElementById("f2l4");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.O;
-b = document.getElementById("oll");
-b.innerText += a.join(" ").replace(/i/gi, "'");
-a = j.structure.P;
-b = document.getElementById("pll");
-b.innerText += a.join(" ").replace(/i/gi, "'");*/
