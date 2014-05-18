@@ -22,7 +22,7 @@ handlers:
   static_dir: solver_programs
 
 - url: /CFOPsolve
-  script: cfopsolver.app
+  script: CFOPjson.app
 
 - url: .*
   script: main.app

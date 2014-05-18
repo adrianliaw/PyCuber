@@ -372,6 +372,10 @@ def scramble_and_solve(structure=False):
 			print "F2L#%d:   " % (i+1), ' '.join(s["F"][i]["solve"]).replace("i", "'", 10)
 		print "OLL:     ", ' '.join(s["O"]).replace("i", "'", 20)
 		print "PLL:     ", ' '.join(s["P"]).replace("i", "'", 20)
+		s = full_solve(sequence(a, initial_cube()))
+		print
+		print "FULL:    ", ' '.join(s[:36]).replace("i", "'", 40)
+		print "         ", ' '.join(s[36:]).replace("i", "'", 40)
 	else:
 		s = full_solve(sequence(a, initial_cube()))
 		print "SOLVE:   ", ' '.join(s[:36]).replace("i", "'", 40)
@@ -391,7 +395,15 @@ def input_and_solve(cube, structure=False):
 			print "F2L#%d:   " % (i+1), ' '.join(s["F"][i]["solve"]).replace("i", "'", 10)
 		print "OLL:     ", ' '.join(s["O"]).replace("i", "'", 20)
 		print "PLL:     ", ' '.join(s["P"]).replace("i", "'", 20)
+		s = full_solve(cube)
+		print
+		print "FULL:    ", ' '.join(s[:36]).replace("i", "'", 40)
+		print "         ", ' '.join(s[36:]).replace("i", "'", 40)
 	else:
 		s = full_solve(cube)
 		print "SOLVE:   ", ' '.join(s[:36]).replace("i", "'", 40)
 		print "         ", ' '.join(s[36:]).replace("i", "'", 40)
+
+if __name__ == "__main__":
+	scramble_and_solve(True)
+	import this
