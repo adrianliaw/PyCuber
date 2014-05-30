@@ -1,4 +1,4 @@
-var j, renderer, camera, scene, bgcanvas, light, cube, material, controls, obj, clock;
+var j, renderer, camera, scene, bgcanvas, light, cube, material, mesh, controls, obj, clock;
 var onMovement = false;
 
 
@@ -13,21 +13,42 @@ function size() {
 
 
 function rotateAroundWorldAxis(object, axis, angle) {
-	object.lookAt(new THREE.Vector3());
-	var dis = object.position.distanceTo(new THREE.Vector3());
 	if (axis == "x") {
+		var dis = object.position.distanceTo(new THREE.Vector3(object.position.x, 0, 0));
+		object.rotation.x = angle;
 		object.position.y = dis * Math.sin(angle);
 		object.position.z = dis * Math.cos(angle);
 	} else if (axis == "y") {
-		object.position.x = dis * Math.cos(angle);
-		object.position.z = dis * Math.sin(angle);
+		var dis = object.position.distanceTo(new THREE.Vector3(0, object.position.y, 0));
+		object.rotation.y = -angle;
+		object.position.x = dis * Math.cos(angle);//Math.cos(Math.abs(object.rotation.y));
+		object.position.z = dis * Math.sin(angle);//Math.sin(Math.abs(object.rotation.y));
 	} else {
+		var dis = object.position.distanceTo(new THREE.Vector3(0, 0, object.position.z));
+		object.rotation.z = -angle;
 		object.position.x = dis * Math.sin(angle);
 		object.position.y = dis * Math.cos(angle);
 	}
-	/*var aux = axis.clone();
-	var angleVector = new THREE.Vector3(angle, angle, angle);
-	object.rotation.addVectors(object.rotation, )*/
+}
+
+
+var rubixCube = {};
+
+function createCubie(v) {
+	cube = new THREE.CubeGeometry(0.95, 0.95, 0.95);
+	material = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
+	mesh = new THREE.Mesh(cube, material);
+	mesh.position = v;
+	rubixCube[v.x + " " + v.y + " " + v.z] = mesh;
+	return mesh;
+}
+
+function U() {
+	for (var x=-1; x<=1; x++) {
+		for (var z=-1; z<=1; z++) {
+			rotateAroundWorldAxis(rubixCube[x + " " + 1 + " " + z], "y", clock.getDelta());
+		}
+	}
 }
 
 function init() {
@@ -40,7 +61,7 @@ function init() {
 	renderer.setSize(s.width, s.height);
 	document.getElementById("anim").appendChild(renderer.domElement);
 	camera = new THREE.PerspectiveCamera(45, 5/3);
-	camera.position.set(20, 20, 20);
+	camera.position.set(5, 10, 0);
 	scene.add(camera);
 	window.addEventListener('resize', function() {
 		var s = size();
@@ -48,7 +69,7 @@ function init() {
 		camera.aspect = s.width / s.height;
 		camera.updateProjectionMatrix();
 	});
-	renderer.setClearColor(0xFFFFFF, 0.5);
+	//renderer.setClearColor(0xFFFFFF, 0.5);
 	light = new THREE.AmbientLight(0x222222);
 	scene.add(light);
 	light = new THREE.DirectionalLight(0xFFFFFF, 0.7);
@@ -57,14 +78,15 @@ function init() {
 	light = new THREE.DirectionalLight(0xFFFFFF, 0.9);
 	light.position.set(-200, -100, -400);
 	scene.add(light);
-	cube = new THREE.BoxGeometry(1, 1, 1, 1, 1, 1);
-	material = new THREE.MeshLambertMaterial({color: 0x55B663});
-	cube = new THREE.Mesh(cube, material);
-	cube.position.set(10, 0, 0);
-	obj = new THREE.Object3D();
-	obj.add(cube);
-	//rotateAroundWorldAxis(cube, new THREE.Vector3(1, 0, 0), 30 * Math.PI/180);
-	scene.add(obj);
+	for (var x=-1; x<=1; x++) {
+		for (var y=-1; y<=1; y++) {
+			for (var z=-1; z<=1; z++) {
+				//if (!(x == y == z == 0)) {
+				scene.add(createCubie(new THREE.Vector3(x, y, z)));
+				//}
+			}
+		}
+	}
 	controls = new THREE.OrbitAndPanControls(camera, renderer.domElement);
 	Coordinates.drawGrid({orientation: "y"});
 	Coordinates.drawGrid({orientation: "z"});
@@ -73,25 +95,11 @@ function init() {
 	clock = new THREE.Clock();
 }
 
-var i = 0;
-
-/*function rotate() {
-	cube.position.set(0, 0, 0);
-	cube.rotation.y += Math.PI / 50;
-	var angle = (Math.PI / 2) + (i / 100) * 2 * Math.PI;
-	cube.position.x = Math.cos(angle) * 10;
-	cube.position.y = Math.sin(angle) * 10;
-	if (i < 100) { i += 1;} else {i = 0;}*/
 
 function animate() {
-	//rotate();
-	requestAnimationFrame(animate);
-	/*var t = clock.getElapsedTime();
-	var m_angle = t * 1;
-	var d = clock.getDelta();
-	cube.lookAt(new THREE.Vector3());
-	cube.position.set(10 * Math.sin(m_angle), 10 * Math.cos(m_angle), 0);*/
-	rotateAroundWorldAxis(cube, "y", clock.getElapsedTime());
+	window.requestAnimationFrame(animate);
+	//rotateAroundWorldAxis(cube, "x", clock.getElapsedTime());
+	//U();
 	renderer.render(scene, camera);
 	controls.update();
 }
@@ -100,6 +108,7 @@ function animate() {
 
 init();
 animate();
+//window.setInterval(animate, 1000/60);
 
 
 
