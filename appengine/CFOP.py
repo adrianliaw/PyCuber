@@ -1,5 +1,5 @@
 def initial_cube():
-	return [[[c, c, c], [c, c, c], [c, c, c]] for c in ["red", "yellow", "green", "white", "orange", "blue"]]
+	return [[[c, c, c], [c, c, c], [c, c, c]] for c in "LUFDRB"]
 
 def U(cube):
 	result = [[[z for z in y] for y in x] for x in cube]
