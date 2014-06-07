@@ -2,7 +2,7 @@ Cube Solver
 ====================
 
 This is a Rubik's cube solver by Python2
-
+```
 - CFOP : This package is the solving algorithm called <a href="http://www.speedsolving.com/wiki/index.php/CFOP">CFOP</a> by Jessica Fridrich, also known as Fridrich Method
 
 - LBL : This is the biginner <a href="http://www.speedsolving.com/wiki/index.php/Layer_by_layer">Layer By Layer</a> method on solving Rubik's cube, coming soon
@@ -10,8 +10,8 @@ This is a Rubik's cube solver by Python2
 - 8355 : This is a method by a Taiwanese, see <a href="http://www.speedsolving.com/wiki/index.php/8355\_Method">the wiki</a>, solver coming soon
 
 - BLD : A method of solving it blindfolded called <a href="http://homepage.ntlworld.com/angela.hayden/cube/blindfold_frontpage.html">3OP</a>, a lot different with other methods, coming soon
-
-
+```
+```
 TODO : 
 	Go to any solving method package, call the solve.py, and run the script.
 
@@ -24,7 +24,7 @@ TODO :
 	  B (5) is the back face color   (blue)
 
 	The order of the stickers be like:
-```
+
                                          |----|
                                          | U  |
                 |----|----|----|    |----|----|----|----|
@@ -46,10 +46,10 @@ TODO :
                 |----|----|----|
                 | 33 | 34 | 35 |
                 |----|----|----|
-```
+
 
 	Input a sequence, ex: "LLLLLLLLLUUUUUUUUUFFFFFFFFFDDDDDDDDDRRRRRRRRRBBBBBBBBB"
-
+```
 
 
 This Rubik's cube solver only displays the official notation, to see graphics, there is another repository, pycuber, with the 3D graphics <a href="http://pycuber.appspot.com">here</a>.
