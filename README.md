@@ -24,7 +24,7 @@ TODO :
 	  B (5) is the back face color   (blue)
 
 	The order of the stickers be like:
-"""
+```
                                          |----|
                                          | U  |
                 |----|----|----|    |----|----|----|----|
@@ -46,7 +46,7 @@ TODO :
                 |----|----|----|
                 | 33 | 34 | 35 |
                 |----|----|----|
-"""
+```
 
 	Input a sequence, ex: "LLLLLLLLLUUUUUUUUUFFFFFFFFFDDDDDDDDDRRRRRRRRRBBBBBBBBB"
 
