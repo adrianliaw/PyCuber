@@ -405,5 +405,35 @@ def input_and_solve(cube, structure=False):
 		print "         ", ' '.join(s[36:]).replace("i", "'", 40)
 
 if __name__ == "__main__":
-	scramble_and_solve(True)
-	import this
+	while True:
+		a = raw_input("Do you need a scramble? (y/n)")
+		if a == "q":
+			exit()
+		if a not in "yn":
+			print "Please answer \"y\" or \"n\".\n\"q\" to quit."
+		else: break
+	while True:
+		b = raw_input("Do you need the structure of the solving? (y/n)")
+		if b == "q":
+			exit()
+		if b not in "yn":
+			print "Please answer \"y\" or \"n\".\n\"q\" to quit."
+		else: break
+	if a == "y":
+		if b == "y":
+			scramble_and_solve(True)
+		else:
+			scramble_and_solve(False)
+	else:
+		while True:
+			c = raw_input("Please enter the state of the cube:")
+			if c == "q":
+				exit()
+			try:
+				if b == "y":
+					input_and_solve(c, True)
+				else:
+					input_and_solve(c, False)
+				break
+			except:
+				print "Invalid input.\nPlease enter a string of 54 characters by [0-5] or [LUFDRB].\n\"q\" to quit."

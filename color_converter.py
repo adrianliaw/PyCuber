@@ -6,9 +6,8 @@ def color_convert(l):
 	3 : white
 	4 : orange
 	5 : blue
-	(6 : unknown)
 	"""
-	colors = ["red", "yellow", "green", "white", "orange", "blue", "unknown"]
+	colors = ["red", "yellow", "green", "white", "orange", "blue"]
 	result = []
 	index = 0
 	for i in range(6):
@@ -16,13 +15,10 @@ def color_convert(l):
 		for j in range(3):
 			result[i].append([])
 			for k in range(3):
-				if isinstance(l, str):
-					if l.isdigit():
-						result[i][j].append(colors[int(l[index])])
-					else:
-						result[i][j].append(colors["LUFDRB".index(l[index])])
+				if l.isdigit():
+					result[i][j].append(colors[int(l[index])])
 				else:
-					result[i][j].append(colors[l[index]])
+					result[i][j].append(colors["LUFDRB".index(l[index])])
 				index += 1
 	return result
 
