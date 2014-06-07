@@ -276,3 +276,4 @@ def show(cube):
 			print cube[i][l]
 		print "\n"
 	print "--------------------------------"
+

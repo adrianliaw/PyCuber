@@ -17,8 +17,12 @@ def color_convert(l):
 			result[i].append([])
 			for k in range(3):
 				if isinstance(l, str):
-					result[i][j].append(colors[int(l[index])])
+					if l.isdigit():
+						result[i][j].append(colors[int(l[index])])
+					else:
+						result[i][j].append(colors["LUFDRB".index(l[index])])
 				else:
 					result[i][j].append(colors[l[index]])
 				index += 1
 	return result
+
