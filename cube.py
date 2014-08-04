@@ -44,16 +44,22 @@ class Face(Object):
         pass
     def rotate():
         """Rotate this face clockwise or counter-clockwise."""
+        pass
     def get_horz_row():
         """Get the horizontal row(s) of the face."""
+        pass
     def get_vert_row():
         """Get the vertical row(s) of the face."""
+        pass
     def get_by_index():
         """Get the square by the index."""
+        pass
     def get_by_2d():
         """Get the square by 2d position."""
+        pass
     def get_colour():
         """Get the centre square of the face."""
+        pass
 
 class Cube(Object):
     """
@@ -65,12 +71,19 @@ class Cube(Object):
         pass
     def __repr__():
         pass
-    def outer_layer_rotate():
+    def _outer_layer_rotate():
         """Perform the actions like U R' D2 L' """
-    def cube_rotation():
+        pass
+    def _cube_rotation():
         """Perform the actions like x y' z2 """
-    def double_layers_rotate():
+        pass
+    def _double_layers_rotate():
         """Perform the actions like u r' d2 l' """
-    def middle_layer_rotate():
-        """Perform """
+        pass
+    def _middle_layer_rotate():
+        """Perform the actions like M S' E2"""
+        pass
+    def perform_action():
+        """Perform an action."""
+        pass
 
