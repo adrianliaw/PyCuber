@@ -7,7 +7,7 @@ ________________
 | 00 | 01 | 02 |
 |____|____|____|
 |    |    |    |
-| 07 |Cntr| 03 |
+| 07 |(08)| 03 |
 |____|____|____|
 |    |    |    |
 | 06 | 05 | 04 |
@@ -15,24 +15,41 @@ ________________
 
 """
 
-class Square(Object):
+class Square:
     """
     Square(colour, face, index), implements a square (sticker) on a cube.
     """
-    def __init__():
-        pass
-    def __str__():
-        pass
-    def __repr__():
-        pass
-    def set_position():
-        """Reset the position (index) of the square in a cube."""
-        pass
-    def set_colour():
-        """Reset the colour of the square."""
-        pass
+    def __init__(self, colour):
+        self._colour = colour
+        #self._face = face
+        #self._index = index
+        #self._type = ["corner", "centre", "edge"][(index==8) or (index%2)*2]
+        self.user_data = {}
+    def __repr__(self):
+        #return "[SQUARE {0._colour} {0._face}{0._index}]".format(self)
+        return "[SQUARE {colour}]".format(colour = self._colour)
+    #def set_position(self, index, face=None):
+    #    """Reset the position (index) of the square in a cube."""
+    #    self._face = face if face else self._face
+    #    self._index = index
+    #    self._type = ["corner", "centre", "edge"][(index==8) or (index%2)*2]
+    #def set_by_2d(self, xy, face=None):
+    #    """Reset the position (index) of the square by 2d position."""
+    #    self._face = face
+    #    if xy[0] == xy[1] == 1:
+    #        self._index = 8
+    #        self._type = "centre"
+    #        return
+    #    elif xy[0] < 2 and xy[1] > 0:
+    #        self._index = 8 - sum(xy)
+    #    else:
+    #        self._index = sum(xy)
+    #    self._type = ["corner", "edge"][index%2]
+    #def set_colour(self, colour):
+    #    """Reset the colour of the square."""
+    #    self._colour = colour
 
-class Face(Object):
+class Face:
     """
     Face(face, (?:[01, 02, ..., 08])), implements a face on a cube.
     """
@@ -61,7 +78,7 @@ class Face(Object):
         """Get the centre square of the face."""
         pass
 
-class Cube(Object):
+class Cube:
     """
     Cube([face * 6]), implements a whole cube.
     """
