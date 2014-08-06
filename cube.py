@@ -15,92 +15,210 @@ ________________
 
 """
 
+
+
 class Square:
+
     """
     Square(colour, face, index), implements a square (sticker) on a cube.
     """
+
     def __init__(self, colour):
-        self._colour = colour
-        #self._face = face
-        #self._index = index
-        #self._type = ["corner", "centre", "edge"][(index==8) or (index%2)*2]
+        self.colour = colour
         self.user_data = {}
+
     def __repr__(self):
-        #return "[SQUARE {0._colour} {0._face}{0._index}]".format(self)
-        return "[SQUARE {colour}]".format(colour = self._colour)
-    #def set_position(self, index, face=None):
-    #    """Reset the position (index) of the square in a cube."""
-    #    self._face = face if face else self._face
-    #    self._index = index
-    #    self._type = ["corner", "centre", "edge"][(index==8) or (index%2)*2]
-    #def set_by_2d(self, xy, face=None):
-    #    """Reset the position (index) of the square by 2d position."""
-    #    self._face = face
-    #    if xy[0] == xy[1] == 1:
-    #        self._index = 8
-    #        self._type = "centre"
-    #        return
-    #    elif xy[0] < 2 and xy[1] > 0:
-    #        self._index = 8 - sum(xy)
-    #    else:
-    #        self._index = sum(xy)
-    #    self._type = ["corner", "edge"][index%2]
-    #def set_colour(self, colour):
-    #    """Reset the colour of the square."""
-    #    self._colour = colour
+        return "[SQUARE {colour}]".format(colour = self.colour)
+
+    def clone(self):
+        """Clone a Square from another Square"""
+        new = Square(self.colour)
+        new.user_data = self.user_data.copy()
+        return new
+
+
 
 class Face:
+
     """
-    Face(face, (?:[01, 02, ..., 08])), implements a face on a cube.
+    Face(face, colour_or_list_of_squares), implements a face on a cube.
     """
-    def __init__():
-        pass
-    def __str__():
-        pass
-    def __repr__():
-        pass
-    def rotate():
+
+    def __init__(self, squares):
+        if type(squares) == str:
+            squares = [Square(squares) for i in range(9)]
+        self.centre = squares[8]
+        self.arounds = squares[:8]
+        self.user_data = {}
+
+    def __repr__(self):
+        return (str(self.arounds[:3]) + "\n" + 
+                str([self.arounds[7], self.centre, self.arounds[3]]) + "\n" + 
+                str(self.arounds[6:3:-1]))
+
+    def rotate(self, cc=False):
         """Rotate this face clockwise or counter-clockwise."""
-        pass
-    def get_horz_row():
-        """Get the horizontal row(s) of the face."""
-        pass
-    def get_vert_row():
-        """Get the vertical row(s) of the face."""
-        pass
-    def get_by_index():
-        """Get the square by the index."""
-        pass
-    def get_by_2d():
+        for i in range(2):
+            square = self.arounds.pop(cc-1)
+            self.arounds.insert(cc*8, square)
+
+    def get_row(self, pos):
+        """Get the row by URDL on a face."""
+        idx = "URDL".index(pos)*2
+        if pos != "L":
+            return self.arounds[idx:][:3]
+        else:
+            return self.arounds[idx:] + [self.arounds[0]]
+
+    def get_by_2d(self, xy):
         """Get the square by 2d position."""
-        pass
-    def get_colour():
-        """Get the centre square of the face."""
-        pass
+        if xy[0] == xy[1] == 1:
+            return self.centre
+        elif xy[0] < 2 and xy[1] > 0:
+            return self.arounds[8-sum(xy)]
+        else:
+            return self.arounds[sum(xy)]
+
+    def clone(self):
+        """Clone a face."""
+        new = Face([self.arounds[i].clone() for i in range(8)] + [self.centre.clone()])
+        new.user_data = self.user_data.copy()
+        return new
+
+
 
 class Cube:
+
     """
-    Cube([face * 6]), implements a whole cube.
+    Cube([face * 6 L,U,F,D,R,B]), implements a whole cube.
     """
-    def __init__():
-        pass
-    def __str__():
-        pass
-    def __repr__():
-        pass
-    def _outer_layer_rotate():
+
+    def __init__(self, faces=None):
+        if not faces:
+            self.left  = Face("red   ")
+            self.up    = Face("yellow")
+            self.front = Face("green ")
+            self.down  = Face("white ")
+            self.right = Face("orange")
+            self.back  = Face("blue  ")
+        else:
+            self.left  = faces[0]
+            self.up    = faces[1]
+            self.front = faces[2]
+            self.down  = faces[3]
+            self.right = faces[4]
+            self.back  = faces[5]
+
+    def __repr__(self):
+        result = ""
+        for side in ["left", "up", "front", "down", "right", "back"]:
+            result += (side[0].upper() + ":").center(50) + "\n"
+            result += str(self[side])
+            result += "\n"
+            result += "----------------------------------------------------\n"
+        return result
+
+    def __getitem__(self, key):
+        for side in ["left", "up", "front", "down", "right", "back"]:
+            if key == side or key == side[0].upper():
+                return eval("self.%s" % side)
+
+    def __setitem__(self, key, value):
+        if key == "left" or key == "L": self.left = value
+        elif key == "up" or key == "U": self.up = value
+        elif key == "front" or key == "F": self.front = value
+        elif key == "down" or key == "D": self.down = value
+        elif key == "right" or key == "R": self.right = value
+        elif key == "back" or key == "B": self.back = value
+
+
+    _olr_patterns = {
+        "L": "UL FL DL BR", 
+        "U": "BU RU FU LU", 
+        "F": "LR UD RL DU", 
+        "D": "LD FD RD BD", 
+        "R": "DR FR UR BL", 
+        "B": "RR UU LL DD"
+    }
+
+    def _outer_layer_rotate(self, symbol):
         """Perform the actions like U R' D2 L' """
-        pass
-    def _cube_rotation():
+        self[symbol[0]].rotate("'" in symbol)
+        rows = [self[p[0]].get_row(p[1]) for p in self._olr_patterns[symbol[0]].split()]
+        copy = [[sqr.clone() for sqr in a_row] for a_row in rows]
+        for i in range(len(rows)):
+            for j in range(len(rows[i])):
+                rows[i][j].colour = copy[(i + ("'" in symbol) * 2 - 1) % 4][j].colour
+        if len(symbol) == 2 and symbol[1] == "2":
+            self._outer_layer_rotate(symbol[0])
+
+    _cr_patterns = {
+        "x": (["F", 0, "U", 2, "B", 2, "D", 0, "F"], "RL"), 
+        "y": (["L", 0, "B", 0, "R", 0, "F", 0, "L"], "UD"), 
+        "z": (["U", 1, "R", 1, "D", 1, "L", 1, "U"], "FB")
+    }
+
+    def _cube_rotation(self, symbol):
         """Perform the actions like x y' z2 """
-        pass
-    def _double_layers_rotate():
+        self[self._cr_patterns[symbol[0]][1][0]].rotate("'" in symbol)
+        self[self._cr_patterns[symbol[0]][1][1]].rotate("'" not in symbol)
+        change = self._cr_patterns[symbol[0]][0][::("'" not in symbol)*2-1]
+        if "'" in symbol:
+            for i in range(1, 8, 2):
+                if change[i] == 1: change[i] = -1
+        old = [self[change[i]].clone() for i in range(0, 7, 2)]
+        for i in range(4):
+            if change[i*2+1] == 2:
+                for j in range(2): old[i].rotate()
+            elif change[i*2+1] != 0:
+                old[i].rotate((-change[i*2+1]+1)/2)
+            self[change[i*2+2]] = old[i]
+        if "2" in symbol:
+            self._cube_rotation(symbol[0])
+
+    _dlr_patterns = {
+        "l": ["x'", "R"], 
+        "u": ["y", "D"], 
+        "f": ["z", "B"], 
+        "d": ["y'", "U"], 
+        "r": ["x", "L"], 
+        "b": ["z'", "F"]
+    }
+
+    def _double_layers_rotate(self, symbol):
         """Perform the actions like u r' d2 l' """
-        pass
-    def _middle_layer_rotate():
+        actions = self._dlr_patterns[symbol[0]][:]
+        if "'" in symbol:
+            if "'" in actions[0]: actions[0] = actions[0][0]
+            else: actions[0] = actions[0] + "'"
+            actions[1] += "'"
+        elif "2" in symbol:
+            for i in range(2): actions[i] = actions[i][0] + "2"
+        self._cube_rotation(actions[0])
+        self._outer_layer_rotate(actions[1])
+
+    _mlr_patterns = {
+        "M": "l", 
+        "S": "f", 
+        "E": "d"
+    }
+
+    def _middle_layer_rotate(self, symbol):
         """Perform the actions like M S' E2"""
-        pass
-    def perform_action():
+        self._double_layers_rotate(self._mlr_patterns[symbol[0]] + symbol[1:])
+        olr_adds = "" if "'" in symbol else "2" if "2" in symbol else "'"
+        self._outer_layer_rotate(self._mlr_patterns[symbol[0]].upper() + olr_adds)
+
+    def perform_action(self, symbol):
         """Perform an action."""
-        pass
+        if symbol.isupper():
+            if any([a in symbol for a in "MSE"]):
+                self._middle_layer_rotate(symbol)
+            else:
+                self._outer_layer_rotate(symbol)
+        else:
+            if any([a in symbol for a in "xyz"]):
+                self._cube_rotation(symbol)
+            else:
+                self._double_layers_rotate(symbol)
 
