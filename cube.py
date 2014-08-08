@@ -16,7 +16,6 @@ ________________
 """
 
 
-
 class Square:
 
     """
@@ -95,19 +94,12 @@ class Cube:
 
     def __init__(self, faces=None):
         if not faces:
-            self.left  = Face("red   ")
-            self.up    = Face("yellow")
-            self.front = Face("green ")
-            self.down  = Face("white ")
-            self.right = Face("orange")
-            self.back  = Face("blue  ")
+            for pair in zip("LUFDRB", ["red", "yellow", "green", "white", "orange", "blue"]):
+                self[pair[0]] = Face(pair[1]+" "*(6-len(pair[1])))
         else:
-            self.left  = faces[0]
-            self.up    = faces[1]
-            self.front = faces[2]
-            self.down  = faces[3]
-            self.right = faces[4]
-            self.back  = faces[5]
+            for pair in enumerate("LUFDRB"):
+                self[pair[1]] = faces[pair[0]]
+        self.user_data = {}
 
     def __repr__(self):
         result = ""
@@ -221,4 +213,9 @@ class Cube:
                 self._cube_rotation(symbol)
             else:
                 self._double_layers_rotate(symbol)
+
+    def clone(self):
+        new = Cube([self[face].clone() for face in "LUFDRB"])
+        new.user_data = self.user_data.copy()
+        return new
 
