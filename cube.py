@@ -15,6 +15,8 @@ ________________
 
 """
 
+from algorithm import *
+
 
 class Square:
 
@@ -201,20 +203,26 @@ class Cube:
         olr_adds = "" if "'" in symbol else "2" if "2" in symbol else "'"
         self._outer_layer_rotate(self._mlr_patterns[symbol[0]].upper() + olr_adds)
 
-    def perform_action(self, symbol):
-        """Perform an action."""
-        if symbol.isupper():
-            if any([a in symbol for a in "MSE"]):
-                self._middle_layer_rotate(symbol)
+    def perform_step(self, step):
+        """Perform an action (step)."""
+        if step.name.isupper():
+            if any([a in step.name for a in "MSE"]):
+                self._middle_layer_rotate(step.name)
             else:
-                self._outer_layer_rotate(symbol)
+                self._outer_layer_rotate(step.name)
         else:
-            if any([a in symbol for a in "xyz"]):
-                self._cube_rotation(symbol)
+            if any([a in step.name for a in "xyz"]):
+                self._cube_rotation(step.name)
             else:
-                self._double_layers_rotate(symbol)
+                self._double_layers_rotate(step.name)
+
+    def perform_algo(self, algo):
+        """Perform an algorithm."""
+        for step in algo:
+            self.perform_step(step)
 
     def clone(self):
+        """Clone this cube."""
         new = Cube([self[face].clone() for face in "LUFDRB"])
         new.user_data = self.user_data.copy()
         return new
