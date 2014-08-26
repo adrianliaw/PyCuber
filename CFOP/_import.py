@@ -6,8 +6,5 @@ if you want to use color_converter.py, cube.py, sps.py
 """
 
 import sys
-path = sys.path[0]
-path = path.split('/')
-path = '/'.join(path[:-1])
-sys.path.append(path)
+sys.path.insert(0, "../")
 __all__ = []
