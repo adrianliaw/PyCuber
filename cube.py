@@ -165,7 +165,7 @@ class Cube:
             if change[i*2+1] == 2:
                 for j in range(2): old[i].rotate()
             elif change[i*2+1] != 0:
-                old[i].rotate((-change[i*2+1]+1)/2)
+                old[i].rotate(int((-change[i*2+1]+1)/2))
             self[change[i*2+2]] = old[i]
         if "2" in symbol:
             self._cube_rotation(symbol[0])

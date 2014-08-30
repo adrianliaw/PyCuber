@@ -43,6 +43,26 @@ class Step:
     def __ne__(self, another):
         return not self.__eq__(another)
 
+    def __add__(self, another):
+        """
+        Step("U") + Step("U2") => Step("U'")
+        Step("R2") + Step("R2") => None
+        """
+        if self.face == another.face:
+            status = ((self.is_standard    + self.is_180*2    + self.is_inverse*3) + \
+                      (another.is_standard + another.is_180*2 + another.is_inverse*3)) % 4
+            try:
+                return Step(self.face + [None, "", "2", "'"][status])
+            except TypeError: return None
+        raise ValueError("Should be the same side action.")
+
+    def __mul__(self, i):
+        i = i % 4
+        result = Step(self.name)
+        for j in range(i-1):
+            result += Step(self.name)
+        return result
+
     def set(self, new):
         """Reset the action name."""
         self.__init__(new)
@@ -80,6 +100,7 @@ class Algo(list):
         return list.__getitem__(self, item)
 
     def __stepify(func):
+        """Makes last input a Step object."""
         @wraps(func)
         def _func(*args):
             args = list(args[:-1]) + [Step(args[-1])]
@@ -87,6 +108,7 @@ class Algo(list):
         return _func
 
     def __algify_input(func):
+        """Makes last input a Algo object."""
         def _func(*args):
             args = list(args[:-1]) + [Algo(args[-1])]
             return eval("list.{0}(*args)".format(func.__name__))
@@ -95,6 +117,7 @@ class Algo(list):
         return _func
 
     def __algify_output(func):
+        """Makes output a Algo object."""
         @wraps(func)
         def _func(*args):
             if " " in func.__name__:
@@ -103,6 +126,7 @@ class Algo(list):
         return _func
 
     def __delattr(func):
+        """Raise error when calling some not needed method."""
         def _func(*args):
             raise AttributeError("'Algo' object has no attribute '{0}'".format(func.__name__))
         return _func
@@ -166,7 +190,7 @@ class Algo(list):
         Algo([R U R' U']) => Algo([U R U' R'])
         """
         if len(self) == 0: return
-        for i in range((len(self)+1)/2):
+        for i in range(int((len(self)+1)/2)):
             self[i].inverse()
             if i != len(self)-i-1:
                 self[-i-1].inverse()
