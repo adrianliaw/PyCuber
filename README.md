@@ -1,7 +1,7 @@
 Cube Solver
 ====================
 
-This is a Rubik's cube solver by Python2
+This is a Rubik's cube solver by Python3
 
 - CFOP : This package is the solving algorithm called [CFOP]("http://www.speedsolving.com/wiki/index.php/CFOP") by Jessica Fridrich, also known as Fridrich Method
 
