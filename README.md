@@ -9,7 +9,7 @@ This is a Rubik's cube solver by Python3
 
 - 8355 : This is a method by a Taiwanese, see [the wiki]("http://www.speedsolving.com/wiki/index.php/8355\_Method"), solver coming soon
 
-- BLD : A method of solving it blindfolded called [3OP]("http://homepage.ntlworld.com/angela.hayden/cube/blindfold_frontpage.html")3OP, a lot different with other methods, coming soon
+- BLD : A method of solving it blindfolded called [3OP]("http://homepage.ntlworld.com/angela.hayden/cube/blindfold_frontpage.html"), a lot different with other methods, coming soon
 
 ```
 TODO : 
