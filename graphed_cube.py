@@ -13,6 +13,11 @@ from collections import namedtuple
 Square = namedtuple("Square", ["index", "colour"])
 Cuboid = namedtuple("Cuboid", ["x", "y", "z"])
 
+from re import sub
+
+from colorama import init, Back
+init()
+
 __relations__ = {
 	(-1, -1, -1) : [6 , 53, 33], 
 	(-1, -1,  0) : [7 , 30], 
@@ -70,18 +75,34 @@ class Cube:
 						self.cube_g[key].add(_key)
 						self.cube_g[_key].add(key)
 
+	def __repr__(self):
+		result = ""
+		for i in range(3):
+			result += Back.RESET + "       "
+			result += self["FROM SQUARES"]
 
-	#def __getitem__(self, query):
-	#	query = query.lower().split()
-	#	if query[0] == "from":
-	#		result = {}
-	#		if query[1] == "*": result = self.cube_g.copy()
-	#		else:
-	#			for key in self.cube_g:
-	#				if key[0] == query[1][:-1]:
-	#					result[key] = self.cube_g[key]
-	#	return result
+	def __getitem__(self, query):
+		query = query.lower().split()
+		try:
+			if query[0] == "from":
+				result = {}
+				if query[1] == "*": result = self.cube_g.copy()
+				else:
+					for key in self.cube_g:
+						if key.__class__.__name__.lower() == query[1][:-1]:
+							result[key] = self.cube_g[key]
+				query = query[2:]
+			else: result = self.cube_g.copy()
+			while query[0] in ("where", "and"):
+				_result = result.copy()
+				for key in _result:
+					if not eval(sub(r"[xyz]|index|colour", lambda x:"key."+x.group(), sub(r"\"|\'[lufdrb]\"|\'", lambda x:x.group().upper(), query[1]))):
+						result.pop(key)
+				query = query[2:]
+			return result
+		except IndexError:
+			return result
 
 if __name__ == "__main__":
 	a = Cube()
-	print(a.cube_g)
+	print(a["FROM squares WHERE colour=='R'"].keys())
