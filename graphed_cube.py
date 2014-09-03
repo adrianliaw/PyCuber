@@ -10,7 +10,7 @@ from __future__ import print_function
 from functools import reduce
 
 from collections import namedtuple
-Square = namedtuple("Square", ["index", "colour"])
+Square = namedtuple("Square", ["uid", "colour"])
 Cuboid = namedtuple("Cuboid", ["x", "y", "z"])
 
 from re import sub
@@ -71,7 +71,7 @@ class Cube:
 				key = Square(i*9+j, colours[i*9+j])
 				for check, val in [("j+3<9", 3), ("(j+1)%3 != 0", 1)]:
 					if eval(check):
-						_key = Square(key.index+val, colours[key.index+val])
+						_key = Square(key.uid+val, colours[key.uid+val])
 						self.cube_g[key].add(_key)
 						self.cube_g[_key].add(key)
 
@@ -82,9 +82,9 @@ class Cube:
 			result += self["FROM SQUARES"]
 
 	def __getitem__(self, query):
-		query = query.lower().split()
+		query = query.split()
 		try:
-			if query[0] == "from":
+			if query[0].lower() == "from":
 				result = {}
 				if query[1] == "*": result = self.cube_g.copy()
 				else:
@@ -93,11 +93,11 @@ class Cube:
 							result[key] = self.cube_g[key]
 				query = query[2:]
 			else: result = self.cube_g.copy()
-			while query[0] in ("where", "and"):
+			while query[0].lower() in ("where", "and"):
 				_result = result.copy()
-				for key in _result:
-					if not eval(sub(r"[xyz]|index|colour", lambda x:"key."+x.group(), sub(r"\"|\'[lufdrb]\"|\'", lambda x:x.group().upper(), query[1]))):
-						result.pop(key)
+				for its in _result:
+					if not eval(query[1]):
+						result.pop(its)
 				query = query[2:]
 			return result
 		except IndexError:
@@ -105,4 +105,4 @@ class Cube:
 
 if __name__ == "__main__":
 	a = Cube()
-	print(a["FROM squares WHERE colour=='R'"].keys())
+	print(a["FROM squares WHERE its.colour=='R'"])
