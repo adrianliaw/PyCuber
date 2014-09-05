@@ -84,6 +84,21 @@ class Cube:
             result += self["FROM SQUARES"]
 
     def __getitem__(self, query):
+        """
+        This can filter the cube graph.
+
+        Cube[{ "key" : ["its.colour == 'R'"] , "nbr" : ["its.type == 'cuboid'"] }] =>
+
+        {Square(uid=36, colour='R'): {Cuboid(x=1, y=1, z=1)},
+         Square(uid=37, colour='R'): {Cuboid(x=1, y=1, z=0)},
+         Square(uid=38, colour='R'): {Cuboid(x=1, y=1, z=-1)},
+         Square(uid=39, colour='R'): {Cuboid(x=1, y=0, z=1)},
+         Square(uid=40, colour='R'): {Cuboid(x=1, y=0, z=0)},
+         Square(uid=41, colour='R'): {Cuboid(x=1, y=0, z=-1)},
+         Square(uid=42, colour='R'): {Cuboid(x=1, y=-1, z=1)},
+         Square(uid=43, colour='R'): {Cuboid(x=1, y=-1, z=0)},
+         Square(uid=44, colour='R'): {Cuboid(x=1, y=-1, z=-1)}}
+        """
         _query = {"key":[], "nbr":[]}
         _query.update(query)
         result = dict(zip(self.cube_g.keys(), map(lambda x:x.copy(), self.cube_g.values())))
@@ -96,7 +111,6 @@ class Cube:
                             deleted.add(its)
                     except AttributeError:
                         deleted.add(its)
-                        continue
         for obj in deleted:
             del result[obj]
         for key in result:
@@ -109,7 +123,6 @@ class Cube:
                                 deleted.add(its)
                         except AttributeError:
                             deleted.add(its)
-                            continue
             for obj in deleted:
                 result[key].remove(obj)
         return result
@@ -117,4 +130,4 @@ class Cube:
 
 if __name__ == "__main__":
     a = Cube()
-    print(a["FROM squares WHERE its.colour=='R'"])
+    print(a[{"key": ["its.colour == 'R'"], "nbr": ["its.type == 'cuboid'"]}])
