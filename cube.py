@@ -29,7 +29,7 @@ class Square:
         self.user_data = {}
 
     def __repr__(self):
-        return "[SQUARE {colour}]".format(colour = self.colour)
+        return {"red":"\x1b[45m", "yellow":"\x1b[43m", "green":"\x1b[42m", "white":"\x1b[47m", "orange":"\x1b[41m", "blue":"\x1b[46m"}[self.colour] + "  \x1b[49m"
 
     def clone(self):
         """Clone a Square from another Square"""
@@ -53,9 +53,9 @@ class Face:
         self.user_data = {}
 
     def __repr__(self):
-        return (str(self.arounds[:3]) + "\n" + 
-                str([self.arounds[7], self.centre, self.arounds[3]]) + "\n" + 
-                str(self.arounds[6:3:-1]))
+        return (''.join(str(self.arounds[i]) for i in range(3)) + "\n" + 
+                str(self.arounds[7]) + str(self.centre) + str(self.arounds[3]) + "\n" + 
+                ''.join(str(self.arounds[i]) for i in range(6, 3, -1)))
 
     def rotate(self, cc=False):
         """Rotate this face clockwise or counter-clockwise."""
@@ -97,20 +97,25 @@ class Cube:
     def __init__(self, faces=None):
         if not faces:
             for pair in zip("LUFDRB", ["red", "yellow", "green", "white", "orange", "blue"]):
-                self[pair[0]] = Face(pair[1]+" "*(6-len(pair[1])))
+                self[pair[0]] = Face(pair[1])
         else:
             for pair in enumerate("LUFDRB"):
                 self[pair[1]] = faces[pair[0]]
         self.user_data = {}
 
     def __repr__(self):
-        result = ""
-        for side in ["left", "up", "front", "down", "right", "back"]:
-            result += (side[0].upper() + ":").center(50) + "\n"
-            result += str(self[side])
-            result += "\n"
-            result += "----------------------------------------------------\n"
-        return result
+        result = ["      ", "      ", "      ", "", "", "", "      ", "      ", "      "]
+        for i in range(3):
+            for j in range(3):
+                result[i] += str(self["U"])[i+(3*i+j)*12:i+(3*i+j)*12+12]
+        for side in "LFRB":
+            for i in range(3):
+                for j in range(3):
+                    result[3+i] += str(self[side])[i+(3*i+j)*12:i+(3*i+j)*12+12]
+        for i in range(3):
+            for j in range(3):
+                result[6+i] += str(self["D"])[i+(3*i+j)*12:i+(3*i+j)*12+12]
+        return "\n".join(result)
 
     def __getitem__(self, key):
         for side in ["left", "up", "front", "down", "right", "back"]:
@@ -205,6 +210,7 @@ class Cube:
 
     def perform_step(self, step):
         """Perform an action (step)."""
+        step = Step(step)
         if step.name.isupper():
             if any([a in step.name for a in "MSE"]):
                 self._middle_layer_rotate(step.name)
@@ -218,6 +224,7 @@ class Cube:
 
     def perform_algo(self, algo):
         """Perform an algorithm."""
+        algo = Algo(algo)
         for step in algo:
             self.perform_step(step)
 

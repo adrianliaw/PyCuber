@@ -15,11 +15,6 @@ Square.type = "square"
 Cuboid = namedtuple("Cuboid", ["x", "y", "z"])
 Cuboid.type = "cuboid"
 
-from re import sub
-
-from colorama import init, Back
-init()
-
 __relations__ = {
     (-1, -1, -1) : [6 , 53, 33], 
     (-1, -1,  0) : [7 , 30], 
@@ -77,12 +72,6 @@ class Cube:
                         self.cube_g[key].add(_key)
                         self.cube_g[_key].add(key)
 
-    def __repr__(self):
-        result = ""
-        for i in range(3):
-            result += Back.RESET + "       "
-            result += self["FROM SQUARES"]
-
     def __getitem__(self, query):
         """
         This can filter the cube graph.
@@ -127,7 +116,3 @@ class Cube:
                 result[key].remove(obj)
         return result
 
-
-if __name__ == "__main__":
-    a = Cube()
-    print(a[{"key": ["its.colour == 'R'"], "nbr": ["its.type == 'cuboid'"]}])
