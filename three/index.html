@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>WebGL and Three.js</title>
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+    <section class="" data-id="cc31f0ce3abfbe78609cb4235ad6731a">
+        <h1>
+            <br>
+            </h1>
+<h1>Webgl</h1>
+<h2>&amp;</h2>
+<h1>THREE.js</h1>
+    <div>
+        <font style="font-size: 24px;">
+            <span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;by Adrian Liaw</span>
+        </font>
+        </div>
+        </section>
+        <section class="" data-id="a8c520dd5ea158280f57a660f266772a">
+            <h3>
+                <br>
+            </h3>
+<h2>What is Webgl?</h2>
+<div>
+            <ul>
+<li class="fragment" data-fragment-index="0">Web Graphics Library</li>
+<li class="fragment" data-fragment-index="1">JavaScript API</li>
+<li class="fragment" data-fragment-index="2">Rendering interactive 3D graphics</li>
+<li class="fragment" data-fragment-index="3">Based on OpenGL ES 2.0</li>
+<li class="fragment" data-fragment-index="4">Using HTML5 Canvas</li>
+<li class="fragment" data-fragment-index="5">Shader code on GPU</li>
+<li class="fragment" data-fragment-index="6">Modern browsers except IE9</li>
+<li class="fragment" data-fragment-index="7">Without any plug-ins</li>
+</ul>
+        </div>
+    </section>
+        <section class="" data-id="3bce35530ae8c2ddd41932cebf04aba3">
+        <h1>
+            <br>
+        </h1>
+<h1>cool!!</h1>
+<br>
+</section>
+        <section class="" data-id="d7d89df60042c5c7138a2298a6ba8faa">
+    <h3>
+        <br>
+    </h3>
+<h2>What is three.js?</h2>
+<div>
+    <ul>
+<li class="fragment" data-fragment-index="0">JavaScript library/API</li>
+<li class="fragment" data-fragment-index="1">WebGL technology</li>
+<li class="fragment" data-fragment-index="2">Open source on GitHub</li>
+<li class="fragment" data-fragment-index="3">3D animations</li>
+<li class="fragment" data-fragment-index="4">Virtual world</li>
+<li class="fragment" data-fragment-index="5">
+<a href="https://github.com/mrdoob/three.js">
+GitHub repository
+</a>
+<br>
+</li>
+</ul>
+</div>
+</section>
+        <section class="stack" data-id="5d4860ea89aec76212ac6bfa581594a5">
+    <section class="" data-id="9710fadc683e9ff3a08ffb198b0564d6">
+        <h2>
+            <br>
+        </h2>&nbsp; &nbsp; &nbsp;<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/liawadrian/images/498412/_____2014-07-01___8.43.05.png" style="width: 576px; height: 399.288056206089px; max-height: none; max-width: none;">
+    </section>
+    <section class="" data-id="9600851210c37183f8a62c48b7e5baa4">
+        <h2>
+            <br>
+        </h2>
+<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/liawadrian/images/498416/_____2014-07-01___8.59.49.png">
+    </section>
+    <section class="" data-id="9c28120c7e6c2e3858384fe47437bd06">
+        <h2>
+            <br>
+        </h2>
+<h2>
+<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/liawadrian/images/498420/_____2014-07-01___9.03.06.png">
+        <br>
+</h2>
+    </section>
+    <section class="" data-id="8725533f610542c6a34dc156eea7021c">
+        <h2>
+            <br>
+        </h2>
+<h2>
+<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/liawadrian/images/498425/_____2014-07-01___9.10.29.png">
+        <br>
+</h2>
+    </section>
+    <section class="" data-id="4c68bac4859dc75e7aa10c6a5b1be982">
+        <h2>
+            <br>
+        </h2>
+<h2>
+<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/liawadrian/images/498426/_____2014-07-01___9.16.43.png">
+        <br>
+</h2>
+    </section>
+    <section class="" data-id="5165d2632511239119baccf5d13c06ab">
+        <h2>
+<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/liawadrian/images/498430/_____2014-07-01___9.20.17.png" style="font-size: 75.96px;">
+        <br>
+</h2>
+    </section>
+    <section class="" data-id="07b61bbc29a1a702cc8353e3089a3c33">
+        <h2>
+            <br>
+        </h2>
+<h2>
+<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/liawadrian/images/498431/_____2014-07-01___9.22.23.png">
+        <br>
+</h2>
+    </section>
+    <section class="" data-id="a35b6f7dfa23f71338fb25c92168397b">
+        <h2>
+            <br>
+        </h2>
+<h2>
+<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/liawadrian/images/498441/_____2014-07-01___9.30.57.png">
+        <br>
+</h2>
+    </section>
+    <section class="" data-id="e5a248e6b1a9052409f7adcf7f998ab5">
+        <h2>
+<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/liawadrian/images/498436/_____2014-07-01___9.26.06.png" style="font-size: 75.96px;">
+        <br>
+</h2>
+    </section>
+</section>
+        <section class="" data-id="2c5b0ab80168c15d082103fb796095d5">
+    <h2>
+        <br>
+    </h2>
+<div>
+    <br>
+</div>
+<h2>everything in threejs world</h2>
+<h2>is an object</h2>
+</section>
+        <section class="" data-id="6c835151176f244c2c4f7d0ca3d98f48">
+    <h1>
+        <br>
+    </h1>
+<h1>everything!!!!!!</h1>
+</section>
+        <section class="" data-id="9178c17693ee8d794e51e26138ad3a6a">
+    <h2>
+        <br>
+    </h2>
+<h2>basics for a virtual world</h2>
+<div>
+<ul>
+<li class="fragment" data-fragment-index="0">A scene</li>
+<li class="fragment" data-fragment-index="1">A renderer</li>
+<li class="fragment" data-fragment-index="2">A camera</li>
+<li class="fragment" data-fragment-index="3">A light source</li>
+<li class="fragment" data-fragment-index="4">An object (with materials)</li>
+</ul>
+</div>
+</section>
+        <section class="" data-id="d974ccdbc9a3eb9bf5b9674295b041d2">
+    <h2>
+        <br>
+    </h2>
+<h2>
+<span style="font-size: 75.96px;">click <a href="http://github.com/mrdoob/three.js/archive/master.zip">here</a> to download three.js</span>
+<br>
+</h2>
+<div>three.js -&gt; /build/three.js</div>
+<div>three.min.js -&gt; /build/three.min.js</div>
+</section>
+<section class="" data-id="c53ab3b4d077cbdc5b5df7873f2f086c">
+    <h2>
+        <br>
+    </h2>
+<h2>or from command line</h2>
+<div>
+<pre><code>   git clone https://github.com/mrdoob/three.js.git
+   cd three.js
+   cd build
+   ls
+-&gt; three.js three.min.js</code>    </pre>
+</div>
+<br>
+</section>
+<section class="stack" data-id="22159f431f4beb90af49effa5ee86573">
+    <section class="" data-id="af8a88663989e1c2f094c697aafcec24">
+        <h2>
+            <br>
+        </h2>
+<h2>
+<span style="font-size: 75.96px;">let's start a simple project !!</span>
+    <br>
+</h2>
+</section>
+<section class="" data-id="d9dcd27930a8a10a3f2581f9902e6d03">
+    <div>
+        <br>
+    </div>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>Make sure you have these files in a folder:</div>
+<div>
+<ul>
+<li>three.min.js (or three.js)</li>
+<li>main.html (blank)</li>
+</ul>
+<div style="text-align: center;">
+<br>
+</div>
+</div>
+<h2 style="text-align: center;" class="fragment" data-fragment-index="0">that's all you needed!</h2>
+<div>
+<br>
+</div>
+</section>
+<section class="" data-id="e7d5de3d4a2f3e95b2511cbd6065476a">
+    <h2>
+        <br>
+    </h2>
+<h2>main.html</h2>
+<div>
+<pre><code> &lt;!DOCTYPE HTML&gt;
+ &lt;html&gt;
+     &lt;head&gt;
+         &lt;title&gt;THREE.JS&lt;/title&gt;
+         &lt;script type="text/javascript" src="three.min.js"&gt;&lt;/script&gt;
+     &lt;/head&gt;
+     &lt;body&gt;
+         &lt;script type="text/javascript"&gt;
+             /*...
+             The magic is gonna happen in here
+             ...*/
+         &lt;/script&gt;
+     &lt;/body&gt;
+ &lt;/html&gt;
+</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="ef242fd611174a455bac06fd2f58e22f">
+    <h2>
+        <br>
+    </h2>
+<h2>here's the core</h2>
+<div>Get into the script tag in main.html</div>
+<div>
+    <br>
+</div>
+<div>
+<pre><code> &lt;script type="text/javascript"&gt;
+     
+     var renderer, scene, camera, light, cube, material, mesh;
+     // Some local variables we're going to use later.
+     
+     init(); // Initializes the scene.
+     animate(); // Render the scene every update.
+     // We're going to define these two functions.
+
+ &lt;/script&gt;
+</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="98e128ce42da70a457c91fcf3fac1376">
+    <h2>setup renderer</h2>
+<div>
+    <br>
+</div>
+<div>
+<pre><code> &lt;script type="text/javascript"&gt;
+     ...
+     animate();
+ 
+     function init() {
+     
+         renderer = new THREE.WebGLRenderer();
+         // So the browser can render something.
+         renderer.setSize(window.innerWidth, window.innerHeight);
+         // Full window.
+         document.body.appendChild(renderer.domElement);
+         // Put canvas into DOM.
+     
+     }
+ &lt;/script&gt;
+</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="8c5a98f77e75b518da75b90b3d3475f4">
+    <h2>setup scene and camera</h2>
+<div>
+    <br>
+</div>
+<div>
+<pre><code> &lt;script type="text/javascript"&gt;
+     ...
+         document.body.appendChild(renderer.domElement);
+ 
+         scene = new THREE.Scene();
+         // A scene for the virtual world.
+ 
+         camera = new THREE.PerspectiveCamera(45, 
+                  (window.innerWidth/window.innerHieght), 
+                  1, 
+                  1000);
+         // Create a camera so we can see something.
+         // THREE.PerspectiveCamera(fov, aspect, near, far)
+         camera.position.setZ(200);
+         // Set the camera's position at (0, 0, 200)
+         // The camera's default target is (0, 0, 0)<br>    }
+&lt;/script&gt;</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="f9886332bd3b7cb18e42959bd571e92a">
+    <h2>
+        <br>
+    </h2>
+    <h2>some light...</h2>
+<div>
+<pre><code> &lt;script type="text/javascript"&gt;
+     ...
+         scene.add(camera);
+ 
+         light = new THREE.DirectionalLight(0xFFFFFF, 0.7);
+         // White light, not too strong.
+         light.position.setZ(200);
+         // The position of the light is (0, 0, 200)
+         // Target (0, 0, 0)
+         scene.add(light);
+         // Add to scene.
+     }
+&lt;/script&gt;</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="28fb523a96a1cfcfc7caf6477e9b3edd">
+    <h2>
+        <br>
+    </h2>
+    <h2>a mesh</h2>
+    <div>A mesh has two parts, geometry and material.</div>
+    <div>
+<pre><code> &lt;script type="text/javascript"&gt;
+     ...
+         cube = new THREE.BoxGeometry(30, 30, 30);
+         // A 30*30*30 cube geometry.
+         
+         material = new THREE.MeshLambertMaterial( {color: 0x00FFFF} );
+         // Light blue.
+         
+         mesh = new THREE.Mesh(cube, material);
+         // Create a mesh.
+         scene.add(mesh);
+     }
+         
+ &lt;/script&gt;
+</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="415b6f02d67fa5d569d03f7eaab06d87">
+    <h2>
+        <br>
+    </h2>
+    <h2>animate</h2>
+    <div>
+<pre><code> &lt;script type="text/javascript"&gt;
+     ...
+     }
+     
+     function animate() {
+         
+         renderer.render(scene, camera);
+         // Render it every update
+         requestAnimationFrame(animate);
+         // Smart animating
+
+     }
+     
+ &lt;/script&gt;
+</code></pre>
+</div>
+<br>
+</section>
+</section>
+<section class="" data-id="172dd86800532eb856fac9b35e689e56">
+    <h2>if your code works,&nbsp;</h2>
+    <h2>it should be like this<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/liawadrian/images/500752/_____2014-07-02___11.05.32.png">
+    </h2>
+</section>
+<section class="" data-id="7bbcfe179fd9213f17cfe5050e099f03">
+    <h2>
+        <br>
+    </h2>
+    <h2>let's add some rotation!</h2>
+    <div>
+<pre><code> &lt;script type="text/javascript"&gt;
+     ...
+     function animate() {
+ 
+         mesh.rotation.x += 0.01;
+         mesh.rotation.y += 0.02;
+         mesh.rotation.z += 0.03;
+         // Rotations on three axes
+         
+         renderer.render(scene, camera);
+         requestAnimationFrame(animate);
+     }
+
+ &lt;/script&gt;
+</code></pre>
+</div>
+<br>
+</section>
+<section class="" data-id="bd0f4e2a00f0700c8394914fd27c4a3d">
+    <div>
+        <br>
+    </div>
+    <div class="stretch">
+    <iframe height="600" width="900" src="main.html"></iframe>
+    </div>
+</section>
+<section class="" data-id="7152bbe980b56beb01322ee5553f3cd5">
+    <h2>
+        some useful tools
+    </h2>
+<div>
+<ul>
+<li class="fragment" data-fragment-index="0">
+<a href="http://www.createjs.com/#!/TweenJS">TweenJS</a>&nbsp;, smooth animations</li>
+<li class="fragment" data-fragment-index="1">
+<a href="https://dat-gui.googlecode.com/git-history/dbb4fa0ef0428380044e825470e788dec1e37b86/index.html">dat.gui</a>, simple UI for demos</li>
+<li class="fragment" data-fragment-index="2">
+<a href="http://chandlerprall.github.io/Physijs/">Physijs</a>, 3D physics engine</li>
+<li class="fragment" data-fragment-index="3">
+<a href="http://erich.realtimerendering.com/download/lib/OrbitAndPanControls.new.js">OrbitAndPanControls</a>
+</li>
+<li class="fragment" data-fragment-index="4">
+<a href="http://erich.realtimerendering.com/download/lib/Coordinates.js">Coordinates</a>
+</li>
+</ul>
+</div>
+</section>
+<section class="" data-id="ce072f0c7a7a71a9b46921538bd662b2">
+    <h2>links</h2>
+<div>
+    <ul>
+<li class="fragment" data-fragment-index="0">
+    <a href="http://threejs.org/">threejs.org</a>
+</li>
+<li class="fragment" data-fragment-index="1">
+<a href="http://threejs.org/docs/">three.js documentations</a>
+</li>
+<li class="fragment" data-fragment-index="2">
+<a href="https://www.udacity.com/course/cs291">Udacity CS291</a>
+</li>
+<li class="fragment" data-fragment-index="3">
+<a href="http://mrdoob.github.io/three.js/editor/">Online Threejs editor</a>
+</li>
+<li class="fragment" data-fragment-index="4">
+<a href="http://pycuber.appspot.com">Pycuber</a>&nbsp;XD</li>
+</ul>
+</div>
+</section>
+<section class="" data-id="8ef53966cc87e443db3c369c890dddc0">
+<h1>end</h1>
+    </section>
+</div>
+
+
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
