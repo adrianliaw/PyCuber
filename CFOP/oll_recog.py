@@ -9,17 +9,17 @@ take a cube as an input, return True if it is the O-- pattern, False otherwise.
 
 
 def side_recog(cube, ll):
-	"""
-	Recognize the OLL patterns by checking the side of the last layer.
+    """
+    Recognize the OLL patterns by checking the side of the last layer.
 
-	The "ll" parameter is the side of the last layer, 
-	if it's U face color (top face color), then represent it by "1", "0" otherwise.
-	"""
-	side_ll = cube[0][0] + cube[2][0] + cube[4][0] + cube[5][0]
-	for i in range(len(side_ll)):
-		if int(ll[i]) != (side_ll[i] == cube[1][1][1]):
-			return False
-	return True
+    The "ll" parameter is the side of the last layer, 
+    if it's U face color (top face color), then represent it by "1", "0" otherwise.
+    """
+    side_ll = cube[0][0] + cube[2][0] + cube[4][0] + cube[5][0]
+    for i in range(len(side_ll)):
+        if int(ll[i]) != (side_ll[i] == cube[1][1][1]):
+            return False
+    return True
 
 
 def O00_recog(c): return side_recog(c, "000000000000")
