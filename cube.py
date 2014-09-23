@@ -16,6 +16,11 @@ ________________
 """
 
 from algorithm import *
+from collections import namedtuple
+Cuboid = namedtuple("Cuboid", ["x", "y", "z"])
+Cuboid.type = "Cuboid"
+Square = namedtuple("Square", ["face", "index", "colour"])
+Square.type = "Square"
 
 
 class Square:
@@ -234,3 +239,14 @@ class Cube:
         new.user_data = self.user_data.copy()
         return new
 
+
+
+class _CubeAsGraph(dict):
+    """
+    Cube in graph notation.
+    """
+    def __repr__(self):
+        result = ""
+        for key in self:
+            result += "{0} -> {1}\n".format(key, self[key])
+        return result
