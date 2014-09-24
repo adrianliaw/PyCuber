@@ -17,10 +17,10 @@ ________________
 
 from algorithm import *
 from collections import namedtuple
-Cuboid = namedtuple("Cuboid", ["x", "y", "z"])
-Cuboid.type = "Cuboid"
-Square = namedtuple("Square", ["face", "index", "colour"])
-Square.type = "Square"
+_Cuboid = namedtuple("Cuboid", ["x", "y", "z"])
+_Cuboid.type = "Cuboid"
+_Square = namedtuple("Square", ["face", "index", "colour"])
+_Square.type = "Square"
 
 
 class Square:
@@ -61,6 +61,10 @@ class Face:
         return (''.join(str(self.arounds[i]) for i in range(3)) + "\n" + 
                 str(self.arounds[7]) + str(self.centre) + str(self.arounds[3]) + "\n" + 
                 ''.join(str(self.arounds[i]) for i in range(6, 3, -1)))
+    
+    def __getitem__(self, index):
+        return (self.arounds + [self.centre])[index]
+        
 
     def rotate(self, cc=False):
         """Rotate this face clockwise or counter-clockwise."""
@@ -233,6 +237,10 @@ class Cube:
         for step in algo:
             self.perform_step(step)
 
+    def as_graph(self):
+        """Convert cube into graph. \nGraphics: http://pycuber.appspot.com/cubegraph/main.html"""
+        return _CubeAsGraph(self)
+
     def clone(self):
         """Clone this cube."""
         new = Cube([self[face].clone() for face in "LUFDRB"])
@@ -241,12 +249,64 @@ class Cube:
 
 
 
+_relations = {
+    (-1, -1, -1) : [("L", 6), ("D", 6), ("B", 4)], 
+    (-1, -1,  0) : [("L", 5), ("D", 7)], 
+    (-1, -1,  1) : [("L", 4), ("F", 6), ("D", 0)], 
+    (-1,  0, -1) : [("L", 7), ("B", 3)], 
+    (-1,  0,  0) : [("L", 8)], 
+    (-1,  0,  1) : [("L", 3), ("F", 7)], 
+    (-1,  1, -1) : [("L", 0), ("U", 0), ("B", 2)], 
+    (-1,  1,  0) : [("L", 1), ("U", 7)], 
+    (-1,  1,  1) : [("L", 2), ("U", 6), ("F", 0)], 
+    ( 0, -1, -1) : [("D", 5), ("B", 5)], 
+    ( 0, -1,  0) : [("D", 8)], 
+    ( 0, -1,  1) : [("F", 5), ("D", 1)], 
+    ( 0,  0, -1) : [("B", 8)], 
+    ( 0,  0,  0) : [], 
+    ( 0,  0,  1) : [("F", 8)], 
+    ( 0,  1, -1) : [("U", 1), ("B", 1)], 
+    ( 0,  1,  0) : [("U", 8)], 
+    ( 0,  1,  1) : [("U", 5), ("F", 1)], 
+    ( 1, -1, -1) : [("D", 4), ("R", 4), ("B", 6)], 
+    ( 1, -1,  0) : [("D", 3), ("R", 5)], 
+    ( 1, -1,  1) : [("F", 4), ("D", 2), ("R", 6)], 
+    ( 1,  0, -1) : [("R", 3), ("B", 7)], 
+    ( 1,  0,  0) : [("R", 8)], 
+    ( 1,  0,  1) : [("F", 3), ("R", 7)], 
+    ( 1,  1, -1) : [("U", 2), ("R", 2), ("B", 0)], 
+    ( 1,  1,  0) : [("U", 3), ("R", 1)], 
+    ( 1,  1,  1) : [("U", 4), ("F", 2), ("R", 0)]
+}
+
 class _CubeAsGraph(dict):
+
     """
     Cube in graph notation.
     """
-    def __repr__(self):
-        result = ""
-        for key in self:
-            result += "{0} -> {1}\n".format(key, self[key])
-        return result
+
+    def __init__(self, cube):
+        super(_CubeAsGraph, self).__init__()
+        for x in range(-1, 2):
+            for y in range(-1, 2):
+                for z in range(-1, 2):
+                    node = _Cuboid(x, y, z)
+                    self[node] = set()
+                    for axis in "xyz":
+                        for _ in [-1, 1]:
+                            val = node._asdict()[axis] + _
+                            if abs(val) <= 1:
+                                self[node].add(node._replace(**{axis:val}))
+                    for face, index in _relations[node]:
+                        sqr_nbr = _Square(face, index, cube[face][index].colour)
+                        self[node].add(sqr_nbr)
+                        self[sqr_nbr] = {node}
+                        if len(_relations[node]) != 1:
+                            for _ in [-1, 1]:
+                                self[sqr_nbr].add( sqr_nbr._replace( index = (index + _)%8, colour = cube[face][(index + _)%8].colour ) )
+                            if len(_relations[node]) == 2:
+                                self[sqr_nbr].add( sqr_nbr._replace( index=8, colour=cube[face].centre.colour ) )
+                        else:
+                            for _ in range(1, 8, 2):
+                                self[sqr_nbr].add( sqr_nbr._replace(index=_, colour=cube[face][index].colour) )
+
