@@ -139,20 +139,18 @@ class Cube:
         elif key == "right" or key == "R": self.right = value
         elif key == "back" or key == "B": self.back = value
 
-
-    _olr_patterns = {
-        "L": "UL FL DL BR", 
-        "U": "BU RU FU LU", 
-        "F": "LR UD RL DU", 
-        "D": "LD FD RD BD", 
-        "R": "DR FR UR BL", 
-        "B": "RR UU LL DD"
-    }
-
     def _outer_layer_rotate(self, symbol):
         """Perform the actions like U R' D2 L' """
+        _olr_patterns = {
+            "L": "UL FL DL BR", 
+            "U": "BU RU FU LU", 
+            "F": "LR UD RL DU", 
+            "D": "LD FD RD BD", 
+            "R": "DR FR UR BL", 
+            "B": "RR UU LL DD"
+        }
         self[symbol[0]].rotate("'" in symbol)
-        rows = [self[p[0]].get_row(p[1]) for p in self._olr_patterns[symbol[0]].split()]
+        rows = [self[p[0]].get_row(p[1]) for p in _olr_patterns[symbol[0]].split()]
         copy = [[sqr.clone() for sqr in a_row] for a_row in rows]
         for i in range(len(rows)):
             for j in range(len(rows[i])):
@@ -160,17 +158,16 @@ class Cube:
         if len(symbol) == 2 and symbol[1] == "2":
             self._outer_layer_rotate(symbol[0])
 
-    _cr_patterns = {
-        "x": (["F", 0, "U", 2, "B", 2, "D", 0, "F"], "RL"), 
-        "y": (["L", 0, "B", 0, "R", 0, "F", 0, "L"], "UD"), 
-        "z": (["U", 1, "R", 1, "D", 1, "L", 1, "U"], "FB")
-    }
-
     def _cube_rotation(self, symbol):
         """Perform the actions like x y' z2 """
-        self[self._cr_patterns[symbol[0]][1][0]].rotate("'" in symbol)
-        self[self._cr_patterns[symbol[0]][1][1]].rotate("'" not in symbol)
-        change = self._cr_patterns[symbol[0]][0][::("'" not in symbol)*2-1]
+        _cr_patterns = {
+            "x": (["F", 0, "U", 2, "B", 2, "D", 0, "F"], "RL"), 
+            "y": (["L", 0, "B", 0, "R", 0, "F", 0, "L"], "UD"), 
+            "z": (["U", 1, "R", 1, "D", 1, "L", 1, "U"], "FB")
+        }
+        self[_cr_patterns[symbol[0]][1][0]].rotate("'" in symbol)
+        self[_cr_patterns[symbol[0]][1][1]].rotate("'" not in symbol)
+        change = _cr_patterns[symbol[0]][0][::("'" not in symbol)*2-1]
         if "'" in symbol:
             for i in range(1, 8, 2):
                 if change[i] == 1: change[i] = -1
@@ -184,18 +181,17 @@ class Cube:
         if "2" in symbol:
             self._cube_rotation(symbol[0])
 
-    _dlr_patterns = {
-        "l": ["x'", "R"], 
-        "u": ["y", "D"], 
-        "f": ["z", "B"], 
-        "d": ["y'", "U"], 
-        "r": ["x", "L"], 
-        "b": ["z'", "F"]
-    }
-
     def _double_layers_rotate(self, symbol):
         """Perform the actions like u r' d2 l' """
-        actions = self._dlr_patterns[symbol[0]][:]
+        _dlr_patterns = {
+            "l": ["x'", "R"], 
+            "u": ["y", "D"], 
+            "f": ["z", "B"], 
+            "d": ["y'", "U"], 
+            "r": ["x", "L"], 
+            "b": ["z'", "F"]
+        }
+        actions = _dlr_patterns[symbol[0]][:]
         if "'" in symbol:
             if "'" in actions[0]: actions[0] = actions[0][0]
             else: actions[0] = actions[0] + "'"
@@ -205,17 +201,16 @@ class Cube:
         self._cube_rotation(actions[0])
         self._outer_layer_rotate(actions[1])
 
-    _mlr_patterns = {
-        "M": "l", 
-        "S": "f", 
-        "E": "d"
-    }
-
     def _middle_layer_rotate(self, symbol):
         """Perform the actions like M S' E2"""
-        self._double_layers_rotate(self._mlr_patterns[symbol[0]] + symbol[1:])
+        _mlr_patterns = {
+            "M": "l", 
+            "S": "f", 
+            "E": "d"
+        }
+        self._double_layers_rotate(_mlr_patterns[symbol[0]] + symbol[1:])
         olr_adds = "" if "'" in symbol else "2" if "2" in symbol else "'"
-        self._outer_layer_rotate(self._mlr_patterns[symbol[0]].upper() + olr_adds)
+        self._outer_layer_rotate(_mlr_patterns[symbol[0]].upper() + olr_adds)
 
     def perform_step(self, step):
         """Perform an action (step)."""
