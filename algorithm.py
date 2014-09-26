@@ -5,6 +5,7 @@ This module is to represent the Rubik's Cube algorithms.
 """
 
 from functools import wraps
+import sys
 
 
 class Step:
@@ -89,19 +90,25 @@ class Algo(list):
             sequence = sequence.split()
         for i in range(len(sequence)):
             sequence[i] = Step(sequence[i])
-        list.__init__(self, sequence)
+        super(Algo, self).__init__(sequence)
 
     def __repr__(self):
         return " ".join(map(lambda x: x.name, self))
 
-    def __getitem__(self, item):
-        if isinstance(item, slice):
-            return Algo(list.__getitem__(self, item))
-        return list.__getitem__(self, item)
+    def __getitem__(self, index):
+        if isinstance(index, slice):
+            return Algo(list.__getitem__(self, index))
+        return list.__getitem__(self, index)
+
+    def __setitem__(self, index, item):
+        if isinstance(index, slice):
+            list.__setitem__(self, index, Algo(item))
+        else:
+            list.__setitem__(self, index, Step(item))
 
     def __stepify(func):
         """Makes last input a Step object."""
-        @wraps(func)
+        @wraps(eval("list.{0}".format(func.__name__)))
         def _func(*args):
             args = list(args[:-1]) + [Step(args[-1])]
             return eval("list.{0}(*args)".format(func.__name__))
@@ -112,13 +119,13 @@ class Algo(list):
         def _func(*args):
             args = list(args[:-1]) + [Algo(args[-1])]
             return eval("list.{0}(*args)".format(func.__name__))
-        _func.__doc__ = func.__doc__
+        _func.__doc__ = eval("list.{0}".format(func.__name__)).__doc__
         _func.__name__ = func.__name__ + " "
         return _func
 
     def __algify_output(func):
         """Makes output a Algo object."""
-        @wraps(func)
+        @wraps(eval("list.{0}".format(func.__name__)))
         def _func(*args):
             if " " in func.__name__:
                 return Algo(func(*args))
@@ -134,10 +141,11 @@ class Algo(list):
     @__algify_output
     @__algify_input
     def __add__(self, another): pass
-    @__algify_output
-    def __getslice__(self, i, j): pass
-    @__algify_input
-    def __setslice__(self, i, j, value): pass
+    if sys.version_info.major == 2:
+        @__algify_output
+        def __getslice__(self, i, j): pass
+        @__algify_input
+        def __setslice__(self, i, j, value): pass
     @__algify_output
     def __mul__(self, i): pass
     def __iadd__(self, another):
@@ -150,8 +158,6 @@ class Algo(list):
     def __le__(self, another): return len(self) <= len(another)
     def __ne__(self, another): return len(self) != len(another)
 
-    @__stepify
-    def __setitem__(self, index, new): pass
     @__stepify
     def __contains__(self, value): pass
     @__stepify
@@ -169,8 +175,6 @@ class Algo(list):
     def extend(*args): pass
     @__delattr
     def sort(*args): pass
-    @__delattr
-    def __dict__(*args): pass
 
     def __or__(self, another):
         """Algo(...) | Algo(...) => Two algorithms are fully same."""
