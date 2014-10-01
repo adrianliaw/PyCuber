@@ -68,6 +68,16 @@ class Step:
         """Reset the action name."""
         self.__init__(new)
 
+    def set_face(self, new_face):
+        """
+        Reset the face of the action.
+        ex: r = Step("R2")
+            r.set_face("U")
+            r => U2
+        """
+        self.face = new_face
+        self.name = new_face + self.name[1:]
+
     def inverse(self):
         """Inverse the action."""
         new = self.name[0] + ("" if "'" in self.name else "'" if not self.name[1:] else "2")
@@ -199,4 +209,65 @@ class Algo(list):
             if i != len(self)-i-1:
                 self[-i-1].inverse()
             self[i], self[-i-1] = self[-i-1], self[i]
+    
+    def clear(self):
+        """Clear this algorithm."""
+        self[:] = ""
+
+    def _optimize_wide_actions(self):
+        """
+        Reduce the wide actions (double layers)
+        ex: R u -> R D y
+            L M -> L L' R x'
+        """
+        pattern = {
+            "r": "L x", 
+            "l": "R x'", 
+            "u": "D y", 
+            "d": "U y'", 
+            "f": "B z", 
+            "b": "F z'", 
+            "M": "R L' x'", 
+            "S": "F' B z", 
+            "E": "U D' y'"
+        }
+        _self = Algo(self)
+        index = 0
+        for step in _self:
+            if step.name[0] in pattern:
+                replacement = Algo(pattern[step.name[0]])
+                if step.name[1:] != "":
+                    for i in range(len(replacement)):
+                        if step.name[1] == "'":
+                            replacement[i] *= -1
+                        else:
+                            replacement[i] *= 2
+                self[index:index+1] = replacement
+                index += len(replacement)
+            else:
+                index += 1
+    
+    def _optimize_rotations(self):
+        """
+        Reduce the rotations (whole cube rotations).
+        ex: x R U   -> R F
+            y' L' F -> B' L
+        """
+        pattern = {
+            "x": "UFDB", 
+            "y": "FRBL", 
+            "z": "ULDR"
+        }
+        _self = Algo(self)
+        self.clear()
+        for i in range(len(_self)-1, -1, -1):
+            if _self[i].face not in pattern:
+                self.insert(0, _self[i])
+            else:
+                cr_pattern = pattern[_self[i].face]
+                for j in range(len(self)):
+                    if self[j].face in cr_pattern:
+                        self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 1) % 4])
+
+
 
