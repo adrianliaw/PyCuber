@@ -330,6 +330,17 @@ class Algo(list):
             rhs._optimize_same_steps()
             self[flag:] = rhs
 
+    def optimize(self):
+        """
+        Optimize the algorithm:
+        - Only outer layers (LUFDRB)
+        - No cube rotations (x y z)
+        - No repeated steps
+        """
+        self._optimize_wide_actions()
+        self._optimize_rotations()
+        self._optimize_same_steps()
+
     del _stepify, _algify_input, _algify_output, _delattr
 
 
