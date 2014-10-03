@@ -8,7 +8,7 @@ from functools import wraps
 import sys
 
 
-class Step:
+class Step(object):
 
     """
     Representing a Rubik's Cube action.
@@ -75,8 +75,12 @@ class Step:
             r.set_face("U")
             r => U2
         """
-        self.face = new_face
-        self.name = new_face + self.name[1:]
+        if new_face in list("LUFDRBlufdrbMSExyz"):
+            self.face = new_face
+            self.name = new_face + self.name[1:]
+        else:
+            raise ValueError("Invalid name")
+
 
     def inverse(self):
         """Inverse the action."""
@@ -111,20 +115,29 @@ class Algo(list):
         return list.__getitem__(self, index)
 
     def __setitem__(self, index, item):
+        if item == None:
+            del self[index]
+            return
         if isinstance(index, slice):
             list.__setitem__(self, index, Algo(item))
         else:
             list.__setitem__(self, index, Step(item))
 
-    def __stepify(func):
+    def __setattr__(self, name, value):
+        if name in dir(self) and name not in ["sort", "extend"]:
+            raise AttributeError("'Algo' object attribute '{}' is read-only".format(name))
+        else:
+            raise AttributeError("'Algo' object has no attribute '{}'".format(name))
+
+    def _stepify(func):
         """Makes last input a Step object."""
-        @wraps(eval("list.{0}".format(func.__name__)))
+        @wraps(eval("list.{0}".format(func.__name__)), assigned=("__name__", "__doc__"))
         def _func(*args):
             args = list(args[:-1]) + [Step(args[-1])]
             return eval("list.{0}(*args)".format(func.__name__))
         return _func
 
-    def __algify_input(func):
+    def _algify_input(func):
         """Makes last input a Algo object."""
         def _func(*args):
             args = list(args[:-1]) + [Algo(args[-1])]
@@ -133,30 +146,30 @@ class Algo(list):
         _func.__name__ = func.__name__ + " "
         return _func
 
-    def __algify_output(func):
+    def _algify_output(func):
         """Makes output a Algo object."""
-        @wraps(eval("list.{0}".format(func.__name__)))
+        @wraps(eval("list.{0}".format(func.__name__)), assigned=("__name__", "__doc__"))
         def _func(*args):
             if " " in func.__name__:
                 return Algo(func(*args))
             return Algo(eval("list.{0}(*args)".format(func.__name__)))
         return _func
 
-    def __delattr(func):
+    def _delattr(func):
         """Raise error when calling some not needed method."""
         def _func(*args):
             raise AttributeError("'Algo' object has no attribute '{0}'".format(func.__name__))
         return _func
 
-    @__algify_output
-    @__algify_input
+    @_algify_output
+    @_algify_input
     def __add__(self, another): pass
     if sys.version_info.major == 2:
-        @__algify_output
+        @_algify_output
         def __getslice__(self, i, j): pass
-        @__algify_input
+        @_algify_input
         def __setslice__(self, i, j, value): pass
-    @__algify_output
+    @_algify_output
     def __mul__(self, i): pass
     def __iadd__(self, another):
         return self.__add__(another)
@@ -168,22 +181,22 @@ class Algo(list):
     def __le__(self, another): return len(self) <= len(another)
     def __ne__(self, another): return len(self) != len(another)
 
-    @__stepify
+    @_stepify
     def __contains__(self, value): pass
-    @__stepify
+    @_stepify
     def append(self, another): pass
-    @__stepify
+    @_stepify
     def count(self, value): pass
-    @__stepify
+    @_stepify
     def index(self, start, stop): pass
-    @__stepify
+    @_stepify
     def insert(self, index, obj): pass
-    @__stepify
+    @_stepify
     def remove(self, value): pass
 
-    @__delattr
+    @_delattr
     def extend(*args): pass
-    @__delattr
+    @_delattr
     def sort(*args): pass
 
     def __or__(self, another):
@@ -211,8 +224,12 @@ class Algo(list):
             self[i], self[-i-1] = self[-i-1], self[i]
     
     def clear(self):
-        """Clear this algorithm."""
+        """L.clear() -> None -- remove all items from L"""
         self[:] = ""
+
+    def copy(self):
+        """L.copy() -> Algo -- a shallow copy of L"""
+        return Algo(self)
 
     def _optimize_wide_actions(self):
         """
@@ -265,9 +282,54 @@ class Algo(list):
                 self.insert(0, _self[i])
             else:
                 cr_pattern = pattern[_self[i].face]
+                if _self[i].is_inverse:
+                    cr_pattern = cr_pattern[::-1]
                 for j in range(len(self)):
                     if self[j].face in cr_pattern:
-                        self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 1) % 4])
+                        if _self[i].is_180:
+                            self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 2) % 4])
+                        else:
+                            self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 1) % 4])
 
+    def _optimize_same_steps(self):
+        """
+        Reduce repeated steps.
+        ex: R R2 U U' -> R'
+            L' R L2   -> L R
+        """
+        opposite = {"U":"D", "L":"R", "F":"B", "D":"U", "R":"L", "B":"F"}
+        if len(self) < 2:
+            return
+        elif len(self) == 2:
+            if self[0].face == self[1].face:
+                if self[0] + self[1] == None:
+                    self[0] += self[1]
+                    del self[0]
+                else:
+                    self[0] += self[1]
+                    del self[1]
+        else:
+            flag = True
+            if self[0].face == self[2].face and opposite[self[0].face] == self[1].face:
+                if self[0] + self[2] == None:
+                    self[0] += self[2]
+                    del self[1]
+                    flag = False
+                else:
+                    self[0] += self[2]
+                    del self[2]
+            if self[0].face == self[1].face:
+                if self[0] + self[1] == None:
+                    self[0] += self[1]
+                    del self[0]
+                    flag = False
+                else:
+                    self[0] += self[1]
+                    del self[1]
+            rhs = self[flag:]
+            rhs._optimize_same_steps()
+            self[flag:] = rhs
+
+    del _stepify, _algify_input, _algify_output, _delattr
 
 
