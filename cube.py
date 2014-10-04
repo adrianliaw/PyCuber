@@ -15,7 +15,7 @@ ________________
 
 """
 
-from algorithm import *
+from .algorithm import *
 from collections import namedtuple
 _Cuboid = namedtuple("Cuboid", ["x", "y", "z"])
 _Cuboid.type = "Cuboid"

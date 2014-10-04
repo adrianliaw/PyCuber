@@ -12,9 +12,53 @@ class Step(object):
 
     """
     Representing a Rubik's Cube action.
+    
+    >>> r = Step("R")
+    >>> r
+    R
+
+    >>> u_prime = Step("U'")
+    >>> u_prime
+    U'
+
+    You can check if it's clockwise (ex: U), counter-clockwise (ex: U'), or 180 degrees (ex: U2)
+    >>> r.is_standard
+    True
+    >>> r.is_inverse
+    False
+    >>> r.is_180
+    False
+
+    >>> u_prime.is_standard
+    False
+    >>> u_prime.is_inverse
+    True
+    >>> u_prime.is_180
+    False
+
+    Or you can inverse action like this:
+    >>> s = Step("U'")
+    >>> s.inverse()
+    >>> s
+    U
+
     """
 
     def __init__(self, name):
+        """
+        Initialize a Step object.
+
+        >>> s = Step("R2")
+        >>> s
+        R2
+
+        >>> s.__init__("L'")
+        >>> s
+        L'
+
+        >>> s = Step("W'")
+        ValueError: Invalid action name.
+        """
         if isinstance(name, Step):
             name = name.name
         try:
@@ -31,9 +75,36 @@ class Step(object):
             raise ValueError("Invalid action name.")
 
     def __repr__(self):
+        """
+        Representing a Step, just print out the name.
+
+        >>> s = Step("L'")
+
+        >>> s.__repr__()
+        "L'"
+        """
         return self.name
 
     def __eq__(self, another):
+        """
+        Check if two Steps are the same.
+
+        >>> s = Step("U'")
+        >>> p = Step("U'")
+
+        >>> s == p
+        True
+
+        >>> p = Step("U2")
+        >>> s == p
+        False
+
+        >>> s == "U'"
+        True
+
+        >>> s == "U2"
+        False
+        """
         if type(another) == str:
             return self.name == another
         elif isinstance(another, Step):
@@ -42,13 +113,43 @@ class Step(object):
             return False
 
     def __ne__(self, another):
+        """
+        Check if two Steps are different.
+
+        >>> s = Step("R")
+        >>> p = Step("R")
+        >>> s != p
+        False
+
+        >>> p = Step("U'")
+        >>> s != p
+        True
+
+        >>> s != "R'"
+        True
+
+        >>> s != "R"
+        False
+        """
         return not self.__eq__(another)
 
     def __add__(self, another):
         """
-        Step("U") + Step("U2") => Step("U'")
-        Step("R2") + Step("R2") => None
+        Adding two Steps, these two have to be the same face action.
+
+        >>> s = Step("R")
+        >>> p = Step("R2")
+        >>> s + p
+        R'
+
+        >>> s + "R'"
+        None
+
+        >>> s + "L"
+        ValueError: Should be the same side action.
         """
+        if type(another) == str:
+            another = Step(another)
         if self.face == another.face:
             status = ((self.is_standard    + self.is_180*2    + self.is_inverse*3) + \
                       (another.is_standard + another.is_180*2 + another.is_inverse*3)) % 4
@@ -58,6 +159,22 @@ class Step(object):
         raise ValueError("Should be the same side action.")
 
     def __mul__(self, i):
+        """
+        Multiply a Step by i times.
+        The result will be as same as repeat this step for i times.
+
+        >>> s = Step("U")
+        >>> s * 2
+        U2
+        >>> s * 3
+        U'
+
+        >>> s = Step("U'")
+        >>> s * 3
+        U
+        >>> s * 10
+        U2
+        """
         i = i % 4
         result = Step(self.name)
         for j in range(i-1):
@@ -65,15 +182,30 @@ class Step(object):
         return result
 
     def set(self, new):
-        """Reset the action name."""
+        """
+        Reset this Step.
+
+        >>> s = Step("R2")
+        >>> s
+        R2
+
+        >>> s.set("U'")
+        >>> s
+        U'
+        """
         self.__init__(new)
 
     def set_face(self, new_face):
         """
         Reset the face of the action.
-        ex: r = Step("R2")
-            r.set_face("U")
-            r => U2
+
+        >>> s = Step("R2")
+        >>> s
+        R2
+
+        >>> s.set_face("L")
+        >>> s
+        L2
         """
         if new_face in list("LUFDRBlufdrbMSExyz"):
             self.face = new_face
@@ -83,8 +215,23 @@ class Step(object):
 
 
     def inverse(self):
-        """Inverse the action."""
-        new = self.name[0] + ("" if "'" in self.name else "'" if not self.name[1:] else "2")
+        """
+        Inverse the Step.
+
+        >>> s = Step("R")
+        >>> s
+        R
+
+        >>> s.inverse()
+        >>> s
+        R'
+
+        >>> s = Step("R2")
+        >>> s.inverse()
+        >>> s
+        R2
+        """
+        new = self.name[0] + ("" if self.is_inverse else "'" if self.is_standard else "2")
         self.__init__(new)
 
 
@@ -345,10 +492,22 @@ class Algo(list):
         """
         Random n steps.
         """
+        opposite = {"U":"D", "L":"R", "F":"B", "D":"U", "R":"L", "B":"F"}
         if clear:
             self.clear()
         for i in range(n):
-            self.append(random.choice("LUFDRB"))
+            self.append(random.choice("LUFDRB") + random.choice(["", "'", "2"]))
+            try:
+                while True:
+                    if self[-1].face != self[-2].face and \
+                            self[-1].face != self[-3].face and \
+                            opposite[self[-1].face] != self[-2].face:
+                        break
+                    del self[-1]
+                    self.append(random.choice("LUFDRB") + random.choice(["", "'", "2"]))
+            except IndexError:
+                pass
+                    
 
     del _stepify, _algify_input, _algify_output, _delattr
 
