@@ -5,7 +5,7 @@ This module is to represent the Rubik's Cube algorithms.
 """
 
 from functools import wraps
-import sys
+import sys, random
 
 
 class Step(object):
@@ -340,6 +340,15 @@ class Algo(list):
         self._optimize_wide_actions()
         self._optimize_rotations()
         self._optimize_same_steps()
+
+    def random(self, n=25, clear=True):
+        """
+        Random n steps.
+        """
+        if clear:
+            self.clear()
+        for i in range(n):
+            self.append(random.choice("LUFDRB"))
 
     del _stepify, _algify_input, _algify_output, _delattr
 
