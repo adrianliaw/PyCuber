@@ -507,7 +507,29 @@ class Algo(list):
                     self.append(random.choice("LUFDRB") + random.choice(["", "'", "2"]))
             except IndexError:
                 pass
-                    
+
+    def mirror(self, direction="LR"):
+        """
+        Mirror the algorithm.
+        """
+        opposite = {"U":"D", "L":"R", "F":"B", "D":"U", "R":"L", "B":"F"}
+        direction = set(direction)
+        specials = {
+            frozenset("LR"): ("x", "M"), 
+            frozenset("FB"): ("z", "S"), 
+            frozenset("UD"): ("y", "E")
+        }[frozenset(direction)]
+        if direction not in (set("LR"), set("UD"), set("FB")):
+            raise ValueError("There is only LR mirror, FB mirror, UD mirror")
+        for step in self:
+            if step.face.upper() in direction:
+                if step.face.islower():
+                    step.set_face(opposite[step.face.upper()].lower())
+                else:
+                    step.set_face(opposite[step.face])
+            elif step.face in specials:
+                continue
+            step.inverse()
 
     del _stepify, _algify_input, _algify_output, _delattr
 
