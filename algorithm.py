@@ -321,14 +321,39 @@ class Algo(list):
         super(Algo, self).__init__(sequence)
 
     def __repr__(self):
+        """
+        Representing a Algo object, just print out every move
+
+        >>> a = Algo("R U R' U'")
+        >>> a
+        R U R' U'
+        """
         return " ".join(map(lambda x: x.name, self))
 
     def __getitem__(self, index):
+        """
+        Get ith item of Algo.
+
+        >>> a = Algo("R U R' U'")
+        >>> a[1]
+        U
+        """
         if isinstance(index, slice):
             return Algo(list.__getitem__(self, index))
         return list.__getitem__(self, index)
 
     def __setitem__(self, index, item):
+        """
+        Set ith item of Algo.
+
+        >>> a = Algo("R U R' U'")
+        >>> a[0] = Step("L")
+        >>> a
+        L U R' U'
+        >>> a[0] = "R'"
+        >>> a
+        R' U R' U'
+        """
         if item == None:
             del self[index]
             return
@@ -338,6 +363,9 @@ class Algo(list):
             list.__setitem__(self, index, Step(item))
 
     def __setattr__(self, name, value):
+        """
+        We don't allow user to set attribute.
+        """
         if name in dir(self) and name not in ["sort", "extend"]:
             raise AttributeError("'Algo' object attribute '{}' is read-only".format(name))
         else:
@@ -346,16 +374,16 @@ class Algo(list):
     def _stepify(func):
         """Makes last input a Step object."""
         @wraps(eval("list.{0}".format(func.__name__)), assigned=("__name__", "__doc__"))
-        def _func(*args):
+        def _func(*args, **kwargs):
             args = list(args[:-1]) + [Step(args[-1])]
-            return eval("list.{0}(*args)".format(func.__name__))
+            return eval("list.{0}(*args, **kwargs)".format(func.__name__))
         return _func
 
     def _algify_input(func):
         """Makes last input a Algo object."""
-        def _func(*args):
+        def _func(*args, **kwargs):
             args = list(args[:-1]) + [Algo(args[-1])]
-            return eval("list.{0}(*args)".format(func.__name__))
+            return eval("list.{0}(*args, **kwargs)".format(func.__name__))
         _func.__doc__ = eval("list.{0}".format(func.__name__)).__doc__
         _func.__name__ = func.__name__ + " "
         return _func
@@ -363,15 +391,15 @@ class Algo(list):
     def _algify_output(func):
         """Makes output a Algo object."""
         @wraps(eval("list.{0}".format(func.__name__)), assigned=("__name__", "__doc__"))
-        def _func(*args):
+        def _func(*args, **kwargs):
             if " " in func.__name__:
-                return Algo(func(*args))
-            return Algo(eval("list.{0}(*args)".format(func.__name__)))
+                return Algo(func(*args, **kwargs))
+            return Algo(eval("list.{0}(*args, **kwargs)".format(func.__name__)))
         return _func
 
     def _delattr(func):
         """Raise error when calling some not needed method."""
-        def _func(*args):
+        def _func(*args, **kwargs):
             raise AttributeError("'Algo' object has no attribute '{0}'".format(func.__name__))
         return _func
 
@@ -388,12 +416,89 @@ class Algo(list):
     def __iadd__(self, another):
         return self.__add__(another)
     
-    def __eq__(self, another): return len(self) == len(another)
-    def __lt__(self, another): return len(self) < len(another)
-    def __gt__(self, another): return len(self) > len(another)
-    def __ge__(self, another): return len(self) >= len(another)
-    def __le__(self, another): return len(self) <= len(another)
-    def __ne__(self, another): return len(self) != len(another)
+    def __eq__(self, another):
+        """
+        Check if length of this Algo is equal to another.
+        
+        >>> a = Algo("R U R' U'")
+        >>> a == Algo("R' F R F'")
+        True
+        >>> a == "U R U' R'"
+        True
+        >>> a == Algo("R U R'")
+        False
+        """
+        return len(self) == len(Algo(another))
+
+    def __lt__(self, another):
+        """
+        Check if length of this Algo is less than another.
+
+        >>> a = Algo("R U R' U'")
+        >>> a < Algo("R' F R F' R'")
+        True
+        >>> a < Algo("R U R'")
+        False
+        >>> a < "R' F R F' R'"
+        True
+        """
+        return len(self) < len(Algo(another))
+
+    def __gt__(self, another):
+        """
+        Check if length of this Algo is greater than another.
+
+        >>> a = Algo("R U R' U'")
+        >>> a > Algo("R U R'")
+        True
+        >>> a > Algo("R' F R F' R'")
+        False
+        >>> a > "R U R'"
+        True
+        """
+        return len(self) > len(Algo(another))
+
+    def __ge__(self, another):
+        """
+        Check if length of this Algo is greater than or equal to another.
+
+        >>> a = Algo("R U R' U'")
+        >>> a >= Algo("R U R'")
+        True
+        >>> a >= Algo("R' F R F' R'")
+        False
+        >>> a >= "R U R' U"
+        True
+        """
+        return len(self) >= len(Algo(another))
+
+    def __le__(self, another):
+        """
+        Check if length of this Algo is less than or equal to another.
+
+        >>> a = Algo("R U R' U'")
+        >>> a <= Algo("R U R'")
+        False
+        >>> a <= Algo("R' F R F' R'")
+        True
+        >>> a <= "R U R' U"
+        True
+        """
+        return len(self) <= len(Algo(another))
+
+    def __ne__(self, another):
+        """
+        Check if length of this Algo is'n equal to another.
+
+        >>> a = Algo("R U R' U'")
+        >>> a <= Algo("R U R'")
+        False
+        >>> a <= Algo("R' F R F' R'")
+        True
+        >>> a <= "R U R' U"
+        True
+        """
+        return len(self) != len(Algo(another))
 
     @_stepify
     def __contains__(self, value): pass
@@ -414,21 +519,34 @@ class Algo(list):
     def sort(*args): pass
 
     def __or__(self, another):
-        """Algo(...) | Algo(...) => Two algorithms are fully same."""
-        try:
-            if type(another) == str:
-                another = another.split()
+        """
+        Check if two Algos are fully same.
+
+        >>> a = Algo("R U R' U'")
+        >>> a == Algo("R' F R F'")
+        True
+        >>> a | "R' F R F'"
+        False
+        >>> a | "R U R' U'"
+        True
+        """
+        another = Algo(another)
+        if len(self) == len(another):
             for i in range(len(self)):
                 if self[i] != another[i]:
-                    return False
-            return True
-        except:
-            return False
+                    break
+            else:
+                return True
+        return False
     
     def reverse(self):
         """
-        Reverse this algorithm
-        Algo([R U R' U']) => Algo([U R U' R'])
+        Reverse this Algo.
+
+        >>> a = Algo("R U R' U'")
+        >>> a.reverse()
+        >>> a
+        U R U' R'
         """
         if len(self) == 0: return
         for i in range(int((len(self)+1)/2)):
@@ -447,9 +565,13 @@ class Algo(list):
 
     def _optimize_wide_actions(self):
         """
+        Helper function for Algo.optimize()
         Reduce the wide actions (double layers)
-        ex: R u -> R D y
-            L M -> L L' R x'
+
+        >>> a = Algo("r u' M2")
+        >>> a._optimize_wide_actions()
+        >>> a
+        L x D' y' R2 L2 x2
         """
         pattern = {
             "r": "L x", 
@@ -480,9 +602,13 @@ class Algo(list):
     
     def _optimize_rotations(self):
         """
+        Helper function for Algo.optimize()
         Reduce the rotations (whole cube rotations).
-        ex: x R U   -> R F
-            y' L' F -> B' L
+
+        >>> a = Algo("L x D' y' R2 L2 x2")
+        >>> a._optimize_rotations()
+        >>> a
+        L B' D2 U2
         """
         pattern = {
             "x": "UFDB", 
@@ -507,9 +633,18 @@ class Algo(list):
 
     def _optimize_same_steps(self):
         """
+        Helper function for Algo.optimize()
         Reduce repeated steps.
-        ex: R R2 U U' -> R'
-            L' R L2   -> L R
+
+        >>> a = Algo("R R2 U'")
+        >>> a._optimize_same_steps()
+        >>> a
+        R' U'
+
+        >>> a = Algo("R L' R U2")
+        >>> a._optimize_same_steps()
+        >>> a
+        R2 L' U2
         """
         opposite = {"U":"D", "L":"R", "F":"B", "D":"U", "R":"L", "B":"F"}
         if len(self) < 2:
@@ -550,6 +685,11 @@ class Algo(list):
         - Only outer layers (LUFDRB)
         - No cube rotations (x y z)
         - No repeated steps
+
+        >>> a = Algo("R U r' x2 M' y' D D' L2 R L'")
+        >>> a.optimize()
+        >>> a
+        R U R' F B
         """
         self._optimize_wide_actions()
         self._optimize_rotations()
@@ -557,7 +697,16 @@ class Algo(list):
 
     def random(self, n=25, clear=True):
         """
-        Random n steps.
+        Random n Steps. (default 25)
+
+        >>> a = Algo()
+        >>> a.random()
+        >>> a
+        D' L' U B' D' F2 R D2 L2 F2 U' L' D F2 R' B D R2 B2 D R' U F2 R D
+
+        >>> a.random(15)
+        >>> a
+        F' R D B2 R' F' L2 D2 F2 L2 D2 B' U F2 L
         """
         opposite = {"U":"D", "L":"R", "F":"B", "D":"U", "R":"L", "B":"F"}
         if clear:
@@ -578,6 +727,23 @@ class Algo(list):
     def mirror(self, direction="LR"):
         """
         Mirror the algorithm.
+
+        >>> a = Algo("R U R' U'")
+        >>> a.mirror()
+        >>> a
+        L' U' L U
+        >>> a.mirror("LR")
+        >>> a
+        R U R' U'
+
+        >>> a.mirror("UD")
+        >>> a
+        R' D' R D
+
+        >>> a = Algo("R' F R F'")
+        >>> a.mirror("FB")
+        >>> a
+        R B' R' B
         """
         opposite = {"U":"D", "L":"R", "F":"B", "D":"U", "R":"L", "B":"F"}
         direction = set(direction)
