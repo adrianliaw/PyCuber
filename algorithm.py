@@ -1,6 +1,24 @@
 """
 
-This module is to represent the Rubik's Cube algorithms.
+This module is to implement the Rubik's Cube algorithms.
+You can deal with Rubik's Cube algorithms easily with Step and Algo.
+
+Usage:
+    >>> a = Algo("R U R' U'")
+    >>> a
+    R U R' U'
+
+    >>> a.reverse()
+    >>> a
+    U R U' R'
+
+    >>> a.mirror()
+    >>> a
+    U' L' U L
+
+    >>> a *= 3
+    >>> a
+    U' L' U L U' L' U L U' L' U L
 
 """
 
