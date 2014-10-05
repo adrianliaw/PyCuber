@@ -42,6 +42,28 @@ class Step(object):
     >>> s
     U
 
+    You can reset the Step like this:
+    >>> s.set("R2")
+    >>> s
+    R2
+
+    Or just set the face of Step.
+    >>> s.set_face("L")
+    >>> s
+    L2
+
+    You can add two Steps together!
+    >>> s + Step("L'")
+    L
+    >>> s + Step("L2")
+    None
+
+    And also multiply by numbers!
+    >>> s.set("L")
+    >>> s * 2
+    L2
+    >>> s * 5
+    L
     """
 
     def __init__(self, name):
