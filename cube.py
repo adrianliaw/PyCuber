@@ -1,22 +1,49 @@
 """
-This module is going to implement a Rubik's Cube
+This module is to implement a Rubik's Cube
 
-It implements like this
-________________
-|    |    |    |
-| 00 | 01 | 02 |
-|____|____|____|
-|    |    |    |
-| 07 |(08)| 03 |
-|____|____|____|
-|    |    |    |
-| 06 | 05 | 04 |
-|____|____|____|
+The data structure of a Rubik's Cube is like this:
+           
+    Cube - | L face
+           | U face
+           | F face
+           | D face
+           | R face
+           | B face
+
+    Face - | centre
+           | list of 8 stickers around centre sticker
+            ________________
+            |    |    |    |
+            | 00 | 01 | 02 |
+            |____|____|____|
+            |    |    |    |
+            | 07 |    | 03 |
+            |____|____|____|
+            |    |    |    |
+            | 06 | 05 | 04 |
+            |____|____|____|
+
+Easy to use and easy to visualise.
+
+>>> c = Cube()
+>>> c
+(If you're in terminal, you'll see some graphics.)
+
+>>> a = Algo("R U R' U' R' F R2 U' R' U' R U R' F'") # T-perm
+>>> c.apply(a) # Perform T-perm on c.
+>>> c
+(Graphics)
+
+>>> a.reverse() # Reverse the T-perm algorithm.
+>>> c.apply(a) # Perform reversed T-perm.
+>>> c
+(You'll see a solved cube.)
 
 """
 
 from .algorithm import *
 from collections import namedtuple
+from pprint import pformat
 _Cuboid = namedtuple("Cuboid", ["x", "y", "z"])
 _Cuboid.type = "Cuboid"
 _Square = namedtuple("Square", ["face", "index", "colour"])
@@ -231,6 +258,11 @@ class Cube:
         algo = Algo(algo)
         for step in algo:
             self.perform_step(step)
+    
+    def apply(self, algo_or_step):
+        """Perform a Step or a Algo."""
+        algo = Algo(algo_or_step)
+        self.perform_algo(algo)
 
     def as_graph(self):
         """Convert cube into graph. \nGraphics: http://pycuber.appspot.com/cubegraph/main.html"""
@@ -304,4 +336,4 @@ class _CubeAsGraph(dict):
                         else:
                             for _ in range(1, 8, 2):
                                 self[sqr_nbr].add( sqr_nbr._replace(index=_, colour=cube[face][index].colour) )
-
+    
