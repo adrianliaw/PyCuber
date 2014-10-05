@@ -262,10 +262,55 @@ class Algo(list):
 
     """
     Representing a Rubik's Cube algorithm.
-    | Algo(["R", "U", "R'", "U'"])
-    | Algo([Step("R"), Step("U"), Step("R'"), Step("U'")])
-    | Algo("R U R' U'")
-    | -> Algo object (extends list)
+
+    >>> a = Algo("R U R' U'")
+    >>> a
+    R U R' U'
+
+    You can add two Algos together:
+    >>> a + Algo("R' F R F'")
+    R U R' U' R' F R F'
+    >>> a + "F R' F' R"
+    R U R' U' F R' F' R
+
+    And also multiply by n times:
+    >>> a * 3
+    R U R' U' R U R' U' R U R' U'
+
+    ==, >, >=, <, <=, != are a little bit different
+    It only depends on the length
+    >>> a
+    R U R' U'
+    >>> a == Algo("R' F R F'")
+    True
+    >>> a < Algo("R U R'")
+    False
+
+    If you want to check if two Algos are fully same, use |
+    >>> a | Algo("R U R' U'")
+    True
+    >>> a | Algo("R' F R F'")
+    False
+
+    You can reverse an Algo simply like this:
+    >>> a.reverse()
+    >>> a
+    U R U' R'
+
+    You can also mirror it!
+    >>> a.mirror()
+    >>> a
+    U' L' U L
+    >>> a.mirror("UD")
+    >>> a
+    D L D' L'
+    
+    Also optimizing - only outer layer Steps.
+    >>> a = Algo("R U r' x2 M' y' D D' L2 R L'")
+    >>> a.optimize()
+    >>> a
+    R U R' F B
+
     """
 
     def __init__(self, sequence=[]):
