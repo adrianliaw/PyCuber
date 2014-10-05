@@ -258,12 +258,12 @@ class Cube:
         algo = Algo(algo)
         for step in algo:
             self.perform_step(step)
-    
-    def apply(self, algo_or_step):
-        """Perform a Step or a Algo."""
+
+    def __call__(self, algo_or_step):
+        """Perform Step or Algo on this cube."""
         algo = Algo(algo_or_step)
         self.perform_algo(algo)
-
+    
     def as_graph(self):
         """Convert cube into graph. \nGraphics: http://pycuber.appspot.com/cubegraph/main.html"""
         return _CubeAsGraph(self)
@@ -336,4 +336,4 @@ class _CubeAsGraph(dict):
                         else:
                             for _ in range(1, 8, 2):
                                 self[sqr_nbr].add( sqr_nbr._replace(index=_, colour=cube[face][index].colour) )
-    
+

@@ -334,6 +334,8 @@ class Algo(list):
     def __init__(self, sequence=[]):
         if type(sequence) == str:
             sequence = sequence.split()
+        elif isinstance(sequence, Step):
+            sequence = [sequence]
         for i in range(len(sequence)):
             sequence[i] = Step(sequence[i])
         super(Algo, self).__init__(sequence)
