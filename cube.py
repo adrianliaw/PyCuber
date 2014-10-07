@@ -103,12 +103,12 @@ class Square(object):
         """
         return self.colour != another.colour
 
-    def clone(self):
+    def copy(self):
         """
-        Clone this square.
+        Copy this square.
 
         >>> s = Square("yellow")
-        >>> p = s.clone()
+        >>> p = s.copy()
         >>> s == p
         True
         """
@@ -173,9 +173,9 @@ class Face(object):
         else:
             return self.arounds[sum(xy)]
 
-    def clone(self):
-        """Clone a face."""
-        new = Face([self.arounds[i].clone() for i in range(8)] + [self.centre.clone()])
+    def copy(self):
+        """Copy a face."""
+        new = Face([self.arounds[i].copy() for i in range(8)] + [self.centre.clone()])
         new.user_data = self.user_data.copy()
         return new
 
@@ -235,7 +235,7 @@ class Cube(object):
         }
         self[symbol[0]].rotate("'" in symbol)
         rows = [self[p[0]].get_row(p[1]) for p in _olr_patterns[symbol[0]].split()]
-        copy = [[sqr.clone() for sqr in a_row] for a_row in rows]
+        copy = [[sqr.copy() for sqr in a_row] for a_row in rows]
         for i in range(len(rows)):
             for j in range(len(rows[i])):
                 rows[i][j].colour = copy[(i + ("'" in symbol) * 2 - 1) % 4][j].colour
@@ -255,7 +255,7 @@ class Cube(object):
         if "'" in symbol:
             for i in range(1, 8, 2):
                 if change[i] == 1: change[i] = -1
-        old = [self[change[i]].clone() for i in range(0, 7, 2)]
+        old = [self[change[i]].copy() for i in range(0, 7, 2)]
         for i in range(4):
             if change[i*2+1] == 2:
                 for j in range(2): old[i].rotate()
@@ -325,9 +325,9 @@ class Cube(object):
         """Convert cube into graph. \nGraphics: http://pycuber.appspot.com/cubegraph/main.html"""
         return _CubeAsGraph(self)
 
-    def clone(self):
-        """Clone this cube."""
-        new = Cube([self[face].clone() for face in "LUFDRB"])
+    def copy(self):
+        """Copy this cube."""
+        new = Cube([self[face].copy() for face in "LUFDRB"])
         new.user_data = self.user_data.copy()
         return new
 
