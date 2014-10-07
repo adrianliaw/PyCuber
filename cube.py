@@ -54,7 +54,7 @@ _Square = namedtuple("Square", ["face", "index", "colour"])
 _Square.type = "Square"
 
 
-class Square:
+class Square(object):
 
     """
     Square(colour, face, index), implements a square (sticker) on a cube.
@@ -117,7 +117,7 @@ class Square:
 
 
 
-class Face:
+class Face(object):
 
     """
     Face(face, colour_or_list_of_squares), implements a face on a cube.
@@ -170,7 +170,7 @@ class Face:
 
 
 
-class Cube:
+class Cube(object):
 
     """
     Cube([face * 6 L,U,F,D,R,B]), implements a whole cube.
