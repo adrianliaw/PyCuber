@@ -114,6 +114,17 @@ class Square(object):
         """
         new = Square(self.colour)
         return new
+    
+    def __hash__(self):
+        """
+        Square object is hashable.
+
+        >>> s = Square("red")
+        >>> hash(s)
+        505081555585376768
+        """
+        colour_to_hex = {"red":0xFF0000, "yellow":0xFFFF00, "green":0x00FF00, "white":0xFFFFFF, "orange":0xFFA500, "blue":0x0000FF}
+        return hash(str(self)) + colour_to_hex[self.colour]
 
 
 
