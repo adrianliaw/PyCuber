@@ -43,7 +43,11 @@ Easy to use and easy to visualise.
 
 from .algorithm import *
 from collections import namedtuple
-from pprint import pformat
+try:
+    from itertools import zip_longest
+except ImportError:
+    from itertools import izip_longest as zip_longest
+
 _Cuboid = namedtuple("Cuboid", ["x", "y", "z"])
 _Cuboid.type = "Cuboid"
 _Square = namedtuple("Square", ["face", "index", "colour"])
@@ -336,4 +340,20 @@ class _CubeAsGraph(dict):
                         else:
                             for _ in range(1, 8, 2):
                                 self[sqr_nbr].add( sqr_nbr._replace(index=_, colour=cube[face][index].colour) )
+
+    def __repr__(self):
+        result = ("=" * 70 + "\n") * 2
+        cuboids = filter(lambda x:x.type == "Cuboid", self.keys())
+        squares = filter(lambda x:x.type == "Square", self.keys())
+        for cos in [cuboids, squares]:
+            for key in sorted(cos):
+                value = self[key]
+                result += "{0}:\n".format(key)
+                _cuboids = filter(lambda x:x.type == "Cuboid", value)
+                _squares = filter(lambda x:x.type == "Square", value)
+                for c, s in zip_longest(_cuboids, _squares, fillvalue=""):
+                    result += "    {0!s: <25} {1!s: <45}\n".format(c, s)
+                result += "\n"
+        return result
+
 
