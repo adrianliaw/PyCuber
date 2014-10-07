@@ -27,17 +27,17 @@ Easy to use and easy to visualise.
 
 >>> c = Cube()
 >>> c
-(If you're in terminal, you'll see some graphics.)
+      \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\n      \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\n      \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\n      \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\n      \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\n      \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
 
 >>> a = Algo("R U R' U' R' F R2 U' R' U' R U R' F'") # T-perm
->>> c.apply(a) # Perform T-perm on c.
+>>> c(a) # Perform T-perm on c.
 >>> c
-(Graphics)
+      \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\n      \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\n      \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[41m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\n      \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\n      \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\n      \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
 
 >>> a.reverse() # Reverse the T-perm algorithm.
->>> c.apply(a) # Perform reversed T-perm.
+>>> c(a) # Perform reversed T-perm.
 >>> c
-(You'll see a solved cube.)
+      \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\n      \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\n      \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\n      \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\n      \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\n      \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
 
 """
 
@@ -61,7 +61,7 @@ class Square(object):
 
     >>> s = Square("green")
     >>> s
-    (Two spaces with green background)
+    \x1b[42m  \x1b[49m
 
     Notice: Only use red, yellow, green, white, orange and blue.
     """
@@ -75,9 +75,9 @@ class Square(object):
 
         >>> s = Square("red")
         >>> s
-        (Two spaces with red background)
+        \x1b[45m  \x1b[49m
         >>> s.__repr__()
-        '\x1b[45m  \x1b[49m'
+        '\\x1b[45m  \\x1b[49m'
         """
         return {"red":"\x1b[45m", "yellow":"\x1b[43m", "green":"\x1b[42m", "white":"\x1b[47m", "orange":"\x1b[41m", "blue":"\x1b[46m"}[self.colour] + "  \x1b[49m"
     
