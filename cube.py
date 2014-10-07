@@ -139,7 +139,6 @@ class Face(object):
             squares = [Square(squares) for i in range(9)]
         self.centre = squares[8]
         self.arounds = squares[:8]
-        self.user_data = {}
 
     def __repr__(self):
         return (''.join(str(self.arounds[i]) for i in range(3)) + "\n" + 
@@ -176,7 +175,6 @@ class Face(object):
     def copy(self):
         """Copy a face."""
         new = Face([self.arounds[i].copy() for i in range(8)] + [self.centre.clone()])
-        new.user_data = self.user_data.copy()
         return new
 
 
@@ -194,7 +192,6 @@ class Cube(object):
         else:
             for pair in enumerate("LUFDRB"):
                 self[pair[1]] = faces[pair[0]]
-        self.user_data = {}
 
     def __repr__(self):
         result = ["      ", "      ", "      ", "", "", "", "      ", "      ", "      "]
@@ -328,7 +325,6 @@ class Cube(object):
     def copy(self):
         """Copy this cube."""
         new = Cube([self[face].copy() for face in "LUFDRB"])
-        new.user_data = self.user_data.copy()
         return new
 
 
