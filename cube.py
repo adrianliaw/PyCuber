@@ -58,19 +58,61 @@ class Square:
 
     """
     Square(colour, face, index), implements a square (sticker) on a cube.
+
+    >>> s = Square("green")
+    >>> s
+    (Two spaces with green background)
+
+    Notice: Only use red, yellow, green, white, orange and blue.
     """
 
     def __init__(self, colour):
         self.colour = colour
-        self.user_data = {}
 
     def __repr__(self):
+        """
+        Print out two spaces with background colours.
+
+        >>> s = Square("red")
+        >>> s
+        (Two spaces with red background)
+        >>> s.__repr__()
+        '\x1b[45m  \x1b[49m'
+        """
         return {"red":"\x1b[45m", "yellow":"\x1b[43m", "green":"\x1b[42m", "white":"\x1b[47m", "orange":"\x1b[41m", "blue":"\x1b[46m"}[self.colour] + "  \x1b[49m"
+    
+    def __eq__(self, another):
+        """
+        Check if the colour is as same as another.
+
+        >>> s = Square("red")
+        >>> p = Square("red")
+        >>> s == p
+        True
+        """
+        return self.colour == another.colour
+
+    def __ne__(self, another):
+        """
+        Check if the colours are different.
+        
+        >>> s = Square("red")
+        >>> p = Square("green")
+        >>> s != p
+        True
+        """
+        return self.colour != another.colour
 
     def clone(self):
-        """Clone a Square from another Square"""
+        """
+        Clone this square.
+
+        >>> s = Square("yellow")
+        >>> p = s.clone()
+        >>> s == p
+        True
+        """
         new = Square(self.colour)
-        new.user_data = self.user_data.copy()
         return new
 
 
