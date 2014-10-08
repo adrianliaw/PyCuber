@@ -613,6 +613,37 @@ class Cube(object):
         """
         Helper function for Cube.perform_step()
         Perform the actions like U R' D2 L'
+
+        >>> c = Cube()
+        >>> c._outer_layer_rotate("R2")
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[47m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+        >>> c._outer_layer_rotate("U'")
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+
+        Available actions:
+            L L' L2
+            U U' U2
+            F F' F2
+            D D' D2
+            R R' R2
+            B B' B2
+
         """
         _olr_patterns = {
             "L": "UL FL DL BR", 
@@ -635,6 +666,46 @@ class Cube(object):
         """
         Helper function for Cube.perform_step()
         Perform the actions like x y' z2
+
+        >>> c = Cube()
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+
+        >>> c._cube_rotation("x")
+              \x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+              \x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+              \x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+
+        >>> c._cube_rotation("y2")
+              \x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+              \x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+              \x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+
+        Available actions:
+            x x' x2
+            y y' y2
+            z z' z2
+
         """
         _cr_patterns = {
             "x": (["F", 0, "U", 2, "B", 2, "D", 0, "F"], "RL"), 
@@ -661,6 +732,39 @@ class Cube(object):
         """
         Helper function for Cube.perform_step()
         Perform the actions like u r' d2 l'
+
+        >>> c = Cube()
+        >>> c._double_layers_rotate("r")
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+
+        >>> c._double_layers_rotate("d'")
+              \x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+              \x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+
+        Available actions:
+            l l' l2
+            u u' u2
+            f f' f2
+            d d' d2
+            r r' r2
+            b b' b2
+
         """
         _dlr_patterns = {
             "l": ["x'", "R"], 
@@ -684,6 +788,37 @@ class Cube(object):
         """
         Helper function for Cube.perform_step()
         Perform the actions like M S' E2
+        
+        >>> c = Cube()
+        >>> c._middle_layer_rotate("M")
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m
+        
+        >>> c._middle_layer_rotate("E2")
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m
+        
+        Available actions:
+            M M' M2
+            S S' S2
+            E E' E2
+
         """
         _mlr_patterns = {
             "M": "l", 
