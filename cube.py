@@ -399,7 +399,22 @@ class Face(object):
             return self.arounds[sum(xy)]
 
     def copy(self):
-        """Copy a face."""
+        """
+        Copy a face.
+
+        >>> f = Face("red")
+        >>> f
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+
+        >>> d = f.copy()
+        >>> d
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+
+        """
         new = Face([self.arounds[i].copy() for i in range(8)] + [self.centre.clone()])
         return new
 
