@@ -237,6 +237,42 @@ class Face(object):
         """
         return (self.arounds + [self.centre])[index]
         
+    def __setitem__(self, index, value):
+        """
+        Get Square by index on the Face.
+
+        ________________
+        |    |    |    |
+        | 00 | 01 | 02 |
+        |____|____|____|
+        |    |    |    |
+        | 07 |(08)| 03 |
+        |____|____|____|
+        |    |    |    |
+        | 06 | 05 | 04 |
+        |____|____|____|
+
+        >>> f = Face([Square("red"), 
+        ...           Square("green"), 
+        ...           Square("green"), 
+        ...           Square("yellow"), 
+        ...           Square("white"), 
+        ...           Square("orange"), 
+        ...           Square("orange"), 
+        ...           Square("blue"), 
+        ...           Square("white")])
+        >>> f
+        \x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[47m  \x1b[49m
+        >>> f[0] = Square("white")
+        >>> f
+        \x1b[47m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[47m  \x1b[49m
+
+        """
+        self.arounds[index] = value
 
     def rotate(self, cc=False):
         """Rotate this face clockwise or counter-clockwise."""
