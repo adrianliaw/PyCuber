@@ -275,13 +275,71 @@ class Face(object):
         self.arounds[index] = value
 
     def rotate(self, cc=False):
-        """Rotate this face clockwise or counter-clockwise."""
+        """
+        Rotate this face clockwise or counter-clockwise.
+
+        >>> f = Face([Square("red"), 
+        ...           Square("green"), 
+        ...           Square("green"), 
+        ...           Square("yellow"), 
+        ...           Square("white"), 
+        ...           Square("orange"), 
+        ...           Square("orange"), 
+        ...           Square("blue"), 
+        ...           Square("white")])
+        >>> f
+        \x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[47m  \x1b[49m
+
+        >>> f.rotate()
+        >>> f
+        \x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[47m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[47m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m
+
+        >>> f.rotate(cc=True)
+        >>> f
+        \x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[47m  \x1b[49m
+
+        """
         for i in range(2):
             square = self.arounds.pop(cc-1)
             self.arounds.insert(cc*8, square)
 
     def get_row(self, pos):
-        """Get the row by URDL on a face."""
+        """
+        Get the row by URDL on a face.
+        
+        >>> f = Face([Square("red"), 
+        ...           Square("green"), 
+        ...           Square("green"), 
+        ...           Square("yellow"), 
+        ...           Square("white"), 
+        ...           Square("orange"), 
+        ...           Square("orange"), 
+        ...           Square("blue"), 
+        ...           Square("white")])
+        >>> f
+        \x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[47m  \x1b[49m
+
+        >>> f.get_row("U")
+        [\x1b[45m  \x1b[49m, \x1b[42m  \x1b[49m, \x1b[42m  \x1b[49m]
+        
+        >>> f.get_row("R")
+        [\x1b[42m  \x1b[49m, \x1b[43m  \x1b[49m, \x1b[47m  \x1b[49m]
+
+        >>> f.get_row("D")
+        [\x1b[47m  \x1b[49m, \x1b[41m  \x1b[49m, \x1b[41m  \x1b[49m]
+
+        >>> f.get_row("L")
+        [\x1b[41m  \x1b[49m, \x1b[46m  \x1b[49m, \x1b[45m  \x1b[49m]
+
+        """
         idx = "URDL".index(pos)*2
         if pos != "L":
             return self.arounds[idx:][:3]
