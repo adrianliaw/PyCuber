@@ -610,7 +610,10 @@ class Cube(object):
         elif key == "back" or key == "B": self.back = value
 
     def _outer_layer_rotate(self, symbol):
-        """Perform the actions like U R' D2 L' """
+        """
+        Helper function for Cube.perform_step()
+        Perform the actions like U R' D2 L'
+        """
         _olr_patterns = {
             "L": "UL FL DL BR", 
             "U": "BU RU FU LU", 
@@ -629,7 +632,10 @@ class Cube(object):
             self._outer_layer_rotate(symbol[0])
 
     def _cube_rotation(self, symbol):
-        """Perform the actions like x y' z2 """
+        """
+        Helper function for Cube.perform_step()
+        Perform the actions like x y' z2
+        """
         _cr_patterns = {
             "x": (["F", 0, "U", 2, "B", 2, "D", 0, "F"], "RL"), 
             "y": (["L", 0, "B", 0, "R", 0, "F", 0, "L"], "UD"), 
@@ -652,7 +658,10 @@ class Cube(object):
             self._cube_rotation(symbol[0])
 
     def _double_layers_rotate(self, symbol):
-        """Perform the actions like u r' d2 l' """
+        """
+        Helper function for Cube.perform_step()
+        Perform the actions like u r' d2 l'
+        """
         _dlr_patterns = {
             "l": ["x'", "R"], 
             "u": ["y", "D"], 
@@ -672,7 +681,10 @@ class Cube(object):
         self._outer_layer_rotate(actions[1])
 
     def _middle_layer_rotate(self, symbol):
-        """Perform the actions like M S' E2"""
+        """
+        Helper function for Cube.perform_step()
+        Perform the actions like M S' E2
+        """
         _mlr_patterns = {
             "M": "l", 
             "S": "f", 
