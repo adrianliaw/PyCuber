@@ -347,7 +347,44 @@ class Face(object):
             return self.arounds[idx:] + [self.arounds[0]]
 
     def get_by_2d(self, xy):
-        """Get the square by 2d position."""
+        """
+        Get Square by 2D position.
+
+        ________________
+        |    |    |    |
+        |0, 0|1, 0|2, 0|
+        |____|____|____|
+        |    |    |    |
+        |1, 0|1, 1|1, 2|
+        |____|____|____|
+        |    |    |    |
+        |2, 0|2, 1|2, 2|
+        |____|____|____|
+
+        >>> f = Face([Square("red"), 
+        ...           Square("green"), 
+        ...           Square("green"), 
+        ...           Square("yellow"), 
+        ...           Square("white"), 
+        ...           Square("orange"), 
+        ...           Square("orange"), 
+        ...           Square("blue"), 
+        ...           Square("white")])
+        >>> f
+        \x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[47m  \x1b[49m
+
+        >>> f.get_by_2d((0, 0))
+        \x1b[45m  \x1b[49m
+
+        >>> f.get_by_2d((2, 2))
+        \x1b[47m  \x1b[49m
+        
+        >>> f.get_by_2d((2, 0))
+        \x1b[42m  \x1b[49m
+        
+        """
         if xy[0] == xy[1] == 1:
             return self.centre
         elif xy[0] < 2 and xy[1] > 0:
