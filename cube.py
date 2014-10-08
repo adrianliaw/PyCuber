@@ -424,6 +424,30 @@ class Cube(object):
 
     """
     Cube([face * 6 L,U,F,D,R,B]), implements a whole cube.
+
+    >>> c = Cube()
+    >>> c # A completed cube.
+          \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+          \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+          \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+    \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+    \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+    \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+          \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+          \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+          \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+
+    >>> c("R U R' U'") # Apply a Rubik's Cube algorithm
+    >>> c
+          \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[45m  \x1b[49m
+          \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m
+          \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m
+    \x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m
+    \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+    \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+          \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m
+          \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+          \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
     """
 
     def __init__(self, faces=None):
@@ -451,7 +475,7 @@ class Cube(object):
     def __getitem__(self, key):
         for side in ["left", "up", "front", "down", "right", "back"]:
             if key == side or key == side[0].upper():
-                return eval("self.%s" % side)
+                return eval("self.{0}".format(side))
 
     def __setitem__(self, key, value):
         if key == "left" or key == "L": self.left = value
