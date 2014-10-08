@@ -206,6 +206,35 @@ class Face(object):
                 ''.join(str(self.arounds[i]) for i in range(6, 3, -1)))
     
     def __getitem__(self, index):
+        """
+        Get Square by index on the Face.
+
+        ________________
+        |    |    |    |
+        | 00 | 01 | 02 |
+        |____|____|____|
+        |    |    |    |
+        | 07 |(08)| 03 |
+        |____|____|____|
+        |    |    |    |
+        | 06 | 05 | 04 |
+        |____|____|____|
+
+        >>> f = Face([Square("red"), 
+        ...           Square("green"), 
+        ...           Square("green"), 
+        ...           Square("yellow"), 
+        ...           Square("white"), 
+        ...           Square("orange"), 
+        ...           Square("orange"), 
+        ...           Square("blue"), 
+        ...           Square("white")])
+        >>> f[0]
+        \x1b[45m  \x1b[49m
+        >>> f[8]
+        \x1b[47m  \x1b[49m
+
+        """
         return (self.arounds + [self.centre])[index]
         
 
