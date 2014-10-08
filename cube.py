@@ -132,6 +132,56 @@ class Face(object):
 
     """
     Face(face, colour_or_list_of_squares), implements a face on a cube.
+    
+
+    Create a Face like this:
+    >>> f = Face([Square("red"), 
+    ...           Square("green"), 
+    ...           Square("green"), 
+    ...           Square("yellow"), 
+    ...           Square("white"), 
+    ...           Square("orange"), 
+    ...           Square("orange"), 
+    ...           Square("blue"), 
+    ...           Square("white")])
+    >>> f
+    \x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+    \x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+    \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[47m  \x1b[49m
+    
+    Or if you want the Face has the same colour on all pieces:
+    >>> f = Face("red")
+    >>> f
+    \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+    \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+    \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+
+    The index of every Square on the Face is a bit different than normal 2D system.
+    ________________
+    |    |    |    |
+    | 00 | 01 | 02 |
+    |____|____|____|
+    |    |    |    |
+    | 07 |(08)| 03 |
+    |____|____|____|
+    |    |    |    |
+    | 06 | 05 | 04 |
+    |____|____|____|
+
+    For example:
+    >>> f = Face([Square("red"), 
+    ...           Square("green"), 
+    ...           Square("green"), 
+    ...           Square("yellow"), 
+    ...           Square("white"), 
+    ...           Square("orange"), 
+    ...           Square("orange"), 
+    ...           Square("blue"), 
+    ...           Square("white")])
+    >>> f[0]
+    \x1b[45m  \x1b[49m
+    >>> f[8]
+    \x1b[47m  \x1b[49m
     """
 
     def __init__(self, squares):
@@ -141,6 +191,13 @@ class Face(object):
         self.arounds = squares[:8]
 
     def __repr__(self):
+        """
+        Print out nine squares with colours.
+ 
+        >>> f = Face("red")
+        >>> f
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        """
         return (''.join(str(self.arounds[i]) for i in range(3)) + "\n" + 
                 str(self.arounds[7]) + str(self.centre) + str(self.arounds[3]) + "\n" + 
                 ''.join(str(self.arounds[i]) for i in range(6, 3, -1)))
