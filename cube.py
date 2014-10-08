@@ -451,6 +451,43 @@ class Cube(object):
     """
 
     def __init__(self, faces=None):
+        """
+        Create a Cube object.
+
+        Create a solved Cube with no arguments.
+        >>> c = Cube()
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+
+        Filling colours yourself:
+        >>> c = Cube([
+        ...     Face([Square(colour) for colour in ['green', 'yellow', 'green', 'red', 'red', 'blue', 'blue', 'yellow', 'red']]), 
+        ...     Face([Square(colour) for colour in ['orange', 'blue', 'white', 'orange', 'blue', 'green', 'red', 'green', 'yellow']]), 
+        ...     Face([Square(colour) for colour in ['yellow', 'orange', 'orange', 'red', 'red', 'green', 'white', 'blue', 'green']]), 
+        ...     Face([Square(colour) for colour in ['blue', 'white', 'yellow', 'red', 'red', 'orange', 'orange', 'yellow', 'white']]), 
+        ...     Face([Square(colour) for colour in ['white', 'white', 'orange', 'blue', 'green', 'green', 'blue', 'white', 'orange']]), 
+        ...     Face([Square(colour) for colour in ['green', 'orange', 'yellow', 'red', 'yellow', 'yellow', 'white', 'white', 'blue']])
+        ... ]) 
+        >>> c
+              \x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[41m  \x1b[49m
+              \x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[43m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[46m  \x1b[49m\x1b[42m  \x1b[49m\x1b[45m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[47m  \x1b[49m\x1b[42m  \x1b[49m\x1b[45m  \x1b[49m\x1b[46m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[47m  \x1b[49m\x1b[45m  \x1b[49m
+              \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[45m  \x1b[49m
+        
+        """
         if not faces:
             for pair in zip("LUFDRB", ["red", "yellow", "green", "white", "orange", "blue"]):
                 self[pair[0]] = Face(pair[1])
@@ -459,6 +496,22 @@ class Cube(object):
                 self[pair[1]] = faces[pair[0]]
 
     def __repr__(self):
+        """
+        Print out expanded view of Rubik's Cube.
+
+        >>> c = Cube()
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+
+        """
         result = ["      ", "      ", "      ", "", "", "", "      ", "      ", "      "]
         for i in range(3):
             for j in range(3):
@@ -473,11 +526,82 @@ class Cube(object):
         return "\n".join(result)
 
     def __getitem__(self, key):
+        """
+        Get the specified Face on this Cube.
+        Use those keywords to get them:
+            L / left
+            U / up
+            F / front
+            D / down
+            R / right
+            B / back
+
+        >>> c = Cube()
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+        
+        >>> c["L"]
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        >>> c["left"]
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        
+        >>> c["U"]
+        \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        >>> c["up"]
+        \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+
+        """
         for side in ["left", "up", "front", "down", "right", "back"]:
             if key == side or key == side[0].upper():
                 return eval("self.{0}".format(side))
 
     def __setitem__(self, key, value):
+        """
+        Set a specified Face on the Cube.
+        ### BETTER AVOID USING THIS.
+
+        >>> c = Cube()
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+
+        >>> c["U"] = Face("white")
+        >>> c["D"] = Face("yellow")
+        >>> c
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+
+        """
         if key == "left" or key == "L": self.left = value
         elif key == "up" or key == "U": self.up = value
         elif key == "front" or key == "F": self.front = value
