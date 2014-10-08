@@ -182,6 +182,7 @@ class Face(object):
     \x1b[45m  \x1b[49m
     >>> f[8]
     \x1b[47m  \x1b[49m
+
     """
 
     def __init__(self, squares):
@@ -196,7 +197,9 @@ class Face(object):
  
         >>> f = Face("red")
         >>> f
-        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\n\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
         """
         return (''.join(str(self.arounds[i]) for i in range(3)) + "\n" + 
                 str(self.arounds[7]) + str(self.centre) + str(self.arounds[3]) + "\n" + 
