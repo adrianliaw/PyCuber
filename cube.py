@@ -235,7 +235,10 @@ class Face(object):
         \x1b[47m  \x1b[49m
 
         """
-        return (self.arounds + [self.centre])[index]
+        if isinstance(index, int):
+            return (self.arounds + [self.centre])[index]
+        elif isinstance(index, slice):
+            return self.get_by_2d((index.start, index.stop))
         
     def __setitem__(self, index, value):
         """
@@ -349,6 +352,9 @@ class Face(object):
     def get_by_2d(self, xy):
         """
         Get Square by 2D position.
+
+        The shortcut for this method is Face[x:y].
+        Face.get_by_2d((1, 0)) <==> Face[1: 0]
 
         ________________
         |    |    |    |
