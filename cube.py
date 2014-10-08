@@ -415,7 +415,7 @@ class Face(object):
         \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
 
         """
-        new = Face([self.arounds[i].copy() for i in range(8)] + [self.centre.clone()])
+        new = Face([self.arounds[i].copy() for i in range(8)] + [self.centre.copy()])
         return new
 
 
@@ -695,7 +695,35 @@ class Cube(object):
         self._outer_layer_rotate(_mlr_patterns[symbol[0]].upper() + olr_adds)
 
     def perform_step(self, step):
-        """Perform an action (step)."""
+        """
+        Perform a Rubik's Cube action (step).
+
+        >>> c = Cube()
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+
+        >>> c.perform_step(Step("R"))
+        >>> c.perform_step(Step("u2"))
+        >>> c
+              \x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+
+        """
         step = Step(step)
         if step.name.isupper():
             if any([a in step.name for a in "MSE"]):
@@ -709,7 +737,11 @@ class Cube(object):
                 self._double_layers_rotate(step.name)
 
     def perform_algo(self, algo):
-        """Perform an algorithm."""
+        """
+        Perform a Rubik's Cube algorithm on this Cube.
+
+        >>> c = Cube()
+        """
         algo = Algo(algo)
         for step in algo:
             self.perform_step(step)
