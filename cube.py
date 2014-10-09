@@ -922,6 +922,7 @@ class Cube(object):
         """
         Perform a Rubik's Cube algorithm on this Cube.
         A shortcut for this is using Cube(Algo), see __call__.
+        For rules for Rubik's Cube actions, see Cube.perform_step.
 
         >>> c = Cube()
         >>> a = Algo("F R U' R' U' R U R' F' R U R' U' R' F R F'") # Y-perm
@@ -953,7 +954,27 @@ class Cube(object):
             self.perform_step(step)
 
     def __call__(self, algo_or_step):
-        """Perform Step or Algo on this cube."""
+        """
+        Perform Step or Algo on this cube.
+        A shortcut for Cube.perform_algo()
+        For rules of Rubik's Cube actions, see Cube.perform_step.
+
+        >>> c = Cube()
+        >>> c("R U R' U' R' F R F'") # O33
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m
+              \x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[45m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+
+        """
+        if isinstance(algo_or_step, Step):
+            algo_or_step = [algo_or_step]
         algo = Algo(algo_or_step)
         self.perform_algo(algo)
     
