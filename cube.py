@@ -833,6 +833,29 @@ class Cube(object):
         """
         Perform a Rubik's Cube action (step).
 
+        All available actions:
+            L L' L2 (twisting left side face)
+            U U' U2 (twisting top side face)
+            F F' F2 (twisting front side face)
+            D D' D2 (twisting bottom side face)
+            R R' R2 (twisting right side face)
+            B B' B2 (twisting back side face)
+
+            l l' l2 (twisting two layers at left in the meantime)
+            u u' u2 (twisting two layers at top in the meantime)
+            f f' f2 (twisting two layers at front in the meantime)
+            d d' d2 (twisting two layers at bottom in the meantime)
+            r r' r2 (twisting two layers at right in the meantime)
+            b b' b2 (twisting two layers at back in the meantime)
+
+            M M' M2 (twisting the layer between L and R, direction is as same as L)
+            S S' S2 (twisting the layer between F and B, direction is as same as F)
+            E E' E2 (twisting the layer between U and D, direction is as same as D)
+
+            x x' x2 (making a whole cube rotation on x axis, direction is as same as R)
+            y y' y2 (making a whole cube rotation on y axis, direction is as same as U)
+            z z' z2 (making a whole cube rotation on z axis, direction is as same as F)
+
         >>> c = Cube()
         >>> c
               \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
@@ -858,6 +881,30 @@ class Cube(object):
               \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
               \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
 
+        >>> c.perform_step("S")
+        >>> c
+              \x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[45m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m
+              \x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[43m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[41m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+
+        >>> c.perform_step("z'")
+        >>> c
+              \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[41m  \x1b[49m
+              \x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[41m  \x1b[49m
+        \x1b[43m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[46m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[43m  \x1b[49m\x1b[41m  \x1b[49m\x1b[43m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[45m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[42m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[42m  \x1b[49m\x1b[47m  \x1b[49m\x1b[41m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[45m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[45m  \x1b[49m
+
         """
         step = Step(step)
         if step.name.isupper():
@@ -874,8 +921,32 @@ class Cube(object):
     def perform_algo(self, algo):
         """
         Perform a Rubik's Cube algorithm on this Cube.
+        A shortcut for this is using Cube(Algo), see __call__.
 
         >>> c = Cube()
+        >>> a = Algo("F R U' R' U' R U R' F' R U R' U' R' F R F'") # Y-perm
+        >>> c.perform_algo(a)
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+        >>> c.perform_algo(a)
+        >>> c
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+              \x1b[43m  \x1b[49m\x1b[43m  \x1b[49m\x1b[43m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+        \x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[45m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[42m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[41m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m\x1b[46m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
+              \x1b[47m  \x1b[49m\x1b[47m  \x1b[49m\x1b[47m  \x1b[49m
         """
         algo = Algo(algo)
         for step in algo:
