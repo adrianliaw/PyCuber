@@ -57,16 +57,10 @@ class Step(object):
     Or you can inverse action like this:
     >>> s = Step("U'")
     >>> s.inverse()
-    >>> s
     U
 
-    You can reset the Step like this:
-    >>> s.set("R2")
-    >>> s
-    R2
-
-    Or just set the face of Step.
-    >>> s.set_face("L")
+    Reset the face of Step:
+    >>> s = s.set_face("L")
     >>> s
     L2
 
@@ -221,20 +215,6 @@ class Step(object):
             result += Step(self.name)
         return result
 
-    def set(self, new):
-        """
-        Reset this Step.
-
-        >>> s = Step("R2")
-        >>> s
-        R2
-
-        >>> s.set("U'")
-        >>> s
-        U'
-        """
-        self.__init__(new)
-
     def set_face(self, new_face):
         """
         Reset the face of the action.
@@ -243,16 +223,14 @@ class Step(object):
         >>> s
         R2
 
-        >>> s.set_face("L")
+        >>> s = s.set_face("L")
         >>> s
         L2
         """
         if new_face in list("LUFDRBlufdrbMSExyz"):
-            self.face = new_face
-            self.name = new_face + self.name[1:]
+            return Step(new_face + "'" * self.is_inverse + "2" * self.is_180)
         else:
             raise ValueError("Invalid name")
-
 
     def inverse(self):
         """
@@ -263,16 +241,19 @@ class Step(object):
         R
 
         >>> s.inverse()
-        >>> s
         R'
 
         >>> s = Step("R2")
         >>> s.inverse()
-        >>> s
         R2
         """
-        new = self.name[0] + ("" if self.is_inverse else "'" if self.is_standard else "2")
-        self.__init__(new)
+        return Step(self.name[0] + ("" if self.is_inverse else "'" if self.is_standard else "2"))
+    
+    def __hash__(self):
+        """
+        Step object is hashable.
+        """
+        return hash(self.name) + 716947869 * self.is_standard + 14987569 * self.is_inverse + 912837469 * self.is_180
 
 
 
@@ -570,9 +551,9 @@ class Algo(list):
         """
         if len(self) == 0: return
         for i in range(int((len(self)+1)/2)):
-            self[i].inverse()
+            self[i] = self[i].inverse()
             if i != len(self)-i-1:
-                self[-i-1].inverse()
+                self[-i-1] = self[-i-1].inverse()
             self[i], self[-i-1] = self[-i-1], self[i]
     
     def clear(self):
@@ -647,9 +628,9 @@ class Algo(list):
                 for j in range(len(self)):
                     if self[j].face in cr_pattern:
                         if _self[i].is_180:
-                            self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 2) % 4])
+                            self[j] = self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 2) % 4])
                         else:
-                            self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 1) % 4])
+                            self[j] = self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 1) % 4])
 
     def _optimize_same_steps(self):
         """
@@ -774,15 +755,16 @@ class Algo(list):
         }[frozenset(direction)]
         if direction not in (set("LR"), set("UD"), set("FB")):
             raise ValueError("There is only LR mirror, FB mirror, UD mirror")
-        for step in self:
+        for i in range(len(self)):
+            step = self[i]
             if step.face.upper() in direction:
                 if step.face.islower():
-                    step.set_face(opposite[step.face.upper()].lower())
+                    self[i] = self[i].set_face(opposite[step.face.upper()].lower())
                 else:
-                    step.set_face(opposite[step.face])
+                    self[i] = self[i].set_face(opposite[step.face])
             elif step.face in specials:
                 continue
-            step.inverse()
+            self[i] = self[i].inverse()
 
     del _stepify, _algify_input, _algify_output, _delattr
 
