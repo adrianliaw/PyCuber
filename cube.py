@@ -1003,7 +1003,38 @@ class Cube(object):
         self.perform_algo(algo)
     
     def as_graph(self):
-        """Convert cube into graph. \nGraphics: http://pycuber.appspot.com/cubegraph/main.html"""
+        """
+        Convert cube into graph.
+        
+        A Cube Graph has two types of node.
+            - Cuboid(x, y, z)             * 27
+            - Square(face, index, colour) * 54
+        Cuboid:
+            Every Cuboid's XYZ index, coordinate system as follows:
+                X points to right, 
+                Y points to top, 
+                Z points to front.
+                The origin is the very middle of the Cube.
+
+                    Y
+                    ^
+                    |
+                    |
+                    |
+                    |-----------> X
+                    /
+                   /
+                | /
+                |__
+                Z
+                Every Cuboid has a link to the Cuboid next to each other.
+                ex: Cuboid(x=-1, y=-1, z=-1) <--> Cuboid(x=0, y=-1, z=-1)
+                                             <--> Cuboid(x=-1, y=0, z=-1)
+                                             <--> Cuboid(x=-1, y=-1, z=0)
+
+
+        Graphics: http://pycuber.appspot.com/cubegraph/main.html
+        """
         return _CubeAsGraph(self)
 
     def copy(self):
