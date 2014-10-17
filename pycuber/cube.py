@@ -114,7 +114,9 @@ class Square(object):
         >>> s == p
         True
         """
-        return self.colour == another.colour
+        if isinstance(another, Square):
+            return self.colour == another.colour
+        return False
 
     def __ne__(self, another):
         """
@@ -125,7 +127,7 @@ class Square(object):
         >>> s != p
         True
         """
-        return self.colour != another.colour
+        return not self.__eq__(another)
 
     def copy(self):
         """
