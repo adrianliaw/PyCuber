@@ -1,13 +1,15 @@
 """
-Shortest Path Search
 
-The searching algorithms.
+Utility functions.
+Most are path searching functions.
 
 """
 
 def shortest_path_search(start, successors, is_goal):
-    """Find the shortest path from start state to a state
-    such that is_goal(state) is true."""
+    """
+    Find the shortest path from start state to a state
+    such that is_goal(state) is true.
+    """
     if is_goal(start):
         return [start]
     explored = [] # set of states we have visited
