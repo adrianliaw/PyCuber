@@ -44,8 +44,6 @@ def write_to_file(algoset, filename):
     with open(filename, "w") as f:
         writer = csv.writer(f, delimiter=",")
         for a in algoset:
-            #print([bytes("O{0:02d}".format(a[0]), "UTF-8")] + list(map(lambda x:bytes(x, "UTF-8"), a[1:])))
-            #writer.writerow([bytes("O{0:02d}".format(a[0]), "UTF-8")] + list(map(lambda x:bytes(x, "UTF-8"), a[1:])))
             writer.writerow(["O{0:02d}".format(a[0])] + list(a[1:]))
     return True
 
