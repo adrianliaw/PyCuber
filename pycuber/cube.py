@@ -1003,6 +1003,7 @@ class Cube(object):
             algo_or_step = [algo_or_step]
         algo = Algo(algo_or_step)
         self.perform_algo(algo)
+        return self
     
     def as_graph(self):
         """

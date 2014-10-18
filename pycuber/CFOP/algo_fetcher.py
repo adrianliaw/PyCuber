@@ -24,7 +24,10 @@ def get_all_algos(soup):
                 else:
                     break
             print(info[2].get_text())
-            entry.append(str(info[2].b.get_text().replace("(", "", 10).replace(")", "", 10)))
+            if entry[0] == 19:
+                entry.append(str(info[2].b.get_text().replace("(", "", 10).replace(")", "", 10)) + " x'")
+            else:
+                entry.append(str(info[2].b.get_text().replace("(", "", 10).replace(")", "", 10)))
             result.append(tuple(entry))
     result.sort()
     return result
