@@ -98,6 +98,8 @@ class Step(object):
         try:
             if len(name) >= 2 and name[1] == "w":
                 name = name[0].lower() + name[2:]
+            if name[1:] == "2'":
+                name = name[0] + "2"
             if name[0] in "LUFDRBMSElufdrbxyz":
                 if name[1:] in ["", "'", "2"]:
                     self.name = name
