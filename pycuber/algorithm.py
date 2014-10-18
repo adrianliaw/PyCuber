@@ -71,7 +71,7 @@ class Step(object):
     None
 
     And also multiply by numbers!
-    >>> s.set("L")
+    >>> s = Step("L")
     >>> s * 2
     L2
     >>> s * 5
@@ -403,6 +403,14 @@ class Algo(list):
         def _func(*args, **kwargs):
             raise AttributeError("'Algo' object has no attribute '{0}'".format(func.__name__))
         return _func
+    
+    def _return_self(func):
+        """Make function returns self."""
+        @wraps(func, assigned=("__name__", "__doc__"))
+        def _func(*args, **kwargs):
+            func(*args, **kwargs)
+            return args[0]
+        return _func
 
     @_algify_output
     @_algify_input
@@ -503,14 +511,17 @@ class Algo(list):
 
     @_stepify
     def __contains__(self, value): pass
+    @_return_self
     @_stepify
     def append(self, another): pass
     @_stepify
     def count(self, value): pass
     @_stepify
     def index(self, start, stop): pass
+    @_return_self
     @_stepify
     def insert(self, index, obj): pass
+    @_return_self
     @_stepify
     def remove(self, value): pass
 
@@ -555,10 +566,12 @@ class Algo(list):
             if i != len(self)-i-1:
                 self[-i-1] = self[-i-1].inverse()
             self[i], self[-i-1] = self[-i-1], self[i]
+        return self
     
     def clear(self):
         """L.clear() -> None -- remove all items from L"""
         self[:] = ""
+        return self
 
     def copy(self):
         """L.copy() -> Algo -- a shallow copy of L"""
@@ -600,6 +613,7 @@ class Algo(list):
                 index += len(replacement)
             else:
                 index += 1
+        return self
     
     def _optimize_rotations(self):
         """
@@ -631,8 +645,9 @@ class Algo(list):
                             self[j] = self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 2) % 4])
                         else:
                             self[j] = self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 1) % 4])
+        return self
 
-    def _optimize_same_steps(self):
+    def _optimize_same_steps(self, is_root=True):
         """
         Helper function for Algo.optimize()
         Reduce repeated steps.
@@ -649,7 +664,7 @@ class Algo(list):
         """
         opposite = {"U":"D", "L":"R", "F":"B", "D":"U", "R":"L", "B":"F"}
         if len(self) < 2:
-            return
+            return self
         elif len(self) == 2:
             if self[0].face == self[1].face:
                 if self[0] + self[1] == None:
@@ -664,6 +679,8 @@ class Algo(list):
                 if self[0] + self[2] == None:
                     self[0] += self[2]
                     del self[1]
+                    if len(self) == 1:
+                        return self
                     flag = False
                 else:
                     self[0] += self[2]
@@ -677,8 +694,12 @@ class Algo(list):
                     self[0] += self[1]
                     del self[1]
             rhs = self[flag:]
-            rhs._optimize_same_steps()
+            rhs._optimize_same_steps(is_root=False)
             self[flag:] = rhs
+        if is_root:
+            while not self.copy() | self._optimize_same_steps():
+                pass
+        return self
 
     def optimize(self):
         """
@@ -692,9 +713,8 @@ class Algo(list):
         >>> a
         R U R' F B
         """
-        self._optimize_wide_actions()
-        self._optimize_rotations()
-        self._optimize_same_steps()
+        self._optimize_wide_actions()._optimize_rotations()._optimize_same_steps()
+        return self
 
     def random(self, n=25, clear=True):
         """
@@ -724,6 +744,7 @@ class Algo(list):
                     self.append(random.choice("LUFDRB") + random.choice(["", "'", "2"]))
             except IndexError:
                 pass
+        return self
 
     def mirror(self, direction="LR"):
         """
@@ -765,7 +786,8 @@ class Algo(list):
             elif step.face in specials:
                 continue
             self[i] = self[i].inverse()
+        return self
 
-    del _stepify, _algify_input, _algify_output, _delattr
+    del _stepify, _algify_input, _algify_output, _delattr, _return_self
 
 
