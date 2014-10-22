@@ -16,13 +16,7 @@ def get_oll_algos(soup):
             info = a.find_all("td")
             entry = []
             entry.append(int(info[0].get_text()))
-            while True:
-                try:
-                    entry.append(oll_case_identifier(oll_img(str(info[1].img["src"]))))
-                except IOError:
-                    continue
-                else:
-                    break
+            entry.append(oll_case_identifier(oll_img(str(info[1].img["src"]))))
             print(info[2].get_text())
             if entry[0] == 19:
                 entry.append(str(info[2].b.get_text().replace("(", "", 10).replace(")", "", 10)) + " x'")
@@ -34,10 +28,16 @@ def get_oll_algos(soup):
 
 def oll_img(url):
     pic = requests.get(prefix + url)
-    image = Image.open(BytesIO(pic.content))
-    image = image.convert("RGB")
-    print("Image loaded: {0}".format(url))
-    return image
+    while pic.status_code >= 500:
+        pic = requests.get(prefix + url)
+    while True:
+        try:
+            image = Image.open(BytesIO(pic.content))
+            image = image.convert("RGB")
+            print("Image loaded: {0}".format(url))
+            return image
+        except IOError:
+            continue
 
 def oll_case_identifier(image):
     result = ""
@@ -84,13 +84,7 @@ def get_pll_algos(soup1, soup2):
             info = a.find_all("td")
             entry = []
             entry.append(info[0].get_text())
-            while True:
-                try:
-                    entry.append(pll_case_identifier(info[0].get_text()))
-                except IOError:
-                    continue
-                else:
-                    break
+            entry.append(pll_case_identifier(info[0].get_text()))
             print(info[2].get_text())
             entry.append(str(info[2].b.get_text().replace("(", "", 10).replace(")", "", 10).split("\r\n")[0]))
             result.append(tuple(entry))
@@ -100,8 +94,18 @@ def get_pll_algos(soup1, soup2):
 def pll_case_identifier(case_name):
     views = []
     for i in range(1, 5):
-        views.append(Image.open(BytesIO(requests.get(prefix + "images/pllrec/{0}view{1}.gif".format(case_name, (i if case_name not in "AaAbE" else i%4+1))).content)).convert("RGB"))
-        print("Image loaded: {0}".format("images/pllrec/{0}view{1}.gif".format(case_name, (i if case_name not in "AaAbE" else i%4+1))))
+        if len(views) < i:
+            img = requests.get(prefix + "images/pllrec/{0}view{1}.gif".format(case_name, (i if case_name not in "AaAbE" else i%4+1)))
+            while img.status_code >= 500:
+                img = requests.get(prefix + "images/pllrec/{0}view{1}.gif".format(case_name, (i if case_name not in "AaAbE" else i%4+1)))
+            while True:
+                try:
+                    views.append(Image.open(BytesIO(img.content)).convert("RGB"))
+                    print("Image loaded: {0}".format("images/pllrec/{0}view{1}.gif".format(case_name, (i if case_name not in "AaAbE" else i%4+1))))
+                except IOError:
+                    continue
+                else:
+                    break
     result = ""
     for img in views:
         for point in [(20, 50), (35, 60), (55, 70)]:

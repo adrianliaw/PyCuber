@@ -214,6 +214,8 @@ class Step(object):
         U2
         """
         i = i % 4
+        if i == 0:
+            return None
         result = Step(self.name)
         for j in range(i-1):
             result += Step(self.name)
@@ -412,7 +414,8 @@ class Algo(list):
         """Make function returns self."""
         @wraps(func, assigned=("__name__", "__doc__"))
         def _func(*args, **kwargs):
-            func(*args, **kwargs)
+            if args[-1] != None:
+                func(*args, **kwargs)
             return args[0]
         return _func
 
