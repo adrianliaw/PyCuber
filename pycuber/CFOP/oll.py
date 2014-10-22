@@ -2,7 +2,7 @@ import csv
 from ..algorithm import *
 from ..cube import *
 
-with open("pycuber/cfop/oll_algos.csv", "rb") as f:
+with open("pycuber/cfop/oll_algos.csv", "r") as f:
     reader = csv.reader(f, delimiter=",")
     algo_dict = {}
     for line in reader:
