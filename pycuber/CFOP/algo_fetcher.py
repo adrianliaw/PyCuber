@@ -20,6 +20,8 @@ def get_oll_algos(soup):
             print(info[2].get_text())
             if entry[0] == 19:
                 entry.append(str(info[2].b.get_text().replace("(", "", 10).replace(")", "", 10)) + " x'")
+            elif entry[0] == 31:
+                entry.append("R' U' F U R U' R' F' R")
             else:
                 entry.append(str(info[2].b.get_text().replace("(", "", 10).replace(")", "", 10)))
             result.append(tuple(entry))

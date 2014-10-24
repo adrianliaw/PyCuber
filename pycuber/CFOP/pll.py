@@ -37,4 +37,7 @@ class PLLSolver(object):
                 return Algo((Step("y") * i) or []) + algo_dict[rec_id]
             self.cube(Step("y"))
         raise ValueError("Invalid cube.")
+    def is_solved(self):
+        return self.cube == \
+                Cube([Face(self.cube[face].centre.colour) for face in "LUFDRB"])
 

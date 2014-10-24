@@ -265,7 +265,35 @@ class Face(object):
             return (self.arounds + [self.centre])[index]
         elif isinstance(index, slice):
             return self.get_by_2d((index.start, index.stop))
-        
+    
+    def __eq__(self, another):
+        """
+        Check if two faces are the same.
+
+        >>> f1 = Face("yellow")
+        >>> f2 = Face("yellow")
+        >>> f1 == f2
+        True
+        >>> f2 = Face("green")
+        >>> f1 == f2
+        False
+        """
+        return all(self[i] == another[i] for i in range(9))
+
+    def __ne__(self, another):
+        """
+        Check if two faces are not same.
+
+        >>> f1 = Face("yellow")
+        >>> f2 = Face("green")
+        >>> f1 != f2
+        True
+        >>> f2 = Face("yellow")
+        >>> f1 != f2
+        False
+        """
+        return not self.__eq__(another)
+
     def __setitem__(self, index, value):
         """
         Get Square by index on the Face.
@@ -550,6 +578,34 @@ class Cube(object):
             for j in range(3):
                 result[6+i] += str(self["D"])[i+(3*i+j)*12:i+(3*i+j)*12+12]
         return "\n".join(result)
+
+    def __eq__(self, another):
+        """
+        Check if two Cubes are the same.
+
+        >>> c1 = Cube()
+        >>> c2 = Cube()
+        >>> c1 == c2
+        True
+        >>> c2("R U R' U'")
+        >>> c1 == c2
+        False
+        """
+        return all(self[face] == another[face] for face in "LUFDRB")
+
+    def __ne__(self, another):
+        """
+        Check if two Cubes aren't the same.
+
+        >>> c1 = Cube()
+        >>> c2 = Cube()
+        >>> c1 != c2
+        False
+        >>> c2("R U R' U'")
+        >>> c1 != c2
+        True
+        """
+        return not self.__ne__(another)
 
     def __getitem__(self, key):
         """

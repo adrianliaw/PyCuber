@@ -33,4 +33,6 @@ class OLLSolver(object):
         self.recognise()
         self.cube(algo_dict[self.case])
         return algo_dict[self.case]
+    def is_solved(self):
+        return self.cube["U"] == Face(self.cube["U"].centre.colour)
 
