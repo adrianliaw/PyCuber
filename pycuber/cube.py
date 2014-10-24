@@ -103,7 +103,7 @@ class Square(object):
         >>> s.__repr__()
         '\\x1b[45m  \\x1b[49m'
         """
-        return {"red":"\x1b[45m", "yellow":"\x1b[43m", "green":"\x1b[42m", "white":"\x1b[47m", "orange":"\x1b[41m", "blue":"\x1b[46m"}[self.colour] + "  \x1b[49m"
+        return {"red":"\x1b[45m", "yellow":"\x1b[43m", "green":"\x1b[42m", "white":"\x1b[47m", "orange":"\x1b[41m", "blue":"\x1b[46m", "unknown":"\x1b[40m"}[self.colour] + "  \x1b[49m"
     
     def __eq__(self, another):
         """
