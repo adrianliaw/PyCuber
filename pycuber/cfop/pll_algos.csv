@@ -1,0 +1,21 @@
+Aa-perm,BLLFFBLRFRBR,x R' U R' D2 R U' R' D2 R2
+Ab-perm,RLLFFRBRBLBF,x R2 D2 R U R' D2 R U' R
+E-perm,FLBLFRBRFRBL,x' R U' R' D R U R' D' R U R' D R U' R' D'
+F-perm,LLLFBRBRFRFB,R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R
+Ga-perm,BRBLFFRBLFLR,R2' Uw R' U R' U' R Uw' R2' y' R' U R
+Gb-perm,FBFRLBLRRBFL,R' U' R y R2' Uw R' U R U' R Uw' R2'
+Gc-perm,FRFRLBLFRBBL,R2' Uw' R U' R U R' Uw R2 Fw R' Fw'
+Gd-perm,BFBLBFRRLFLR,R U R' y' R2' Uw' R U' R' U R' Uw R2
+H-perm,LRLFBFRLRBFB,M2' U M2' U2 M2' U M2'
+Ja-perm,BBLFFFRRBLLR,R' U L' U2 R U' R' U2 L R U'
+Jb-perm,LLLFRRBFFRBB,R U R' F' R U R' U' R' F R2 U' R' U'
+Na-perm,RLLFBBLRRBFF,z D R' U R2 D' R D U' R' U R2 D' R U' R
+Nb-perm,LLRBBFRRLFFB,z U' R D' R2' U R' D U' R D' R2' U R' D R'
+Ra-perm,LBLFFRBRFRLB,R U R' F' R U2 R' U2 R' F R U R U2 R' U'
+Rb-perm,BLLFRFRFBLBR,R' U2 R U2 R' F R U R' U' R' F' R2 U'
+T-perm,LRLFFRBLFRBB,R U R' U' R' F R2 U' R' U' R U R' F'
+Ua-perm,LFLFRFRLRBBB,R U' R U R U R U' R' U' R2
+Ub-perm,LRLFLFRFRBBB,R2 U R U R' U' R' U' R' U R'
+V-perm,RLLFFBLBRBRF,R' U R' Dw' R' F' R2 U' R' U R' F R F
+Y-perm,RBLFFBLRRBLF,F R U' R' U' R U R' F' R U R' U' R' F R F'
+Z-perm,LBLFRFRFRBLB,M2' U M2' U M' U2 M2' U2 M' U2
