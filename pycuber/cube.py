@@ -155,6 +155,9 @@ class Cuboid(object):
             return self.facings.keys() == another.facings.keys()
 
     def copy(self):
+        """
+        Copy this Cuboid.
+        """
         try:
             new = {
                 "centre": Centre, 
@@ -479,6 +482,14 @@ class Cube(object):
         return self
 
     def perform_step(self, step):
+        """
+        Perform a Rubik's Cube step.
+        Using "Singmaster Notation"
+        L R U D F B
+        l r u d f b
+        M S E
+        x y z
+        """
         step = Step(step)
         if step.face in "LUFDRBMES":
             return self._single_layer(step)
@@ -486,9 +497,20 @@ class Cube(object):
             return self._other_rotations(step)
 
     def perform_algo(self, algo):
+        """
+        Perform a Rubik's Cube Algorithm.
+        Using "Singmaster notation".
+        """
         algo = Algo(algo)
         for step in algo:
             self.perform_step(step)
         return self
+
+    def copy(self):
+        """
+        Copy this Cube.
+        """
+        return Cube({c[1].copy() for c in self})
+
 
 
