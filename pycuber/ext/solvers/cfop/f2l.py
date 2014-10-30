@@ -30,10 +30,11 @@ class F2LPairSolver(object):
             self.cube[self.pair[1]].colour, 
             self.cube["D"].colour
             )
-        result_corner = self.cube.children
+        result_corner = self.cube.children.copy()
         for c in colours[:2]:
             result_corner &= self.cube.has_colour(c)
         result_edge = result_corner & self.cube.select_type("edge")
         result_corner &= self.cube.has_colour(colours[2])
         return (list(result_corner)[0], list(result_edge)[0])
+
         
