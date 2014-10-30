@@ -186,8 +186,11 @@ class Centre(Cuboid):
             raise ValueError("A Centre has 1 Square, got {0}.".format(len(kwargs)))
         super(Centre, self).__init__(parent, children, **kwargs)
         self.type = "centre"
-        self.colour = list(kwargs.values())[0].colour
         self.face = list(kwargs.keys())[0]
+
+    @property
+    def colour(self):
+        return list(self.facings.values())[0].colour
 
  
 class Edge(Cuboid):

@@ -21,9 +21,9 @@ class PLLSolver(object):
     def recognise(self):
         result = ""
         for side in "LFRB":
-            for square in self.cube[side].get_row("U"):
+            for square in self.cube.get_face(side)[0]:
                 for _side in "LFRB":
-                    if square == self.cube[_side].centre:
+                    if square.colour == self.cube[_side].colour:
                         result += _side
                         break
         return result
@@ -38,6 +38,10 @@ class PLLSolver(object):
             self.cube(Step("y"))
         raise ValueError("Invalid cube.")
     def is_solved(self):
-        return self.cube == \
-                Cube([Face(self.cube[face].centre.colour) for face in "LUFDRB"])
+        for side in "LUFDRB":
+            sample = self.cube[side].facings[side]
+            for square in sum(self.cube.get_face(side), []):
+                if square != sample:
+                    return False
+        return True
 
