@@ -1,8 +1,8 @@
 import csv
-from ..algorithm import *
-from ..cube import *
+from ....algorithm import *
+from ....cube import *
 
-with open("pycuber/cfop/oll_algos.csv", "r") as f:
+with open("pycuber/ext/solvers/cfop/oll_algos.csv", "r") as f:
     reader = csv.reader(f, delimiter=",")
     algo_dict = {}
     for line in reader:
@@ -21,8 +21,8 @@ class OLLSolver(object):
             raise ValueError("Use Solver.feed(cube) to feed the cube to solver.")
         result = ""
         for face in "LFRB":
-            for square in self.cube[face].get_row("U"):
-                result += str(int(square == self.cube["U"].centre))
+            for square in self.cube.get_face(face)[0]:
+                result += str(int(square == self.cube["U"]["U"]))
         if result not in algo_dict:
             raise ValueError("Invalid Cube, probably didn't solve F2L, or wrong input value.\nUse Solver.feed(cube) to reset the cube.")
         self.case = result
@@ -34,5 +34,5 @@ class OLLSolver(object):
         self.cube(algo_dict[self.case])
         return algo_dict[self.case]
     def is_solved(self):
-        return self.cube["U"] == Face(self.cube["U"].centre.colour)
+        return self.cube.U == [[Square(self.cube["U"].colour)] * 3] * 3
 
