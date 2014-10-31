@@ -154,6 +154,12 @@ class Cuboid(object):
         except AttributeError:
             return self.facings.keys() == another.facings.keys()
 
+    def __iter__(self):
+        """
+        Iterate over every (face, square) pair.
+        """
+        return iter(self.facings.items())
+
     def copy(self):
         """
         Copy this Cuboid.
