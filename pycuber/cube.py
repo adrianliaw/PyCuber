@@ -53,12 +53,13 @@ class Square(object):
         Square object is hashable.
         """
         colour_to_hex = {
-            "red":0xFF0000, 
-            "yellow":0xFFFF00, 
-            "green":0x00FF00, 
-            "white":0xFFFFFF, 
-            "orange":0xFFA500, 
-            "blue":0x0000FF, 
+            "red": 0xFF0000, 
+            "yellow": 0xFFFF00, 
+            "green": 0x00FF00, 
+            "white": 0xFFFFFF, 
+            "orange": 0xFFA500, 
+            "blue": 0x0000FF, 
+            "unknown": 0x000000
             }
         return hash(str(self)) + colour_to_hex[self.colour]
 
