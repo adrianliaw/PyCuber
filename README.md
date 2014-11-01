@@ -20,6 +20,7 @@ mycube("R U R' U'")
 print(mycube)
 
 ```
+![alt tag](https://raw.github.com/adrianliaw/PyCuber/v0.1a/static/img/terminal.png)
 
 We also provided some useful tools to deal with Rubik's Cube algorithms.
 
