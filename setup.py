@@ -11,7 +11,7 @@ setup(
     author_email="adrianliaw2000@gmail.com", 
     packages=["pycuber"], 
     package_dir={"pycuber":"pycuber"}, 
-    classifiers: [
+    classifiers=[
         "Development Status :: 3 - Alpha", 
         "Environment :: Console", 
         "Intended Audience :: Developers", 
