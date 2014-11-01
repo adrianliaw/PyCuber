@@ -247,6 +247,7 @@ class Cube(object):
                     cuboids.add(Edge(**{loc[i]:Square(colours[loc[i]]) for i in range(2)}))
                 else:
                     cuboids.add(Centre(**{loc[0]:Square(colours[loc[0]])}))
+        cuboids = set(cuboids)
         if isinstance(cuboids, set):
             for cubie in cuboids:
                 if isinstance(cubie, Cuboid):
