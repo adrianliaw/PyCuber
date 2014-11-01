@@ -24,3 +24,24 @@ print(mycube)
 
 We also provided some useful tools to deal with Rubik's Cube algorithms.
 
+```
+
+import pycuber as pc
+
+# Create an Algo object
+myalg = pc.Algo("R U R' U' R' F R2 U' R' U' R U R' F'")
+
+# Reversing an Algo
+myalg.reverse()
+print(myalg)
+
+# Mirroring an Algo object
+myalg.mirror("LR")
+print(myalg)
+
+```
+```
+F R U' R' U R U R2 F' R U R U' R'
+F' L' U L U' L' U' L2 F L' U' L' U L
+```
+
