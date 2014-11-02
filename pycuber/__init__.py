@@ -1,4 +1,5 @@
 from .cube import Cube, Cuboid, Centre, Corner, Edge, Square, Step, Algo
+from .util import fill_unknowns, array_to_cuboids
 
 __all__ = ["Cube", "Cuboid", "Centre", "Corner", "Edge", "Square", "Step", "Algo"]
 __title__ = "PyCuber"
