@@ -31,27 +31,3 @@ class FrozenDict(dict):
 
     del _delattr
 
-def fill_unknowns(s):
-    """
-    Take a set of Cuboids as an input, 
-    adds "unknown Cuboids" to the set.
-    """
-    from .cube import Centre, Corner, Edge, Square
-    new = set()
-    for loc in [
-        "LBD", "LBU", "LFD", "LFU", "RBD", "RBU", "RFD", "RFU", 
-        "DB", "DL", "DF", "DR", "LB", "FL", "FR", "RB", "UB", "UL", "UF", "UR", 
-        "L", "R", "U", "D", "F", "B", 
-        ]:
-        for cuboid in s:
-            if cuboid & loc:
-                new.add(cuboid)
-                break
-        else:
-            new.add(
-                    [Centre, Edge, Corner][len(loc) - 1](**{
-                        face: Square("unknown") for face in loc
-                        })
-                )
-    return new
-
