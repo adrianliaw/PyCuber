@@ -64,4 +64,24 @@ class F2LPairSolver(object):
             return ("SOLVED", (corner_slot, edge_slot), (corner, edge))
         return ("WRONGSLOT", (corner_slot, edge_slot), (corner, edge))
 
+    @staticmethod
+    def combining_goal(state):
+        """
+        Check if two Cuboids are combined on the U face.
+        """
+        ((corner, edge), (L, U, F, D, R, B)) = state
+        if "U" not in corner or "U" not in edge: return False
+        if set(edge).issubset(set(corner)): return True
+        opposite = {"L":"R", "R":"L", "F":"B", "B":"F"}
+        edge_facings = list(edge)
+        for i, (face, square) in enumerate(edge_facings):
+            if face == "U":
+                if square != corner[opposite[edge_facings[(i+1)%2][0]]]:
+                    return False
+            else:
+                if square != corner["U"]:
+                    return False
+        return True
+
+
 
