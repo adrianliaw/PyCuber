@@ -516,6 +516,14 @@ class Algo(list):
         """
         return len(self) != len(Algo(another))
 
+    def __reversed__(self):
+        """
+        Reversed list iterator.
+        """
+        rvd = self.reverse().copy()
+        self.reverse()
+        return rvd.__iter__()
+
     @_stepify
     def __contains__(self, value): pass
     @_return_self

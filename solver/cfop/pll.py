@@ -5,7 +5,7 @@ Module for solving Rubik's Cube PLL.
 import csv
 from pycuber import *
 
-with open("pycuber/ext/solvers/cfop/pll_algos.csv", "r") as f:
+with open("cfop/pll_algos.csv", "r") as f:
     reader = csv.reader(f, delimiter=",")
     algo_dict = {}
     for name, rec_id, algo in reader:

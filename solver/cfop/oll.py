@@ -5,7 +5,7 @@ Module for solving Rubik's Cube OLL.
 import csv
 from pycuber import *
 
-with open("pycuber/ext/solvers/cfop/oll_algos.csv", "r") as f:
+with open("cfop/oll_algos.csv", "r") as f:
     reader = csv.reader(f, delimiter=",")
     algo_dict = {}
     for line in reader:

@@ -3,6 +3,8 @@ Module for solving Rubik's Cube F2L.
 """
 
 from pycuber import *
+from pycuber.helpers import fill_unknowns
+from .util import shortest_path_search, path_actions
 
 class F2LPairSolver(object):
     """
@@ -72,6 +74,7 @@ class F2LPairSolver(object):
         ((corner, edge), (L, U, F, D, R, B)) = state
         if "U" not in corner or "U" not in edge: return False
         if set(edge).issubset(set(corner)): return True
+        elif set(edge.facings.keys()).issubset(set(corner.facings.keys())): return False
         opposite = {"L":"R", "R":"L", "F":"B", "B":"F"}
         edge_facings = list(edge)
         for i, (face, square) in enumerate(edge_facings):
@@ -82,6 +85,45 @@ class F2LPairSolver(object):
                 if square != corner["U"]:
                     return False
         return True
+    
+    @staticmethod
+    def combining_successors(state, last_action=()):
+        """
+        Successors function for finding path of combining F2L pair.
+        """
+        ((corner, edge), (L, U, F, D, R, B)) = state
+        U_turns = [Algo("U"), Algo("U'"), Algo("U2")] if len(last_action) != 1 else []
+        R_turns = [Algo("R U R'"), Algo("R U' R'"), Algo("R U2 R'")] if "R" not in last_action else []
+        F_turns = [Algo("F' U F"), Algo("F' U' F"), Algo("F' U2 F")] if "F" not in last_action else []
+        cube = Cube(fill_unknowns(set([corner, edge, L, U, F, D, R, B])))
+        for act in (U_turns + R_turns + F_turns):
+            cube(act)
+            new_corner = (cube.select_type("corner") - cube.has_colour("unknown")).pop().copy()
+            new_edge = (cube.select_type("edge") - cube.has_colour("unknown")).pop().copy()
+            cube(act.reverse())
+            yield act.reverse(), ((new_corner, new_edge), (L, U, F, D, R, B))
+
+    def combining_search(self):
+        """
+        Searching the path for combining the pair.
+        """
+        start = (
+            self.get_pair(), 
+            (
+                self.cube["L"], 
+                self.cube["U"], 
+                self.cube["F"], 
+                self.cube["D"], 
+                self.cube["R"], 
+                self.cube["B"], 
+                ), 
+            )
+        return sum(path_actions(shortest_path_search(
+            start, 
+            self.combining_successors, 
+            self.combining_goal,
+            )), Algo())
+
 
 
 
