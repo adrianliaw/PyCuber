@@ -4,7 +4,7 @@ Module for solving Rubik's Cube F2L.
 
 from pycuber import *
 from pycuber.helpers import fill_unknowns
-from .util import shortest_path_search, path_actions
+from util import shortest_path_search, path_actions
 
 class F2LPairSolver(object):
     """
@@ -54,6 +54,10 @@ class F2LPairSolver(object):
         """
         corner, edge = self.get_pair()
         corner_slot, edge_slot = corner.location.replace("D", "", 1), edge.location
+        if "U" not in corner_slot and corner_slot not in ["FR", "RB", "BL", "LF"]:
+            corner_slot = ["FR", "RB", "BL", "LF"][["RF", "BR", "LB", "FL"].index(corner_slot)]
+        if "U" not in edge_slot and edge_slot not in ["FR", "RB", "BL", "LF"]:
+            edge_slot = ["FR", "RB", "BL", "LF"][["RF", "BR", "LB", "FL"].index(edge_slot)]
         if "U" in corner_slot and "U" in edge_slot:
             return ("SLOTFREE", (None, None), (corner, edge))
         if "U" in corner_slot:
@@ -118,12 +122,34 @@ class F2LPairSolver(object):
                 self.cube["B"], 
                 ), 
             )
-        return sum(path_actions(shortest_path_search(
-            start, 
-            self.combining_successors, 
-            self.combining_goal,
-            )), Algo())
+        return sum(
+            path_actions(
+                shortest_path_search(start, 
+                                     self.combining_successors, 
+                                     self.combining_goal),
+                ), 
+            Algo(), 
+            )
 
-
-
+    def combining_setup(self):
+        """
+        Setup for some special F2L cases.
+        """
+        (slot_type, (corner_slot, edge_slot), (corner, edge)) = self.get_slot()
+        print(slot_type)
+        cycle = ["FR", "RB", "BL", "LF"]
+        if slot_type == "SLOTFREE":
+            return ("FR", Algo(Step("y") * cycle.index(self.pair) or []))
+        elif slot_type == "CSLOTFREE":
+            return (cycle[-(cycle.index(edge_slot) - cycle.index(self.pair))], 
+                    Algo(Step("y") * cycle.index(edge_slot) or [])) 
+        elif slot_type in ("ESLOTFREE", "WRONGSLOT"):
+            return (cycle[-(cycle.index(corner_slot) - cycle.index(self.pair))], 
+                    Algo(Step("y") * cycle.index(corner_slot) or [])) 
+        elif slot_type == "DIFFSLOT":
+            for s in (corner_slot, edge_slot):
+                if self.pair in [s, s[::-1]]:
+                    return ("FR", Algo(Step("y") * cycle.index(s) or []))
+            return (cycle[-(cycle.index(edge_slot) - cycle.index(self.pair))], 
+                    Algo(Step("y") * cycle.index(edge_slot) or []))
 
