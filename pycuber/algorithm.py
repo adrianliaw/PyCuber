@@ -575,7 +575,7 @@ class Algo(list):
         >>> a
         U R U' R'
         """
-        if len(self) == 0: return
+        if len(self) == 0: return self
         for i in range(int((len(self)+1)/2)):
             self[i] = self[i].inverse()
             if i != len(self)-i-1:

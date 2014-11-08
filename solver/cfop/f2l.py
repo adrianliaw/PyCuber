@@ -12,6 +12,8 @@ class F2LPairSolver(object):
     """
     def __init__(self, cube=None, pair=None):
         self.cube = cube
+        if pair and pair not in ["FR", "RB", "BL", "LF"]:
+            pair = ["FR", "RB", "BL", "LF"][["RF", "BR", "LB", "FL"].index(pair)]
         self.pair = pair
 
     def feed(self, cube, pair):
@@ -19,6 +21,8 @@ class F2LPairSolver(object):
         Feed Cube to the solver.
         """
         self.cube = cube
+        if pair not in ["FR", "RB", "BL", "LF"]:
+            pair = ["FR", "RB", "BL", "LF"][["RF", "BR", "LB", "FL"].index(pair)]
         self.pair = pair
 
     def get_pair(self):
@@ -122,21 +126,15 @@ class F2LPairSolver(object):
                 self.cube["B"], 
                 ), 
             )
-        return sum(
-            path_actions(
-                shortest_path_search(start, 
-                                     self.combining_successors, 
-                                     self.combining_goal),
-                ), 
-            Algo(), 
-            )
+        return sum(path_actions(shortest_path_search(start, 
+                       self.combining_successors, 
+                       self.combining_goal)), Algo())
 
     def combining_setup(self):
         """
         Setup for some special F2L cases.
         """
         (slot_type, (corner_slot, edge_slot), (corner, edge)) = self.get_slot()
-        print(slot_type)
         cycle = ["FR", "RB", "BL", "LF"]
         if slot_type == "SLOTFREE":
             return ("FR", Algo(Step("y") * cycle.index(self.pair) or []))
@@ -147,9 +145,46 @@ class F2LPairSolver(object):
             return (cycle[-(cycle.index(corner_slot) - cycle.index(self.pair))], 
                     Algo(Step("y") * cycle.index(corner_slot) or [])) 
         elif slot_type == "DIFFSLOT":
-            for s in (corner_slot, edge_slot):
-                if self.pair in [s, s[::-1]]:
-                    return ("FR", Algo(Step("y") * cycle.index(s) or []))
-            return (cycle[-(cycle.index(edge_slot) - cycle.index(self.pair))], 
-                    Algo(Step("y") * cycle.index(edge_slot) or []))
+            if corner_slot != self.pair: corner_slot, edge_slot = edge_slot, corner_slot
+            result = Algo(Step("y") * cycle.index(edge_slot) or [])
+            result += Algo("R U R'")
+            result += Algo(Step("y'") * cycle.index(edge_slot) or [])
+            result += Algo(Step("y") * cycle.index(corner_slot) or [])
+            if result[-1].face == "y" and result[-2].face == "y":
+                result[-2] += result[-1]
+                del result[-1]
+            return (cycle[-(cycle.index(corner_slot) - cycle.index(self.pair))], result)
+        else:
+            return (cycle[-cycle.index(self.pair)], Algo())
+
+    def combine(self):
+        """
+        Combine the pair.
+        """
+        self.pair, setup = self.combining_setup()
+        self.cube(setup)
+        actual = self.combining_search()
+        self.cube(actual)
+        return setup + actual
+
+    def solve(self):
+        """
+        Solve the pair.
+        """
+        cycle = ["FR", "RB", "BL", "LF"]
+        combine = self.combine()
+        put = Algo(Step("y") * cycle.index(self.pair) or [])
+        self.cube(put)
+        self.pair = "FR"
+        estimated = self.estimated_position()
+        for U_act in [Algo(), Algo("U"), Algo("U2"), Algo("U'")]:
+            self.cube(U_act)
+            for put_act in [Algo("R U R'"), Algo("R U' R'"), Algo("R U2 R'"), 
+                            Algo("F' U F"), Algo("F' U' F"), Algo("F' U2 F")]:
+                self.cube(put_act)
+                if self.get_pair() == estimated:
+                    return combine + put + U_act + put_act
+                self.cube(put_act.reverse())
+            self.cube(U_act.reverse())
+
 
