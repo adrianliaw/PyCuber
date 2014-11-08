@@ -4,7 +4,7 @@ Module for solving Rubik's Cube F2L.
 
 from pycuber import *
 from pycuber.helpers import fill_unknowns
-from util import shortest_path_search, path_actions
+from .util import shortest_path_search, path_actions
 
 class F2LPairSolver(object):
     """
@@ -187,4 +187,33 @@ class F2LPairSolver(object):
                 self.cube(put_act.reverse())
             self.cube(U_act.reverse())
 
+    def is_solved(self):
+        """
+        Check if the cube is solved.
+        """
+
+
+class F2LSolver(object):
+    """
+    F2LSolver(cube) => An F2L solver.
+    """
+    def __init__(self, cube):
+        self.cube = cube
+
+    def feed(self, cube):
+        """
+        Feed a cube to the solver.
+        """
+        self.cube = cube
+
+    def solve(self):
+        """
+        Solve the entier F2L. (Generator)
+        """
+        for i in range(4):
+            for slot in ["FR", "RB", "BL", "LF"]:
+                if len(result) == 4: return result
+                solver = F2LPairSolver(self.cube, slot)
+                if not solver.is_solved():
+                    yield tuple([self.cube[slot[i]].colour for i in range(2)]), solver.solve()
 
