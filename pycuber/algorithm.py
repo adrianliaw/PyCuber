@@ -361,7 +361,7 @@ class Algo(list):
         >>> a
         R' U R' U'
         """
-        if item == None:
+        if None is item:
             del self[index]
             return
         if isinstance(index, slice):
@@ -712,7 +712,7 @@ class Algo(list):
             rhs._optimize_same_steps(is_root=False)
             self[flag:] = rhs
         if is_root:
-            while not self.copy() | self._optimize_same_steps():
+            while not self.copy() | self._optimize_same_steps(is_root=False):
                 pass
         return self
 

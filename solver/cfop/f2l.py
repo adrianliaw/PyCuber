@@ -210,10 +210,12 @@ class F2LSolver(object):
         """
         Solve the entier F2L. (Generator)
         """
+        times = 0
         for i in range(4):
             for slot in ["FR", "RB", "BL", "LF"]:
-                if len(result) == 4: return result
+                if times == 4: raise StopIteration()
                 solver = F2LPairSolver(self.cube, slot)
                 if not solver.is_solved():
                     yield tuple([self.cube[slot[i]].colour for i in range(2)]), solver.solve()
+                    times += 1
 
