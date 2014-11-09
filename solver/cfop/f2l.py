@@ -219,3 +219,14 @@ class F2LSolver(object):
                     yield tuple([self.cube[slot[i]].colour for i in range(2)]), solver.solve()
                     times += 1
 
+    def is_solved(self):
+        """
+        Check if Cube's F2L is solved.
+        """
+        if self.cube.D == [[Square(self.cube["D"].colour)] * 3] * 3:
+            for face in "LFRB":
+                if self.cube.get_face(face)[1:] != [[Square(self.cube[face].colour)] * 3] * 2:
+                    return False
+            return True
+        return False
+
