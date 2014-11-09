@@ -310,9 +310,9 @@ class Algo(list):
     >>> a
     D L D' L'
     
-    Also optimizing - only outer layer Steps.
+    Also optimising - only outer layer Steps.
     >>> a = Algo("R U r' x2 M' y' D D' L2 R L'")
-    >>> a.optimize()
+    >>> a.optimise()
     >>> a
     R U R' F B
 
@@ -592,13 +592,13 @@ class Algo(list):
         """L.copy() -> Algo -- a shallow copy of L"""
         return Algo(self)
 
-    def _optimize_wide_actions(self):
+    def _optimise_wide_actions(self):
         """
-        Helper function for Algo.optimize()
+        Helper function for Algo.optimise()
         Reduce the wide actions (double layers)
 
         >>> a = Algo("r u' M2")
-        >>> a._optimize_wide_actions()
+        >>> a._optimise_wide_actions()
         >>> a
         L x D' y' R2 L2 x2
         """
@@ -630,13 +630,13 @@ class Algo(list):
                 index += 1
         return self
     
-    def _optimize_rotations(self):
+    def _optimise_rotations(self):
         """
-        Helper function for Algo.optimize()
+        Helper function for Algo.optimise()
         Reduce the rotations (whole cube rotations).
 
         >>> a = Algo("L x D' y' R2 L2 x2")
-        >>> a._optimize_rotations()
+        >>> a._optimise_rotations()
         >>> a
         L B' D2 U2
         """
@@ -662,18 +662,18 @@ class Algo(list):
                             self[j] = self[j].set_face(cr_pattern[(cr_pattern.index(self[j].face) + 1) % 4])
         return self
 
-    def _optimize_same_steps(self, is_root=True):
+    def _optimise_same_steps(self, is_root=True):
         """
-        Helper function for Algo.optimize()
+        Helper function for Algo.optimise()
         Reduce repeated steps.
 
         >>> a = Algo("R R2 U'")
-        >>> a._optimize_same_steps()
+        >>> a._optimise_same_steps()
         >>> a
         R' U'
 
         >>> a = Algo("R L' R U2")
-        >>> a._optimize_same_steps()
+        >>> a._optimise_same_steps()
         >>> a
         R2 L' U2
         """
@@ -709,14 +709,14 @@ class Algo(list):
                     self[0] += self[1]
                     del self[1]
             rhs = self[flag:]
-            rhs._optimize_same_steps(is_root=False)
+            rhs._optimise_same_steps(is_root=False)
             self[flag:] = rhs
         if is_root:
-            while not self.copy() | self._optimize_same_steps(is_root=False):
+            while not self.copy() | self._optimise_same_steps(is_root=False):
                 pass
         return self
 
-    def optimize(self):
+    def optimise(self):
         """
         Optimize the algorithm:
         - Only outer layers (LUFDRB)
@@ -724,11 +724,11 @@ class Algo(list):
         - No repeated steps
 
         >>> a = Algo("R U r' x2 M' y' D D' L2 R L'")
-        >>> a.optimize()
+        >>> a.optimise()
         >>> a
         R U R' F B
         """
-        self._optimize_wide_actions()._optimize_rotations()._optimize_same_steps()
+        self._optimise_wide_actions()._optimise_rotations()._optimise_same_steps()
         return self
 
     def random(self, n=25, clear=True):
