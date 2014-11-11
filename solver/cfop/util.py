@@ -42,7 +42,7 @@ def a_star_search(start, successors, state_value, is_goal):
     while frontier:
         f, g, h, path = frontier.pop(0)
         s = path[-1]
-        for (action, state) in successors(s, path_actions(path)[-1] if len(path) != 1 else None).items():
+        for (action, state) in successors(s, path_actions(path)[-1] if len(path) != 1 else []):
             if state not in explored:
                 explored.append(state)
                 path2 = path + [action, state]

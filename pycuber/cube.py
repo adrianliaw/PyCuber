@@ -129,6 +129,9 @@ class Cuboid(object):
         """
         return not self.__eq__(another)
 
+    def __lt__(self, another):
+        return True
+
     def __contains__(self, value):
         """
         Check if the Cuboid uses that face.
