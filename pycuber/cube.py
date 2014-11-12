@@ -103,7 +103,12 @@ class Cuboid(object):
         """
         Cuboid["L"] => Returns the square that positioned at L face.
         """
-        return self.facings[face]
+        if face in "LUFDRB":
+            return self.facings[face]
+        for k in self.facings:
+            if self.facings[k] in (face, Square(face)):
+                return k
+        raise KeyError(face)
 
     def __hash__(self):
         """
@@ -128,9 +133,6 @@ class Cuboid(object):
         Check if two Cuboids are different.
         """
         return not self.__eq__(another)
-
-    def __lt__(self, another):
-        return True
 
     def __contains__(self, value):
         """

@@ -4,7 +4,7 @@ Module for solving Rubik's Cube cross.
 
 from pycuber import *
 from pycuber.helpers import fill_unknowns
-from util import a_star_search, path_actions
+from .util import a_star_search, path_actions
 
 class CrossSolver(object):
     """
@@ -32,7 +32,9 @@ class CrossSolver(object):
             ], [])
         for step in acts:
             cube(step)
-            yield step, (centres, cube.select_type("edge") & cube.has_colour(cube["D"].colour))
+            nextone = cube.select_type("edge") & cube.has_colour(cube["D"].colour)
+            nextone = {elem.copy() for elem in nextone}
+            yield step, (centres, nextone)
             cube(step.inverse())
 
     @staticmethod
@@ -69,6 +71,61 @@ class CrossSolver(object):
                     value += 3
             else:
                 value += 1
-        
+        edgeposes = {}
+        ngedges = []
+        for edge in edges:
+            if "U" in edge and edge["U"] == centres["D"]["D"]:
+                k = "".join(edge.facings.keys()).replace("U", "")
+                edgeposes[k] = edge[k]
+            elif "D" in edge and edge["D"] == centres["D"]["D"]:
+                k = "".join(edge.facings.keys()).replace("D", "")
+                edgeposes[k] = edge[k]
+            elif "U" in edge or "D" in edge:
+                ngedges.append(edge)
+            else:
+                for k, s in edge:
+                    if s.colour != centres["D"]["D"]:
+                        edgeposes[k] = s
+                        break
+        for edge in ngedges:
+            idx = "LFRB".index(edge[centres["D"].colour])
+            for i in [-1, 1]:
+                if "LFRB"[(idx+1)%4] not in edgeposes:
+                    k = "".join(edge.facings.keys()).replace("LFRB"[idx], "")
+                    edgeposes["LFRB"[(idx+1)%4]] = edge[k]
+                    break
+        relative_pos = {f: centres[f][f] for f in "LFRB"}
+        if len(edgeposes) == 4:
+            for i in range(4):
+                edgeposes["L"], edgeposes["F"], edgeposes["R"], edgeposes["B"] = \
+                    edgeposes["F"], edgeposes["R"], edgeposes["B"], edgeposes["L"]
+                if edgeposes == relative_pos:
+                    break
+            else:
+                value += 5
+        else:
+            value += 3
+        return value
+
+    def solve(self):
+        """
+        Solve the cross.
+        """
+        result = Algo(path_actions(a_star_search(
+            ({f: self.cube[f] for f in "LUFDRB"}, 
+             self.cube.select_type("edge") & self.cube.has_colour(self.cube["D"].colour)), 
+            self.cross_successors, 
+            self.cross_state_value, 
+            self.cross_goal, 
+            )))
+        self.cube(result)
+        return result
+
+    def is_solved(self):
+        """
+        Check if the cross of Cube is solved.
+        """
+        return self.cross_goal(({f: self.cube[f] for f in "LUFDRB"}, 
+            self.cube.select_type("edge") & self.cube.has_colour(self.cube["D"].colour)))
         
 
