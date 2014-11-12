@@ -53,7 +53,7 @@ def a_star_search(start, successors, state_value, is_goal):
                     return path2
                 else:
                     frontier.append((f2, g2, h2, path2))
-                    frontier.sort()
+                    frontier.sort(key=lambda x:x[:3])
     return []
 
 def path_states(path):
