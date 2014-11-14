@@ -3,7 +3,6 @@ Module for solving Rubik's Cube cross.
 """
 
 from pycuber import *
-from pycuber.helpers import fill_unknowns
 from .util import a_star_search, path_actions
 
 class CrossSolver(object):
@@ -20,22 +19,48 @@ class CrossSolver(object):
         self.cube = cube
 
     @staticmethod
+    def _rotate(edges, step):
+        """
+        Simulate the cube rotation with updating four edges.
+        """
+        step = Step(step)
+        result = set()
+        movement = {
+            "U": "RFLB", 
+            "D": "LFRB", 
+            "R": "FUBD", 
+            "L": "FDBU", 
+            "F": "URDL", 
+            "B": "ULDR", 
+            }[step.face]
+        movement = {
+            movement[i]: movement[(i + step.is_standard + (-1 * step.is_inverse) + (2 * step.is_180)) % 4]
+            for i in range(4)
+            }
+        for edge in edges:
+            if step.face not in edge:
+                result.add(edge.copy())
+            else:
+                k = (edge.facings.keys() - {step.face}).pop()
+                new_edge = Edge(**{
+                    step.face: edge[step.face], 
+                    movement[k]: edge[k], 
+                    })
+                result.add(new_edge)
+        return result
+
+    @staticmethod
     def cross_successors(state, last_action=None):
         """
         Successors function for solving the cross.
         """
         centres, edges = state
-        cube = Cube(fill_unknowns(set(centres.values()) | edges))
         acts = sum([
             [s, s.inverse(), s * 2] for s in
             map(Step, "RUFDRB".replace(last_action.face if last_action else "", "", 1))
             ], [])
         for step in acts:
-            cube(step)
-            nextone = cube.select_type("edge") & cube.has_colour(cube["D"].colour)
-            nextone = {elem.copy() for elem in nextone}
-            yield step, (centres, nextone)
-            cube(step.inverse())
+            yield step, (centres, CrossSolver._rotate(edges, step))
 
     @staticmethod
     def cross_goal(state):
@@ -128,4 +153,3 @@ class CrossSolver(object):
         return self.cross_goal(({f: self.cube[f] for f in "LUFDRB"}, 
             self.cube.select_type("edge") & self.cube.has_colour(self.cube["D"].colour)))
         
-
