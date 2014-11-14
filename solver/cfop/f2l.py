@@ -93,7 +93,44 @@ class F2LPairSolver(object):
                 if square != corner["U"]:
                     return False
         return True
-    
+
+    @staticmethod
+    def _rotate(pair, step):
+        """
+        Simulate the cube rotation by updating the pair.
+        """
+        step = Step(step)
+        movement = {
+            "U": "RFLB", 
+            "D": "LFRB", 
+            "R": "FUBD", 
+            "L": "FDBU", 
+            "F": "URDL", 
+            "B": "ULDR", 
+            }[step.face]
+        movement = {
+            movement[i]: movement[(i + step.is_standard + (-1 * step.is_inverse) + (2 * step.is_180)) % 4]
+            for i in range(4)
+            }
+        for cuboid in pair:
+            if step.face not in cuboid:
+                if cuboid.type == "edge":
+                    result_edge = cuboid.copy()
+                else:
+                    result_corner = cuboid.copy()
+            else:
+                result = {}
+                for face, square in cuboid:
+                    if face not in movement:
+                        result[face] = square
+                    else:
+                        result[movement[face]] = square
+                if len(result) == 2:
+                    result_edge = Edge(**result)
+                else:
+                    result_corner = Corner(**result)
+        return (result_corner, result_edge)
+
     @staticmethod
     def combining_successors(state, last_action=()):
         """
@@ -103,13 +140,11 @@ class F2LPairSolver(object):
         U_turns = [Algo("U"), Algo("U'"), Algo("U2")] if len(last_action) != 1 else []
         R_turns = [Algo("R U R'"), Algo("R U' R'"), Algo("R U2 R'")] if "R" not in last_action else []
         F_turns = [Algo("F' U F"), Algo("F' U' F"), Algo("F' U2 F")] if "F" not in last_action else []
-        cube = Cube(fill_unknowns(set([corner, edge, L, U, F, D, R, B])))
         for act in (U_turns + R_turns + F_turns):
-            cube(act)
-            new_corner = (cube.select_type("corner") - cube.has_colour("unknown")).pop().copy()
-            new_edge = (cube.select_type("edge") - cube.has_colour("unknown")).pop().copy()
-            cube(act.reverse())
-            yield act.reverse(), ((new_corner, new_edge), (L, U, F, D, R, B))
+            new = (corner, edge)
+            for q in act:
+                new = F2LPairSolver._rotate(new, q)
+            yield act, (new, (L, U, F, D, R, B))
 
     def combining_search(self):
         """

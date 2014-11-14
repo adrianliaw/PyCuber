@@ -21,7 +21,7 @@ class CrossSolver(object):
     @staticmethod
     def _rotate(edges, step):
         """
-        Simulate the cube rotation with updating four edges.
+        Simulate the cube rotation by updating four edges.
         """
         step = Step(step)
         result = set()
