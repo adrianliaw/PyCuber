@@ -87,7 +87,7 @@ class CrossSolver(object):
         value = 0
         for edge in edges:
             if "U" in edge:
-                if edge["U"].colour == centres["D"]:
+                if edge["U"] == centres["D"]["D"]:
                     value += 1
                 else:
                     value += 2
@@ -97,20 +97,24 @@ class CrossSolver(object):
             else:
                 value += 1
         edgeposes = {}
+        counts = {f: 0 for f in "LFRB"}
         ngedges = []
         for edge in edges:
             if "U" in edge and edge["U"] == centres["D"]["D"]:
                 k = "".join(edge.facings.keys()).replace("U", "")
                 edgeposes[k] = edge[k]
+                counts[k] += 1
             elif "D" in edge and edge["D"] == centres["D"]["D"]:
                 k = "".join(edge.facings.keys()).replace("D", "")
                 edgeposes[k] = edge[k]
+                counts[k] += 1
             elif "U" in edge or "D" in edge:
                 ngedges.append(edge)
             else:
                 for k, s in edge:
-                    if s.colour != centres["D"]["D"]:
+                    if s != centres["D"]["D"]:
                         edgeposes[k] = s
+                        counts[k] += 1
                         break
         for edge in ngedges:
             idx = "LFRB".index(edge[centres["D"].colour])
@@ -118,7 +122,14 @@ class CrossSolver(object):
                 if "LFRB"[(idx+1)%4] not in edgeposes:
                     k = "".join(edge.facings.keys()).replace("LFRB"[idx], "")
                     edgeposes["LFRB"[(idx+1)%4]] = edge[k]
+                    counts["LFRB"[(idx+1)%4]] += 1
                     break
+            else:
+                k = "".join(edge.facings.keys()).replace("LFRB"[idx], "")
+                if counts["LFRB"[(idx-1)%4]] > counts["LFRB"[(idx+1)%4]]:
+                    edgeposes["LFRB"[(idx-1)%4]] = edge[k]
+                else:
+                    edgeposes["LFRB"[(idx+1)%4]] = edge[k]
         relative_pos = {f: centres[f][f] for f in "LFRB"}
         if len(edgeposes) == 4:
             for i in range(4):

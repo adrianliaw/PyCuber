@@ -36,8 +36,8 @@ class F2LTester(object):
             print(record[1])
             print(cube)
             raise AssertionError()
-        return True
         self.history.append(record)
+        return True
     def suite(self, n=10):
         for i in range(n):
             self.test()
