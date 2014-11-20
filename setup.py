@@ -10,7 +10,7 @@ setup(
     name="pycuber", 
     version="0.1b2", 
     description="Rubik's Cube in Python",
-    long_description=read("README.md"), 
+    long_description="See http://github.com/adrianliaw/PyCuber", 
     url="http://github.com/adrianliaw/PyCuber", 
     license="MIT", 
     author="Adrian Liaw", 
