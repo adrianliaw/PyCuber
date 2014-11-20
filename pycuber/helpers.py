@@ -1,7 +1,7 @@
 def fill_unknowns(s):
     """
-    Take a set of Cuboids as an input, 
-    adds "unknown Cuboids" to the set.
+    Take a set of Cubies as an input, 
+    adds "unknown Cubies" to the set.
     """
     from .cube import Centre, Corner, Edge, Square
     new = set()
@@ -10,9 +10,9 @@ def fill_unknowns(s):
         "DB", "DL", "DF", "DR", "LB", "FL", "FR", "RB", "UB", "UL", "UF", "UR", 
         "L", "R", "U", "D", "F", "B", 
         ]:
-        for cuboid in s:
-            if cuboid & loc:
-                new.add(cuboid)
+        for cubie in s:
+            if cubie & loc:
+                new.add(cubie)
                 break
         else:
             new.add([Centre, Edge, Corner][len(loc) - 1](**{
@@ -33,13 +33,13 @@ def extract(l):
             result.append(element)
     return result
 
-def array_to_cuboids(l):
+def array_to_cubies(l):
     """
-    Translate 3x3x6 array into a set cuboids.
-    array_to_cuboids("LLLLLLLLLUUUUUUUUUFFFFFFFFFDDDDDDDDDRRRRRRRRRBBBBBBBBB")
-    array_to_cuboids("000000000111111111222222222333333333444444444555555555")
-    array_to_cuboids(["red", "red", "red", ... , "blue", "blue", "blue"])
-    array_to_cuboids([[["red", "red", "red"], ["red", ...], [...]], [...], [...], [...], [...], [...]])
+    Translate 3x3x6 array into a set cubies.
+    array_to_cubies("LLLLLLLLLUUUUUUUUUFFFFFFFFFDDDDDDDDDRRRRRRRRRBBBBBBBBB")
+    array_to_cubies("000000000111111111222222222333333333444444444555555555")
+    array_to_cubies(["red", "red", "red", ... , "blue", "blue", "blue"])
+    array_to_cubies([[["red", "red", "red"], ["red", ...], [...]], [...], [...], [...], [...], [...]])
     => {
         Centre('B': \x1b[46m  \x1b[49m),
         Centre('R': \x1b[41m  \x1b[49m),
@@ -74,14 +74,14 @@ def array_to_cuboids(l):
         "B": "blue", "5": "blue", "blue": "blue", 
         }
     result = {}
-    for face, cuboids in zip("LUFDRB", index):
-        for c in cuboids.split():
+    for face, cubies in zip("LUFDRB", index):
+        for c in cubies.split():
             if c not in result:
                 result[c] = {}
             result[c][face] = Square(colours[l.pop(0)])
     return {
-        [Centre, Edge, Corner][len(cuboid) - 1](**cuboid) 
-        for cuboid in result.values()
+        [Centre, Edge, Corner][len(cubie) - 1](**cubie) 
+        for cubie in result.values()
         }
 
 

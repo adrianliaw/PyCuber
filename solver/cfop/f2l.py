@@ -43,13 +43,13 @@ class F2LPairSolver(object):
 
     def estimated_position(self):
         """
-        Get the estimated cuboid of solved pair.
+        Get the estimated cubie of solved pair.
         """
         corner = {"D":self.cube["D"]["D"]}
         edge = {}
-        for cuboid in (corner, edge):
+        for cubie in (corner, edge):
             for face in self.pair:
-                cuboid.update({face:self.cube[face][face]})
+                cubie.update({face:self.cube[face][face]})
         return (Corner(**corner), Edge(**edge))
 
     def get_slot(self):
@@ -77,7 +77,7 @@ class F2LPairSolver(object):
     @staticmethod
     def combining_goal(state):
         """
-        Check if two Cuboids are combined on the U face.
+        Check if two Cubies are combined on the U face.
         """
         ((corner, edge), (L, U, F, D, R, B)) = state
         if "U" not in corner or "U" not in edge: return False
@@ -112,15 +112,15 @@ class F2LPairSolver(object):
             movement[i]: movement[(i + step.is_standard + (-1 * step.is_inverse) + (2 * step.is_180)) % 4]
             for i in range(4)
             }
-        for cuboid in pair:
-            if step.face not in cuboid:
-                if cuboid.type == "edge":
-                    result_edge = cuboid.copy()
+        for cubie in pair:
+            if step.face not in cubie:
+                if cubie.type == "edge":
+                    result_edge = cubie.copy()
                 else:
-                    result_corner = cuboid.copy()
+                    result_corner = cubie.copy()
             else:
                 result = {}
-                for face, square in cuboid:
+                for face, square in cubie:
                     if face not in movement:
                         result[face] = square
                     else:

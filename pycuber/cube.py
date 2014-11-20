@@ -70,13 +70,13 @@ class Square(object):
         return Square(self.colour)
 
 
-class Cuboid(object):
+class Cubie(object):
     """
-    Cuboid(**kwargs), implements a cuboid on the Cube.
-    ex: Cuboid(U=Square("yellow"), F=Square("green"), L=Square("red"))
+    Cubie(**kwargs), implements a cubie on the Cube.
+    ex: Cubie(U=Square("yellow"), F=Square("green"), L=Square("red"))
     """
     def __init__(self, parent=None, children=[], **kwargs):
-        super(Cuboid, self).__init__()
+        super(Cubie, self).__init__()
         for kw in kwargs:
             if kw not in list("LUFDRB"):
                 raise ValueError(
@@ -92,7 +92,7 @@ class Cuboid(object):
 
     def __repr__(self):
         """
-        Print out "Cuboid(U:\x1b[43m ...)"
+        Print out "Cubie(U:\x1b[43m ...)"
         """
         return "{0}({1})".format(
             self.__class__.__name__, 
@@ -101,7 +101,7 @@ class Cuboid(object):
 
     def __getitem__(self, face):
         """
-        Cuboid["L"] => Returns the square that positioned at L face.
+        Cubie["L"] => Returns the square that positioned at L face.
         """
         if face in "LUFDRB":
             return self.facings[face]
@@ -112,7 +112,7 @@ class Cuboid(object):
 
     def __hash__(self):
         """
-        Cuboid object is hashable.
+        Cubie object is hashable.
         """
         return reduce(
             lambda x, y: hash(x) + hash(y), 
@@ -122,27 +122,27 @@ class Cuboid(object):
 
     def __eq__(self, another):
         """
-        Check if two Cuboids are the same.
+        Check if two Cubies are the same.
         """
-        if isinstance(another, Cuboid):
+        if isinstance(another, Cubie):
             return self.facings == another.facings
         return False
 
     def __ne__(self, another):
         """
-        Check if two Cuboids are different.
+        Check if two Cubies are different.
         """
         return not self.__eq__(another)
 
     def __contains__(self, value):
         """
-        Check if the Cuboid uses that face.
+        Check if the Cubie uses that face.
         """
         return value in self.facings
 
     def __or__(self, value):
         """
-        Check if the Cuboid uses that colour.
+        Check if the Cubie uses that colour.
         """
         try:
             return Square(value) in self.facings.values()
@@ -151,7 +151,7 @@ class Cuboid(object):
 
     def __and__(self, another):
         """
-        Check if two Cuboids have the same location.
+        Check if two Cubies have the same location.
         """
         if isinstance(another, str):
             return tuple(self.facings) in permutations(another, len(another))
@@ -168,7 +168,7 @@ class Cuboid(object):
 
     def copy(self):
         """
-        Copy this Cuboid.
+        Copy this Cubie.
         """
         try:
             new = {
@@ -181,7 +181,7 @@ class Cuboid(object):
                     **self.facings
                     )
         except AttributeError:
-            new = Cuboid(
+            new = Cubie(
                 parent=self.parent, 
                 children=self.children, 
                 **self.facings
@@ -189,7 +189,7 @@ class Cuboid(object):
         return new
 
 
-class Centre(Cuboid):
+class Centre(Cubie):
     """
     Centre(U=Square("yellow")) => Implements the "Centre Block" (has 1 sticker).
     """
@@ -205,7 +205,7 @@ class Centre(Cuboid):
         return list(self.facings.values())[0].colour
 
  
-class Edge(Cuboid):
+class Edge(Cubie):
     """
     Edge(U=Square("yellow"), F=Square("green")) => Implements the "Edge Block" (has 2 stickers).
     """
@@ -216,7 +216,7 @@ class Edge(Cuboid):
         self.type = "edge"
 
 
-class Corner(Cuboid):
+class Corner(Cubie):
     """
     Corner(
         U=Square("yellow"), 
@@ -233,14 +233,14 @@ class Corner(Cuboid):
 
 class Cube(object):
     """
-    Cube([, {a set of Cuboids}]) => Implements a Rubik's Cube.
+    Cube([, {a set of Cubies}]) => Implements a Rubik's Cube.
     """
-    def __init__(self, cuboids=None):
+    def __init__(self, cubies=None):
         super(Cube, self).__init__()
         self.parent = None
         self.children = set()
-        if not cuboids:
-            cuboids = set()
+        if not cubies:
+            cubies = set()
             colours = {"L":"red", "U":"yellow", "F":"green", "D":"white", "R":"orange", "B":"blue"}
             for loc in [
                 "LDB", "LDF", "LUB", "LUF", "RDB", "RDF", "RUB", "RUF", 
@@ -248,15 +248,15 @@ class Cube(object):
                 "L", "R", "U", "D", "F", "B", 
                 ]:
                 if len(loc) == 3:
-                    cuboids.add(Corner(**{loc[i]:Square(colours[loc[i]]) for i in range(3)}))
+                    cubies.add(Corner(**{loc[i]:Square(colours[loc[i]]) for i in range(3)}))
                 elif len(loc) == 2:
-                    cuboids.add(Edge(**{loc[i]:Square(colours[loc[i]]) for i in range(2)}))
+                    cubies.add(Edge(**{loc[i]:Square(colours[loc[i]]) for i in range(2)}))
                 else:
-                    cuboids.add(Centre(**{loc[0]:Square(colours[loc[0]])}))
-        cuboids = set(cuboids)
-        if isinstance(cuboids, set):
-            for cubie in cuboids:
-                if isinstance(cubie, Cuboid):
+                    cubies.add(Centre(**{loc[0]:Square(colours[loc[0]])}))
+        cubies = set(cubies)
+        if isinstance(cubies, set):
+            for cubie in cubies:
+                if isinstance(cubie, Cubie):
                     children = set()
                     for sqr in cubie.facings.values():
                         children.add(Square(sqr))
@@ -268,7 +268,7 @@ class Cube(object):
                         child_class = Centre
                     self.children.add(child_class(parent=self, children=children, **cubie.facings))
                 else:
-                    raise ValueError("Should use Cuboid, not {0}.".format(cubie.__class__.__name__))
+                    raise ValueError("Should use Cubie, not {0}.".format(cubie.__class__.__name__))
 
     def __repr__(self):
         """
@@ -296,7 +296,7 @@ class Cube(object):
 
     def __getitem__(self, key):
         """
-        Get specific Cuboid by location.
+        Get specific Cubie by location.
         """
         for child in self.children:
             if child & key:
@@ -305,7 +305,7 @@ class Cube(object):
 
     def __setitem__(self, key, value):
         """
-        Reset a specific Cuboid.
+        Reset a specific Cubie.
         """
         if self[key].type != value.type:
             raise ValueError(
@@ -340,7 +340,7 @@ class Cube(object):
     
     def __iter__(self):
         """
-        Iterate over every Cuboid in the Cube.
+        Iterate over every Cubie in the Cube.
         """
         result = []
         for loc in [
@@ -365,7 +365,7 @@ class Cube(object):
 
     def at_face(self, face):
         """
-        Find all Cuboids which have a Square on specific face.
+        Find all Cubies which have a Square on specific face.
         """
         return set(
             child for child in self.children
@@ -374,7 +374,7 @@ class Cube(object):
 
     def has_colour(self, colour):
         """
-        Find all Cuboids which has a specific colour(s).
+        Find all Cubies which has a specific colour(s).
         """
         return set(
             child for child in self.children
@@ -386,7 +386,7 @@ class Cube(object):
 
     def select_type(self, tp):
         """
-        Find all Cuboids which has the specific type.
+        Find all Cubies which has the specific type.
         """
         return set(
             child for child in self.children
@@ -414,18 +414,18 @@ class Cube(object):
             "F": "UDLR", 
             "B": "UDRL", 
             }[face]
-        for cuboid in self.at_face(face):
+        for cubie in self.at_face(face):
             loc = [None, None]
-            for f in cuboid.facings:
-                if cuboid.type == "centre":
+            for f in cubie.facings:
+                if cubie.type == "centre":
                     loc = [1, 1]
                 if f != face:
-                    if cuboid.type == "edge":
+                    if cubie.type == "edge":
                         loc[ordering.index(f) // 2] = (ordering.index(f) % 2) * 2
                         loc[loc.index(None)] = 1
-                    elif cuboid.type == "corner":
+                    elif cubie.type == "corner":
                         loc[ordering.index(f) // 2] = (ordering.index(f) % 2) * 2
-            result[loc[0]][loc[1]] = cuboid.facings[face]
+            result[loc[0]][loc[1]] = cubie.facings[face]
         return result
 
     def _single_layer(self, step):
@@ -454,23 +454,23 @@ class Cube(object):
                 c.copy()
                 for c in (self.children - self.at_face(slice_[0]) - self.at_face(slice_[1]))
                 }
-        for cuboid in to_move:
+        for cubie in to_move:
             new = {}
-            for f in cuboid.facings:
+            for f in cubie.facings:
                 if f != step.face:
-                    new[movement[(movement.index(f) + step.is_180 + 1) % 4]] = cuboid.facings[f]
+                    new[movement[(movement.index(f) + step.is_180 + 1) % 4]] = cubie.facings[f]
                 else:
-                    new[f] = cuboid.facings[f]
-            new_cuboid = {
+                    new[f] = cubie.facings[f]
+            new_cubie = {
                 "centre": Centre, 
                 "edge": Edge, 
                 "corner": Corner, 
-                }[cuboid.type](
+                }[cubie.type](
                     parent=self, 
                     children=new.values(), 
                     **new 
                     )
-            self[new_cuboid.location] = new_cuboid
+            self[new_cubie.location] = new_cubie
         return self
 
     def _other_rotations(self, step):

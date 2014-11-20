@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="pycuber", 
-    version="0.1a2", 
+    version="0.1b1", 
     description="Rubik's Cube in Python",
     long_description="See http://github.com/adrianliaw/PyCuber", 
     url="http://github.com/adrianliaw/PyCuber", 
@@ -12,7 +12,7 @@ setup(
     packages=["pycuber"], 
     package_dir={"pycuber":"pycuber"}, 
     classifiers=[
-        "Development Status :: 3 - Alpha", 
+        "Development Status :: 4 - Beta", 
         "Environment :: Console", 
         "Intended Audience :: Developers", 
         "Intended Audience :: Science/Research", 
