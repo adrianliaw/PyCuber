@@ -3,6 +3,6 @@ from .helpers import fill_unknowns, array_to_cubies
 
 __all__ = ["Cube", "Cubie", "Centre", "Corner", "Edge", "Square", "Step", "Algo"]
 __title__ = "PyCuber"
-__version__ = "0.1b1"
+__version__ = "0.1b2"
 __author__ = "Adrian Liaw"
 __license__ = "MIT"
