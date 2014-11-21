@@ -51,7 +51,7 @@ I’ll add some documentations later."""
 
 setup(
     name = "pycuber", 
-    version = "0.1b4", 
+    version = "0.1.0", 
     description = "Rubik's Cube in Python",
     long_description = long_desc, 
     url = "http://github.com/adrianliaw/PyCuber", 
