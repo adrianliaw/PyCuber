@@ -2,10 +2,10 @@
 Module for solving Rubik's Cube PLL.
 """
 
-import csv
+import csv, os
 from pycuber import *
 
-with open("cfop/pll_algos.csv", "r") as f:
+with open(os.path.join(os.path.dirname(__file__), "pll_algos.csv"), "r") as f:
     reader = csv.reader(f, delimiter=",")
     algo_dict = {}
     for name, rec_id, algo in reader:

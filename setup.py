@@ -55,14 +55,14 @@ I’ll add some documentations later.
 
 setup(
     name = "pycuber", 
-    version = "0.1b3", 
+    version = "0.1b4", 
     description = "Rubik's Cube in Python",
     long_description = long_desc, 
     url = "http://github.com/adrianliaw/PyCuber", 
     license = "MIT", 
     author = "Adrian Liaw", 
     author_email = "adrianliaw2000@gmail.com", 
-    packages = ["pycuber"], 
+    packages = ["pycuber", "pycuber.solver", "pycuber.solver.cfop"], 
     package_dir = {"pycuber":"pycuber"}, 
     classifiers = [
         "Development Status :: 4 - Beta", 
@@ -74,4 +74,7 @@ setup(
         "Programming Language :: Python :: 3", 
         "Topic :: Scientific/Engineering :: Mathematics", 
         ], 
+    package_data = {
+        "pycuber.solver.cfop": ["*.csv"], 
+        }, 
     )
