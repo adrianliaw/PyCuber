@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-import websockets
+import asyncio, websockets
 
 app = Flask(__name__)
 
