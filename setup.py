@@ -23,10 +23,8 @@ to visualise the cube, just inside the terminal.
 
     print(mycube)
 
-.. figure:: https://raw.github.com/adrianliaw/PyCuber/v0.1b/static/img/terminal.png
-   :alt: alt tag
+::
 
-   alt tag
 We also provided some useful tools to deal with Rubik’s Cube algorithms.
 
 .. code:: python
