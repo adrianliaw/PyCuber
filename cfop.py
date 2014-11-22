@@ -15,7 +15,7 @@ class CFOPSolver(object):
         result = pc.Algo()
         solver = CrossSolver(self.cube)
         cross = solver.solve()
-        yield "cross", cross
+        yield "CROSS", cross
         result += cross
         solver = F2LSolver(self.cube)
         for pair in solver.solve():
