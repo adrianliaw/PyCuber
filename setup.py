@@ -1,4 +1,5 @@
 from setuptools import setup
+import pycuber as pc
 
 long_desc = """
 PyCuber
@@ -51,7 +52,7 @@ I’ll add some documentations later."""
 
 setup(
     name = "pycuber", 
-    version = "0.1.0", 
+    version = pc.__version__, 
     description = "Rubik's Cube in Python",
     long_description = long_desc, 
     url = "http://github.com/adrianliaw/PyCuber", 

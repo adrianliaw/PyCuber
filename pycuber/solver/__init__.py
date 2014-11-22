@@ -12,4 +12,4 @@ Usage:
 
 """
 
-from cfop import CFOPSolver
+from .cfop import CFOPSolver
