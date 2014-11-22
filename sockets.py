@@ -6,7 +6,7 @@ import pycuber as pc
 @asyncio.coroutine
 def cfop_solve(websocket, path):
     cube = yield from websocket.recv()
-    cube = pc.Cube(cube)
+    cube = pc.Cube(pc.array_to_cubies(cube))
     solver = cfop.CFOPSolver(cube)
     for step in solver.solve():
         yield from websocket.send(str(step))
