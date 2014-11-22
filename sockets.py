@@ -5,10 +5,13 @@ import pycuber as pc
 
 @asyncio.coroutine
 def cfop_solve(websocket, path):
+    print(websocket)
+    print(path)
     cube = yield from websocket.recv()
     cube = pc.Cube(pc.array_to_cubies(cube))
     solver = cfop.CFOPSolver(cube)
     for step in solver.solve():
+        print(step)
         yield from websocket.send(str(step))
 
 start_server = websockets.serve(cfop_solve, "127.0.0.1", 8765)
