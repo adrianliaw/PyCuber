@@ -96,7 +96,7 @@ class Cubie(object):
         """
         return "{0}({1})".format(
             self.__class__.__name__, 
-            str(self.facings)[1:-1], 
+            ", ".join("{0}: {1}".format(k, v) for k, v in self.facings.items())
             )
 
     def __getitem__(self, face):
