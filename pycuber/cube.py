@@ -105,7 +105,7 @@ class Cubie(object):
         """
         if face in "LUFDRB":
             return self.facings[face]
-        for k, sq in self.facings:
+        for k, sq in self:
             if sq in (face, Square(face)):
                 return k
         raise KeyError(face)
