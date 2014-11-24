@@ -9,12 +9,17 @@ def ws_handler(websocket, path):
     if path == "/cfop":
         cube = yield from websocket.recv()
         cube = pc.Cube(pc.array_to_cubies(cube))
-        solver = cfop.CFOPSolver(cube)
-        for step in solver.solve():
-            print(step)
+        try:
+            solver = cfop.CFOPSolver(cube)
+            for step in solver.solve():
+                print(step)
+                yield from websocket.send(json.dumps({
+                    "step_name": step[0], 
+                    "result": repr(step[1]).split(), 
+                    }))
+        except ValueError:
             yield from websocket.send(json.dumps({
-                "step_name": step[0], 
-                "result": repr(step[1]).split(), 
+                "error": "InvalidCube", 
                 }))
 
 start_server = websockets.serve(ws_handler, "127.0.0.1", 8765)
