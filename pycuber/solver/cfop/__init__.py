@@ -10,6 +10,8 @@ class CFOPSolver(object):
     def feed(self, cube):
         self.cube = cube
     def solve(self):
+        if not self.cube.is_valid():
+            raise ValueError("Invalid Cube.")
         result = pycuber.Algo()
         sys.stdout.write("Solver starts....")
         sys.stdout.write("\rSolving Cross ......")
