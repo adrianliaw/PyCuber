@@ -105,8 +105,8 @@ class Cubie(object):
         """
         if face in "LUFDRB":
             return self.facings[face]
-        for k in self.facings:
-            if self.facings[k] in (face, Square(face)):
+        for k, sq in self.facings:
+            if sq in (face, Square(face)):
                 return k
         raise KeyError(face)
 
@@ -292,7 +292,6 @@ class Cube(object):
         for i in range(3):
             result += "      " + "".join(str(square) for square in _["D"][i]) + "\n"
         return result
-
 
     def __getitem__(self, key):
         """
@@ -521,6 +520,89 @@ class Cube(object):
         for step in algo:
             self.perform_step(step)
         return self
+
+    def which_face(self, colour):
+        """
+        Get the specific face (face name) which has that colour for the centre block.
+        """
+        for centre in [self[face] for face in "LUFDRB"]:
+            if type(colour) == str:
+                if centre.colour == colour:
+                    return centre.face
+            else:
+                if centre.colour == colour.colour:
+                    return centre.face
+        raise KeyError(colour)
+    
+    def is_valid(self):
+        """
+        Check if Cube is solvable.
+        """
+        opposite = {self[f][f]: self[op_f][op_f] for f, op_f in zip("UDLRFB", "DURLBF")}
+        if len(opposite) != 6 or Square("unknown") in opposite:
+            return False
+        checked_cubies = set()
+        edge_total = corner_total = 0
+        graph = {"edges": {}, "corners": {}}
+        for c_loc, cubie in self:
+            for face, square in cubie:
+                for _face, _square in cubie:
+                    if face != _face:
+                        if square == _square: return False
+                        if _square == opposite[square]: return False
+            if len(c_loc) == 3:
+                ordering = "LFRB"
+                selected_face = "U"
+                if "D" in cubie: ordering, selected_face = "BRFL", "D"
+                if cubie[selected_face] not in (self["U"]["U"], self["D"]["D"]):
+                    idx = sorted([f for f, s in cubie if f != selected_face], key=lambda x: ordering.index(x))
+                    if "B" in idx and "L" in idx: idx = idx[::-1]
+                    if cubie[idx[0]] in (self["U"]["U"], self["D"]["D"]):
+                        corner_total += 2
+                    else:
+                        corner_total += 1
+                graph["corners"][c_loc] = "".join([self.which_face(s) for f, s in cubie])
+            elif len(c_loc) == 2:
+                if "U" in cubie: selected_square = "U"
+                elif "D" in cubie: selected_square = "D"
+                elif "L" in cubie: selected_square = "L"
+                elif "R" in cubie: selected_square = "R"
+                if cubie[selected_square] not in (self["U"]["U"], self["D"]["D"]):
+                    if cubie[c_loc.replace(selected_square, "", 1)] not in (self["U"]["U"], self["D"]["D"]):
+                        if cubie[selected_square] not in (self["L"]["L"], self["R"]["R"]):
+                            edge_total += 1
+                    else:
+                        edge_total += 1
+                graph["edges"][c_loc] = "".join([self.which_face(s) for f, s in cubie])
+            checked_cubies.add(frozenset(cubie.facings.values()))
+        if len(checked_cubies) != 26: return False
+        if corner_total % 3 != 0: return False
+        if edge_total % 2 != 0: return False
+        parities = 0
+        for cubies in graph.values():
+            path = []
+            remainings = set(cubies)
+            while True:
+                if path:
+                    next_one = cubies[path[-1]]
+                    for p in permutations(next_one):
+                        if "".join(p) in cubies:
+                            next_one = "".join(p)
+                            break
+                    try:
+                        remainings.remove(next_one)
+                        path.append(next_one)
+                    except KeyError:
+                        if len(path) % 2 != 1:
+                            parities += 1
+                        path = []
+                else:
+                    if remainings:
+                        path.append(remainings.pop())
+                    else:
+                        break
+        if parities % 2 != 0: return False
+        return True
 
     def copy(self):
         """
