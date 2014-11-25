@@ -1,7 +1,8 @@
 from flask import Flask, render_template
-import asyncio, websockets
+from flask.ext.triangle import Triangle
 
 app = Flask(__name__)
+Triangle(app)
 
 @app.route("/")
 def index():

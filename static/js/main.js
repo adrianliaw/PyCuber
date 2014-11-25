@@ -429,21 +429,18 @@ function createRubixCube() {
 
 function init() {
     scene = new THREE.Scene();
-    bgcanvas = document.createElement("canvas");
     var s = size();
-    bgcanvas.width = s.width, bgcanvas.height = s.height;
-    document.getElementById("bg").appendChild(bgcanvas);
     renderer = new THREE.WebGLRenderer({antialias:true});
-    renderer.setSize(s.width, s.height);
-    document.getElementById("anim").appendChild(renderer.domElement);
+    renderer.setSize(800, 400);
+    document.body.appendChild(renderer.domElement);
     camera = new THREE.PerspectiveCamera(45, 2);
     camera.position.set(7, 7, 7);
-    window.addEventListener('resize', function() {
+    /*window.addEventListener('resize', function() {
         var s = size();
         renderer.setSize(s.width, s.height);
         camera.aspect = s.width / s.height;
         camera.updateProjectionMatrix();
-    });
+    });*/
     renderer.setClearColor(0x000000, 1);
     light = new THREE.AmbientLight(0x222222);
     scene.add(light);

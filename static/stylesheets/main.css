@@ -1,10 +1,7 @@
-#bg {
-	position: absolute;
-	left: 0px;
-	top: 0px;
+body {
+    background: #000000;
 }
-#anim {
-	position: absolute;
-	left: 0px;
-	top: 0px;
+
+canvas {
+    border: 1px solid white;
 }
