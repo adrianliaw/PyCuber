@@ -12,7 +12,6 @@ def ws_handler(websocket, path):
         try:
             solver = cfop.CFOPSolver(cube)
             for step in solver.solve():
-                print(step)
                 yield from websocket.send(json.dumps({
                     "step_name": step[0], 
                     "result": repr(step[1]).split(), 
