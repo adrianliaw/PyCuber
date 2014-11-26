@@ -6,8 +6,7 @@ Triangle(app)
 
 @app.route("/")
 def index():
-    print(True)
     return render_template("main.html")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

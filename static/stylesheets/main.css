@@ -9,3 +9,123 @@ canvas {
 h1 {
     color: #CCCCCC;
 }
+
+#fill-colours {
+    width: 400px;
+    height: 300px;
+    padding: 20px;
+    margin: 10px;
+    position: relative;
+}
+
+.grids {
+    width: 400px;
+    height: 300px;
+    position: relative;
+    top: 5px;
+    left: 5px;
+}
+
+#input, #output {
+    margin: 20px;
+}
+
+.clear {
+    clear: left;
+}
+
+.square {
+    background: gray;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #CCCCCC;
+    float: left;
+    display: block;
+    cursor: pointer;
+}
+
+div[id|=face] {
+    position: absolute;
+    width: 96px;
+    height: 96px;
+    border: 1px solid black
+}
+
+#face-L {
+    top: 96px;
+    left: 0px;
+}
+
+#face-U {
+    top: 0px;
+    left: 96px;
+}
+
+#face-F {
+    top: 96px;
+    left: 96px;
+}
+
+#face-D {
+    top: 192px;
+    left: 96px;
+}
+
+#face-R {
+    top: 96px;
+    left: 192px;
+}
+
+#face-B {
+    top: 96px;
+    left: 288px;
+}
+
+#L11 {
+    background: red;
+}
+
+#U11 {
+    background: yellow;
+}
+
+#F11 {
+    background: green;
+}
+
+#D11 {
+    background: white;
+}
+
+#R11 {
+    background: orange;
+}
+
+#B11 {
+    background: blue;
+}
+
+.current-colour {
+    position: absolute;
+    top: 250px;
+    left: 270px;
+    width: 50px;
+    height: 50px;
+    border: 1px solid white;
+}
+
+.solution-table {
+    color: white;
+    font-family: sans-serif;
+    width: 1000px;
+}
+
+.solution-table td {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.algos {
+    width: 800px;
+}

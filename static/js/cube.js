@@ -13,9 +13,8 @@
     }
 
 
-    var colors = {"U":"yellow", "L":"red", "F":"green", "D":"white", "R":"orange", "B":"blue"};
+    var colours = {"U":"yellow", "L":"red", "F":"green", "D":"white", "R":"orange", "B":"blue"};
 
-    var rubixCube = {};
 
     function createCubie(v) {
         obj = new THREE.Object3D();
@@ -28,10 +27,10 @@
         obj.add(mesh);
         var s = cubieStickerRelation[v.x + " " + v.y + " " + v.z];
         for (var i=0; i<s.length; i++) {
-            mesh = createSticker("LUFDRB"[parseInt(s[i].split(" ")[0])], new THREE.Vector3(parseInt(s[i].split(" ")[0]), parseInt(s[i].split(" ")[1]), parseInt(s[i].split(" ")[2])));
+            mesh = createSticker("LUFDRB"[parseInt(s[i].split(" ")[0])], new THREE.Vector3(parseInt(s[i].split(" ")[0]), parseInt(s[i].split(" ")[1]), parseInt(s[i].split(" ")[2])), window.colourSet);
             obj.add(mesh);
         } 
-        rubixCube[v.x + " " + v.y + " " + v.z] = obj;
+        window.rubiksCube[v.x + " " + v.y + " " + v.z] = obj;
         return obj;
     }
 
@@ -59,7 +58,7 @@
         for (var x=-1; x<=1; x++) {
             for (var y=-1; y<=1; y++) {
                 for (var z=-1; z<=1; z++) {
-                    var cubie = rubixCube[x + " " + y + " " + z];
+                    var cubie = window.rubiksCube[x + " " + y + " " + z];
                     for (var i=cubie.children.length; i>0; i--) {
                         var child = cubie.children[i-1];
                         child.position.getPositionFromMatrix(child.matrixWorld);
@@ -73,10 +72,10 @@
                 }
             }
         }
-        rubixCube = newCube;
+        window.rubiksCube = newCube;
     }
 
-    function createSticker(face, v) {
+    function createSticker(face, v, colourSet) {
         var positing = {"0": new THREE.Vector3(-1.505, 0, 0), 
                         "1": new THREE.Vector3(0, 1.505, 0), 
                         "2": new THREE.Vector3(0, 0, 1.505), 
@@ -84,7 +83,7 @@
                         "4": new THREE.Vector3(1.505, 0, 0), 
                         "5": new THREE.Vector3(0, 0, -1.505)};
         cube = new THREE.CubeGeometry(0.8, 0.8, 0.01);
-        material = new THREE.MeshLambertMaterial({color: colors[face]});
+        material = new THREE.MeshLambertMaterial({color: colourSet? colourSet[face + v.y + v.z]: colours[face]});
         mesh = new THREE.Mesh(cube, material);
         mesh.rotation = new THREE.Vector3((positing[v.x.toString()].y !== 0) * 1, (positing[v.x.toString()].x !== 0) * 1, 0);
         mesh.rotation.multiplyScalar(Math.PI / 2);
@@ -149,12 +148,12 @@
         if (a[0] == "L") {
             for (var y=-1; y<=1; y++) {
                 for (var z=-1; z<=1; z++) {
-                    animated.push(rubixCube["-1 " + y + " " + z]);
+                    animated.push(window.rubiksCube["-1 " + y + " " + z]);
                 }
             }
             if (a[1] === undefined) {
                 axis = "x+";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "x-";
             } else {
                 axis = "x+2";
@@ -162,12 +161,12 @@
         } else if (a[0] == "U"){
             for (var x=-1; x<=1; x++) {
                 for (var z=-1; z<=1; z++) {
-                    animated.push(rubixCube[x + " 1 " + z]);
+                    animated.push(window.rubiksCube[x + " 1 " + z]);
                 }
             }
             if (a[1] === undefined) {
                 axis = "y-";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "y+";
             } else {
                 axis = "y-2";
@@ -175,12 +174,12 @@
         } else if (a[0] == "F") {
             for (var x=-1; x<=1; x++) {
                 for (var y=-1; y<=1; y++) {
-                    animated.push(rubixCube[x + " " + y + " 1"]);
+                    animated.push(window.rubiksCube[x + " " + y + " 1"]);
                 }
             }
             if (a[1] === undefined) {
                 axis = "z-";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "z+";
             } else {
                 axis = "z-2";
@@ -188,12 +187,12 @@
         } else if (a[0] == "D") {
             for (var x=-1; x<=1; x++) {
                 for (var z=-1; z<=1; z++) {
-                    animated.push(rubixCube[x + " -1 " + z]);
+                    animated.push(window.rubiksCube[x + " -1 " + z]);
                 }
             }
             if (a[1] === undefined) {
                 axis = "y+";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "y-";
             } else {
                 axis = "y+2";
@@ -201,12 +200,12 @@
         } else if (a[0] == "R") {
             for (var y=-1; y<=1; y++) {
                 for (var z=-1; z<=1; z++) {
-                    animated.push(rubixCube["1 " + y + " " + z]);
+                    animated.push(window.rubiksCube["1 " + y + " " + z]);
                 }
             }
             if (a[1] === undefined) {
                 axis = "x-";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "x+";
             } else {
                 axis = "x-2";
@@ -214,12 +213,12 @@
         } else if (a[0] == "B") {
             for (var x=-1; x<=1; x++) {
                 for (var y=-1; y<=1; y++) {
-                    animated.push(rubixCube[x + " " + y + " -1"]);
+                    animated.push(window.rubiksCube[x + " " + y + " -1"]);
                 }
             }
             if (a[1] === undefined) {
                 axis = "z+";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "z-";
             } else {
                 axis = "z+2";
@@ -227,12 +226,12 @@
         } else if (a[0] == "M") {
             for (var y=-1; y<=1; y++) {
                 for (var z=-1; z<=1; z++) {
-                    animated.push(rubixCube["0 " + y + " " + z]);
+                    animated.push(window.rubiksCube["0 " + y + " " + z]);
                 }
             }
             if (a[1] === undefined) {
                 axis = "x+";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "x-";
             } else {
                 axis = "x+2";
@@ -240,12 +239,12 @@
         } else if (a[0] == "S") {
             for (var x=-1; x<=1; x++) {
                 for (var y=-1; y<=1; y++) {
-                    animated.push(rubixCube[x + " " + y + " 0"]);
+                    animated.push(window.rubiksCube[x + " " + y + " 0"]);
                 }
             }
             if (a[1] === undefined) {
                 axis = "z-";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "z+";
             } else {
                 axis = "z-2";
@@ -253,12 +252,12 @@
         } else if (a[0] == "E") {
             for (var x=-1; x<=1; x++) {
                 for (var z=-1; z<=1; z++) {
-                    animated.push(rubixCube[x + " 0 " + z]);
+                    animated.push(window.rubiksCube[x + " 0 " + z]);
                 }
             }
             if (a[1] === undefined) {
                 axis = "y+";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "y-";
             } else {
                 axis = "y+2";
@@ -267,13 +266,13 @@
             for (var x=-1; x<=0; x++) {
                 for (var y=-1; y<=1; y++) {
                     for (var z=-1; z<=1; z++) {
-                        animated.push(rubixCube[x + " " + y + " " + z]);
+                        animated.push(window.rubiksCube[x + " " + y + " " + z]);
                     }
                 }
             }
             if (a[1] === undefined) {
                 axis = "x+";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "x-";
             } else {
                 axis = "x+2";
@@ -282,13 +281,13 @@
             for (var y=0; y<=1; y++) {
                 for (var x=-1; x<=1; x++) {
                     for (var z=-1; z<=1; z++) {
-                        animated.push(rubixCube[x + " " + y + " " + z]);
+                        animated.push(window.rubiksCube[x + " " + y + " " + z]);
                     }
                 }
             }
             if (a[1] === undefined) {
                 axis = "y-";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "y+";
             } else {
                 axis = "y-2";
@@ -297,13 +296,13 @@
             for (var z=0; z<=1; z++) {
                 for (var x=-1; x<=1; x++) {
                     for (var y=-1; y<=1; y++) {
-                        animated.push(rubixCube[x + " " + y + " " + z]);
+                        animated.push(window.rubiksCube[x + " " + y + " " + z]);
                     }
                 }
             }
             if (a[1] === undefined) {
                 axis = "z-";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "z+";
             } else {
                 axis = "z-2";
@@ -312,13 +311,13 @@
             for (var y=-1; y<=0; y++) {
                 for (var x=-1; x<=1; x++) {
                     for (var z=-1; z<=1; z++) {
-                        animated.push(rubixCube[x + " " + y + " " + z]);
+                        animated.push(window.rubiksCube[x + " " + y + " " + z]);
                     }
                 }
             }
             if (a[1] === undefined) {
                 axis = "y+";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "y-";
             } else {
                 axis = "y+2";
@@ -327,13 +326,13 @@
             for (var x=0; x<=1; x++) {
                 for (var y=-1; y<=1; y++) {
                     for (var z=-1; z<=1; z++) {
-                        animated.push(rubixCube[x + " " + y + " " + z]);
+                        animated.push(window.rubiksCube[x + " " + y + " " + z]);
                     }
                 }
             }
             if (a[1] === undefined) {
                 axis = "x-";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "x+";
             } else {
                 axis = "x-2";
@@ -342,13 +341,13 @@
             for (var z=-1; z<=0; z++) {
                 for (var x=-1; x<=1; x++) {
                     for (var y=-1; y<=1; y++) {
-                        animated.push(rubixCube[x + " " + y + " " + z]);
+                        animated.push(window.rubiksCube[x + " " + y + " " + z]);
                     }
                 }
             }
             if (a[1] === undefined) {
                 axis = "z+";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "z-";
             } else {
                 axis = "z+2";
@@ -357,13 +356,13 @@
             for (var x=-1; x<=1; x++) {
                 for (var y=-1; y<=1; y++) {
                     for (var z=-1; z<=1; z++) {
-                        animated.push(rubixCube[x + " " + y + " " + z]);
+                        animated.push(window.rubiksCube[x + " " + y + " " + z]);
                     }
                 }
             }
             if (a[1] === undefined) {
                 axis = "x-";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "x+";
             } else {
                 axis = "x-2";
@@ -372,13 +371,13 @@
             for (var x=-1; x<=1; x++) {
                 for (var y=-1; y<=1; y++) {
                     for (var z=-1; z<=1; z++) {
-                        animated.push(rubixCube[x + " " + y + " " + z]);
+                        animated.push(window.rubiksCube[x + " " + y + " " + z]);
                     }
                 }
             }
             if (a[1] === undefined) {
                 axis = "y-";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "y+";
             } else {
                 axis = "y-2";
@@ -387,13 +386,13 @@
             for (var x=-1; x<=1; x++) {
                 for (var y=-1; y<=1; y++) {
                     for (var z=-1; z<=1; z++) {
-                        animated.push(rubixCube[x + " " + y + " " + z]);
+                        animated.push(window.rubiksCube[x + " " + y + " " + z]);
                     }
                 }
             }
             if (a[1] === undefined) {
                 axis = "z-";
-            } else if (a[1] == "i") {
+            } else if (a[1] == "'") {
                 axis = "z+";
             } else {
                 axis = "z-2";
@@ -415,7 +414,30 @@
         tween.start();
     }
 
-
+    function perform_algo(algo, callback) {
+        algo = algo.split(" ");
+        if (algo == false) {
+            callback ? callback() : null;
+            return true;
+        } else {
+            act = algo[0];
+            var set = action(act);
+            var rotation = {};
+            rotation[set[1][0]] = 0;
+            var target = {};
+            target[set[1][0]] = eval(set[1][1]+Math.PI/2)*(parseInt(set[1][2]) || 1);
+            var tween = new TWEEN.Tween(rotation).to(target, 500*(parseInt(set[1][2])||1));
+            tween.easing(TWEEN.Easing.Cubic.InOut);
+            tween.onComplete(function () {
+                updateRubixCube();
+                window.setTimeout(function () {
+                    perform_algo(algo.slice(1).join(" "));
+                }, 200);
+            });
+            tween.onUpdate(function () {for (var i=0; i<set[0].length; i++){set[0][i].rotation[set[1][0]] = rotation[set[1][0]];}});
+            tween.start();
+        }
+    }
 
 
     function createRubixCube() {
@@ -433,7 +455,7 @@
         var s = size();
         renderer = new THREE.WebGLRenderer({antialias:true});
         renderer.setSize(800, 400);
-        document.body.appendChild(renderer.domElement);
+        document.getElementById("player").appendChild(renderer.domElement);
         camera = new THREE.PerspectiveCamera(45, 2);
         camera.position.set(7, 7, 7);
         /*window.addEventListener('resize', function() {
@@ -468,6 +490,7 @@
         createRubixCube();
         controls = new THREE.OrbitAndPanControls(camera, renderer.domElement);
         animate();
+        window.scene = scene;
     }
 
 
@@ -479,5 +502,8 @@
     }
 
     window.initScene = init;
+    window.rubiksCube = {};
+    window.createCube = createRubixCube;
+    window.performAlgo = perform_algo;
 
 })();

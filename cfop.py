@@ -32,4 +32,5 @@ class CFOPSolver(object):
         pll = solver.solve()
         yield "PLL", pll
         result += pll
-        return result
+        yield "FULL", result.optimise()
+

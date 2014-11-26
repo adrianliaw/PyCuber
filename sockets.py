@@ -8,18 +8,27 @@ import pycuber as pc
 def ws_handler(websocket, path):
     if path == "/cfop":
         cube = yield from websocket.recv()
-        cube = pc.Cube(pc.array_to_cubies(cube))
         try:
+            cube = pc.Cube(pc.array_to_cubies(cube))
             solver = cfop.CFOPSolver(cube)
             for step in solver.solve():
                 yield from websocket.send(json.dumps({
                     "step_name": step[0], 
                     "result": repr(step[1]).split(), 
                     }))
-        except ValueError:
+        except:
             yield from websocket.send(json.dumps({
-                "error": "InvalidCube", 
+                "error": "Invalid Cube", 
                 }))
+    elif path == "/random":
+        yield from websocket.recv()
+        cube = pc.Cube()(pc.Algo().random())
+        data = {}
+        for face, fname in zip(map(cube.get_face, "LUFDRB"), "LUFDRB"):
+            for x, row in enumerate(face):
+                for y, square in enumerate(row):
+                    data["{0}{1}{2}".format(fname, x, y)] = {"background": square.colour}
+        yield from websocket.send(json.dumps(data))
 
 start_server = websockets.serve(ws_handler, "0.0.0.0", 8765)
 
