@@ -30,8 +30,13 @@ def ws_handler(websocket, path):
                     data["{0}{1}{2}".format(fname, x, y)] = {"background": square.colour}
         yield from websocket.send(json.dumps(data))
 
-start_server = websockets.serve(ws_handler, "0.0.0.0", 8765)
 
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+if __name__ == "__main__":
+    from app import main
+    from threading import Thread
+    t = Thread(target=main)
+    t.start()
+    start_server = websockets.serve(ws_handler, "0.0.0.0", 8765)
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
 

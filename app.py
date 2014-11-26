@@ -8,5 +8,8 @@ Triangle(app)
 def index():
     return render_template("main.html")
 
+def main():
+    app.run("0.0.0.0")
+
 if __name__ == "__main__":
     app.run(debug=True)
