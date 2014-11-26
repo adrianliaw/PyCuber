@@ -1,12 +1,28 @@
-<html>
+<html ng-app="rubikApp">
     <head>
         <title>Rubik's Cube Solver!</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
         <script type="text/javascript" src="/static/lib/three.min.js"></script>
         <script type="text/javascript" src="/static/lib/OrbitAndPanControls.js"></script>
         <script type="text/javascript" src="/static/lib/tween.min.js"></script>
+        <script type="text/javascript" src="/static/lib/angular.min.js"></script>
+        <script type="text/javascript" src="/static/js/cube.js"></script>
+        <script type="text/javascript" src="/static/js/app.js"></script>
         <link rel="stylesheet" type="text/css" href="/static/stylesheets/main.css">
     </head>
-    <body>
-        <script type="text/javascript" src="/static/js/main.js"></script>
+    <body ng-controller="MainCtrl">
+        <div class="title">
+            <h1>PyCuber!</h1>
+        </div>
+        <div class="input">
+            <button ng-click="randomCube()">Random</button>
+            <button ng-click="resetCube()">Reset</button>
+            <button ng-click="cleanCube()">Clean</button>
+            <br>
+            <div class="fill-colours">
+                <div ng-repeat="face in 'LUFDRB'" id="{{ 'face-' + face | angular}}">
+                </div>
+            </div>
+        </div>
     </body>
 </html>

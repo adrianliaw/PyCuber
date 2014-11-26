@@ -5,3 +5,7 @@ body {
 canvas {
     border: 1px solid white;
 }
+
+h1 {
+    color: #CCCCCC;
+}
