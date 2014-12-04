@@ -1,0 +1,10 @@
+Flask==0.10.1
+Flask-Triangle==0.5.3
+Jinja2==2.7.3
+MarkupSafe==0.23
+Werkzeug==0.9.6
+itsdangerous==0.24
+jsonschema==2.4.0
+pycuber==0.1.3
+six==1.8.0
+websockets==2.3

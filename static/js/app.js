@@ -92,6 +92,10 @@
                         }
                     }
                 }
+                window.colourSet = {};
+                for (var k in $scope.colourMap) {
+                    window.colourSet[k] = $scope.colourMap[k].background;
+                }
                 socket.send(message);
             };
             socket.onmessage = function (msg) {
