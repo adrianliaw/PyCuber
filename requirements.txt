@@ -1,5 +1,5 @@
 Flask==0.10.1
-Flask-Triangle==0.5.3
+git+https://github.com/morgan-del/flask-triangle.git
 Jinja2==2.7.3
 MarkupSafe==0.23
 Werkzeug==0.9.6

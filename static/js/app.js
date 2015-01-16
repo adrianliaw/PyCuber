@@ -2,6 +2,8 @@
 
     var app = angular.module("rubikApp", []);
 
+    var prefix = location.hostname;
+
     app.controller("MainCtrl", function ($scope) {
         
         $scope.selectedColour = {background: "red"};
@@ -34,7 +36,7 @@
         };
 
         $scope.randomCube = function () {
-            var socket = new WebSocket("ws://127.0.0.1:8765/random");
+            var socket = new WebSocket("ws://" + prefix + ":8765/random");
             socket.onopen = function () {
                 socket.send("");
             };
@@ -81,7 +83,7 @@
 
         $scope.solveCube = function () {
             $scope.solutionList = [{result: "Sometimes it takes longer to solve it, please be patient...."}];
-            var socket = new WebSocket("ws://127.0.0.1:8765/cfop");
+            var socket = new WebSocket("ws://"+ prefix + ":8765/cfop");
             socket.onopen = function () {
                 var message = "";
                 for (var _ in "LUFDRB") {
