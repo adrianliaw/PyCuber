@@ -41,7 +41,7 @@ class CrossSolver(object):
             if step.face not in edge:
                 result.add(edge.copy())
             else:
-                k = (edge.facings.keys() - {step.face}).pop()
+                k = (set(edge.facings.keys()) - {step.face}).pop()
                 new_edge = Edge(**{
                     step.face: edge[step.face], 
                     movement[k]: edge[k], 

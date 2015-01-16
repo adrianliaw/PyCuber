@@ -5,10 +5,10 @@ long_desc = """
 PyCuber
 =======
 
-PyCuber is a Rubik’s Cube simulator in Python 2/3.
+PyCuber is a Rubik's Cube simulator in Python 2/3.
 --------------------------------------------------
 
-The cube can be revealed as expanded view in the terminal, so it’s easy
+The cube can be revealed as expanded view in the terminal, so it's easy
 to visualise the cube, just inside the terminal.
 
 .. code-block:: python
@@ -26,7 +26,7 @@ to visualise the cube, just inside the terminal.
 
 .. image:: https://camo.githubusercontent.com/906f83f4933fe1d0741b7d3ff43bda66fb464cdd/68747470733a2f2f7261772e6769746875622e636f6d2f61647269616e6c6961772f507943756265722f76302e31622f7374617469632f696d672f7465726d696e616c2e706e67
 
-We also provided some useful tools to deal with Rubik’s Cube algorithms.
+We also provided some useful tools to deal with Rubik's Cube algorithms.
 
 .. code-block:: python
 
@@ -48,7 +48,7 @@ We also provided some useful tools to deal with Rubik’s Cube algorithms.
     F R U' R' U R U R2 F' R U R U' R'
     F' L' U L U' L' U' L2 F L' U' L' U L
 
-I’ll add some documentations later."""
+I'll add some documentations later."""
 
 setup(
     name = "pycuber", 
