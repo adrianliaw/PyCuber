@@ -59,6 +59,7 @@ setup(
     license = "MIT", 
     author = "Adrian Liaw", 
     author_email = "adrianliaw2000@gmail.com", 
+    keywords = ["Rubik's Cube", "rubik", "cube", "solver"], 
     packages = ["pycuber", "pycuber.solver", "pycuber.solver.cfop"], 
     package_dir = {"pycuber":"pycuber"}, 
     classifiers = [
