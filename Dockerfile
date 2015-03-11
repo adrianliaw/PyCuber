@@ -1,13 +1,11 @@
-FROM canercandan/python3-base
+FROM python:2.7.7
 
 WORKDIR src
 
 ADD . src
 
-RUN apt-get update && apt-get install -y git
-
 RUN pip install -r requirements.txt
 
-CMD python main.py
+CMD python app.py
 
 EXPOSE 5000

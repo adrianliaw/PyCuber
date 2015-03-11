@@ -17,7 +17,8 @@ class CFOPSolver(object):
         result = pc.Algo()
         solver = CrossSolver(self.cube)
         cross = solver.solve()
-        yield "CROSS", cross
+        if cross:
+            yield "CROSS", cross
         result += cross
         solver = F2LSolver(self.cube)
         for pair in solver.solve():
@@ -26,11 +27,13 @@ class CFOPSolver(object):
             result += f2l
         solver = OLLSolver(self.cube)
         oll = solver.solve()
-        yield "OLL", oll
+        if oll:
+            yield "OLL", oll
         result += oll
         solver = PLLSolver(self.cube)
         pll = solver.solve()
-        yield "PLL", pll
+        if pll:
+            yield "PLL", pll
         result += pll
         yield "FULL", result.optimise()
 
