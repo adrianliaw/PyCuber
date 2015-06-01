@@ -1,10 +1,10 @@
 """
 
 This module is to implement the Rubik's Cube algorithms.
-You can deal with Rubik's Cube algorithms easily with Step and Algo.
+You can deal with Rubik's Cube algorithms easily with Step and Formula.
 
 Usage:
-    >>> a = Algo("R U R' U'")
+    >>> a = Formula("R U R' U'")
     >>> a
     R U R' U'
 
@@ -259,21 +259,21 @@ class Step(object):
         """
         Step object is hashable.
         """
-        return hash(self.name) + 716947869 * self.is_standard + 14987569 * self.is_inverse + 912837469 * self.is_180
+        return hash(self.name)
 
 
 
-class Algo(list):
+class Formula(list):
 
     """
     Representing a Rubik's Cube algorithm.
 
-    >>> a = Algo("R U R' U'")
+    >>> a = Formula("R U R' U'")
     >>> a
     R U R' U'
 
-    You can add two Algos together:
-    >>> a + Algo("R' F R F'")
+    You can add two Formulae together:
+    >>> a + Formula("R' F R F'")
     R U R' U' R' F R F'
     >>> a + "F R' F' R"
     R U R' U' F R' F' R
@@ -286,18 +286,18 @@ class Algo(list):
     It only depends on the length
     >>> a
     R U R' U'
-    >>> a == Algo("R' F R F'")
+    >>> a == Formula("R' F R F'")
     True
-    >>> a < Algo("R U R'")
+    >>> a < Formula("R U R'")
     False
 
-    If you want to check if two Algos are fully same, use |
-    >>> a | Algo("R U R' U'")
+    If you want to check if two Formulae are fully same, use |
+    >>> a | Formula("R U R' U'")
     True
-    >>> a | Algo("R' F R F'")
+    >>> a | Formula("R' F R F'")
     False
 
-    You can reverse an Algo simply like this:
+    You can reverse an Formula simply like this:
     >>> a.reverse()
     >>> a
     U R U' R'
@@ -311,7 +311,7 @@ class Algo(list):
     D L D' L'
     
     Also optimising - only outer layer Steps.
-    >>> a = Algo("R U r' x2 M' y' D D' L2 R L'")
+    >>> a = Formula("R U r' x2 M' y' D D' L2 R L'")
     >>> a.optimise()
     >>> a
     R U R' F B
@@ -325,13 +325,13 @@ class Algo(list):
             sequence = [sequence]
         for i in range(len(sequence)):
             sequence[i] = Step(sequence[i])
-        super(Algo, self).__init__(sequence)
+        super(Formula, self).__init__(sequence)
 
     def __repr__(self):
         """
-        Representing a Algo object, just print out every move
+        Representing a Formula object, just print out every move
 
-        >>> a = Algo("R U R' U'")
+        >>> a = Formula("R U R' U'")
         >>> a
         R U R' U'
         """
@@ -339,21 +339,21 @@ class Algo(list):
 
     def __getitem__(self, index):
         """
-        Get ith item of Algo.
+        Get ith item of Formula.
 
-        >>> a = Algo("R U R' U'")
+        >>> a = Formula("R U R' U'")
         >>> a[1]
         U
         """
         if isinstance(index, slice):
-            return Algo(list.__getitem__(self, index))
+            return Formula(list.__getitem__(self, index))
         return list.__getitem__(self, index)
 
     def __setitem__(self, index, item):
         """
-        Set ith item of Algo.
+        Set ith item of Formula.
 
-        >>> a = Algo("R U R' U'")
+        >>> a = Formula("R U R' U'")
         >>> a[0] = Step("L")
         >>> a
         L U R' U'
@@ -365,7 +365,7 @@ class Algo(list):
             del self[index]
             return
         if isinstance(index, slice):
-            list.__setitem__(self, index, Algo(item))
+            list.__setitem__(self, index, Formula(item))
         else:
             list.__setitem__(self, index, Step(item))
 
@@ -374,40 +374,40 @@ class Algo(list):
         We don't allow user to set attribute.
         """
         if name in dir(self) and name not in ["sort", "extend"]:
-            raise AttributeError("'Algo' object attribute '{}' is read-only".format(name))
+            raise AttributeError("'Formula' object attribute '{}' is read-only".format(name))
         else:
-            raise AttributeError("'Algo' object has no attribute '{}'".format(name))
+            raise AttributeError("'Formula' object has no attribute '{}'".format(name))
 
     def _stepify(func):
         """Makes last input a Step object."""
-        @wraps(eval("list.{0}".format(func.__name__)), assigned=("__name__", "__doc__"))
+        @wraps(getattr(list, func.__name__), assigned=("__name__", "__doc__"))
         def _func(*args, **kwargs):
             args = list(args[:-1]) + [Step(args[-1])]
-            return eval("list.{0}(*args, **kwargs)".format(func.__name__))
+            return getattr(list, func.__name__)(*args, **kwargs)
         return _func
 
     def _algify_input(func):
-        """Makes last input a Algo object."""
+        """Makes last input a Formula object."""
         def _func(*args, **kwargs):
-            args = list(args[:-1]) + [Algo(args[-1])]
-            return eval("list.{0}(*args, **kwargs)".format(func.__name__))
-        _func.__doc__ = eval("list.{0}".format(func.__name__)).__doc__
+            args = list(args[:-1]) + [Formula(args[-1])]
+            return getattr(list, func.__name__)(*args, **kwargs)#"list.{0}(*args, **kwargs)".format(func.__name__))
+        _func.__doc__ = getattr(list, func.__name__).__doc__#eval("list.{0}".format(func.__name__)).__doc__
         _func.__name__ = func.__name__ + " "
         return _func
 
     def _algify_output(func):
-        """Makes output a Algo object."""
-        @wraps(eval("list.{0}".format(func.__name__)), assigned=("__name__", "__doc__"))
+        """Makes output a Formula object."""
+        @wraps(getattr(list, func.__name__.strip()), assigned=("__name__", "__doc__"))
         def _func(*args, **kwargs):
             if " " in func.__name__:
-                return Algo(func(*args, **kwargs))
-            return Algo(eval("list.{0}(*args, **kwargs)".format(func.__name__)))
+                return Formula(func(*args, **kwargs))
+            return Formula(getattr(list, func.__name__))
         return _func
 
     def _delattr(func):
         """Raise error when calling some not needed method."""
         def _func(*args, **kwargs):
-            raise AttributeError("'Algo' object has no attribute '{0}'".format(func.__name__))
+            raise AttributeError("'Formula' object has no attribute '{0}'".format(func.__name__))
         return _func
     
     def _return_self(func):
@@ -431,90 +431,93 @@ class Algo(list):
     def __mul__(self, i): pass
     def __iadd__(self, another):
         return self.__add__(another)
+
+    @_algify_input
+    def extend(self, another): pass
     
     def __eq__(self, another):
         """
-        Check if length of this Algo is equal to another.
+        Check if length of this Formula is equal to another.
         
-        >>> a = Algo("R U R' U'")
-        >>> a == Algo("R' F R F'")
+        >>> a = Formula("R U R' U'")
+        >>> a == Formula("R' F R F'")
         True
         >>> a == "U R U' R'"
         True
-        >>> a == Algo("R U R'")
+        >>> a == Formula("R U R'")
         False
         """
-        return len(self) == len(Algo(another))
+        return len(self) == len(Formula(another))
 
     def __lt__(self, another):
         """
-        Check if length of this Algo is less than another.
+        Check if length of this Formula is less than another.
 
-        >>> a = Algo("R U R' U'")
-        >>> a < Algo("R' F R F' R'")
+        >>> a = Formula("R U R' U'")
+        >>> a < Formula("R' F R F' R'")
         True
-        >>> a < Algo("R U R'")
+        >>> a < Formula("R U R'")
         False
         >>> a < "R' F R F' R'"
         True
         """
-        return len(self) < len(Algo(another))
+        return len(self) < len(Formula(another))
 
     def __gt__(self, another):
         """
-        Check if length of this Algo is greater than another.
+        Check if length of this Formula is greater than another.
 
-        >>> a = Algo("R U R' U'")
-        >>> a > Algo("R U R'")
+        >>> a = Formula("R U R' U'")
+        >>> a > Formula("R U R'")
         True
-        >>> a > Algo("R' F R F' R'")
+        >>> a > Formula("R' F R F' R'")
         False
         >>> a > "R U R'"
         True
         """
-        return len(self) > len(Algo(another))
+        return len(self) > len(Formula(another))
 
     def __ge__(self, another):
         """
-        Check if length of this Algo is greater than or equal to another.
+        Check if length of this Formula is greater than or equal to another.
 
-        >>> a = Algo("R U R' U'")
-        >>> a >= Algo("R U R'")
+        >>> a = Formula("R U R' U'")
+        >>> a >= Formula("R U R'")
         True
-        >>> a >= Algo("R' F R F' R'")
+        >>> a >= Formula("R' F R F' R'")
         False
         >>> a >= "R U R' U"
         True
         """
-        return len(self) >= len(Algo(another))
+        return len(self) >= len(Formula(another))
 
     def __le__(self, another):
         """
-        Check if length of this Algo is less than or equal to another.
+        Check if length of this Formula is less than or equal to another.
 
-        >>> a = Algo("R U R' U'")
-        >>> a <= Algo("R U R'")
+        >>> a = Formula("R U R' U'")
+        >>> a <= Formula("R U R'")
         False
-        >>> a <= Algo("R' F R F' R'")
+        >>> a <= Formula("R' F R F' R'")
         True
         >>> a <= "R U R' U"
         True
         """
-        return len(self) <= len(Algo(another))
+        return len(self) <= len(Formula(another))
 
     def __ne__(self, another):
         """
-        Check if length of this Algo is'n equal to another.
+        Check if length of this Formula is'n equal to another.
 
-        >>> a = Algo("R U R' U'")
-        >>> a <= Algo("R U R'")
+        >>> a = Formula("R U R' U'")
+        >>> a <= Formula("R U R'")
         False
-        >>> a <= Algo("R' F R F' R'")
+        >>> a <= Formula("R' F R F' R'")
         True
         >>> a <= "R U R' U"
         True
         """
-        return len(self) != len(Algo(another))
+        return len(self) != len(Formula(another))
 
     def __reversed__(self):
         """
@@ -541,23 +544,21 @@ class Algo(list):
     def remove(self, value): pass
 
     @_delattr
-    def extend(*args): pass
-    @_delattr
     def sort(*args): pass
 
     def __or__(self, another):
         """
-        Check if two Algos are fully same.
+        Check if two Formulae are fully same.
 
-        >>> a = Algo("R U R' U'")
-        >>> a == Algo("R' F R F'")
+        >>> a = Formula("R U R' U'")
+        >>> a == Formula("R' F R F'")
         True
         >>> a | "R' F R F'"
         False
         >>> a | "R U R' U'"
         True
         """
-        another = Algo(another)
+        another = Formula(another)
         if len(self) == len(another):
             for i in range(len(self)):
                 if self[i] != another[i]:
@@ -568,9 +569,9 @@ class Algo(list):
     
     def reverse(self):
         """
-        Reverse this Algo.
+        Reverse this Formula.
 
-        >>> a = Algo("R U R' U'")
+        >>> a = Formula("R U R' U'")
         >>> a.reverse()
         >>> a
         U R U' R'
@@ -589,15 +590,15 @@ class Algo(list):
         return self
 
     def copy(self):
-        """L.copy() -> Algo -- a shallow copy of L"""
-        return Algo(self)
+        """L.copy() -> Formula -- a shallow copy of L"""
+        return Formula(self)
 
     def _optimise_wide_actions(self):
         """
-        Helper function for Algo.optimise()
+        Helper function for Formula.optimise()
         Reduce the wide actions (double layers)
 
-        >>> a = Algo("r u' M2")
+        >>> a = Formula("r u' M2")
         >>> a._optimise_wide_actions()
         >>> a
         L x D' y' R2 L2 x2
@@ -613,11 +614,11 @@ class Algo(list):
             "S": "F' B z", 
             "E": "U D' y'"
         }
-        _self = Algo(self)
+        _self = Formula(self)
         index = 0
         for step in _self:
             if step.name[0] in pattern:
-                replacement = Algo(pattern[step.name[0]])
+                replacement = Formula(pattern[step.name[0]])
                 if step.name[1:] != "":
                     for i in range(len(replacement)):
                         if step.name[1] == "'":
@@ -632,10 +633,10 @@ class Algo(list):
     
     def _optimise_rotations(self):
         """
-        Helper function for Algo.optimise()
+        Helper function for Formula.optimise()
         Reduce the rotations (whole cube rotations).
 
-        >>> a = Algo("L x D' y' R2 L2 x2")
+        >>> a = Formula("L x D' y' R2 L2 x2")
         >>> a._optimise_rotations()
         >>> a
         L B' D2 U2
@@ -645,7 +646,7 @@ class Algo(list):
             "y": "FRBL", 
             "z": "ULDR"
         }
-        _self = Algo(self)
+        _self = Formula(self)
         self.clear()
         for i in range(len(_self)-1, -1, -1):
             if _self[i].face not in pattern:
@@ -664,15 +665,15 @@ class Algo(list):
 
     def _optimise_same_steps(self, is_root=True):
         """
-        Helper function for Algo.optimise()
+        Helper function for Formula.optimise()
         Reduce repeated steps.
 
-        >>> a = Algo("R R2 U'")
+        >>> a = Formula("R R2 U'")
         >>> a._optimise_same_steps()
         >>> a
         R' U'
 
-        >>> a = Algo("R L' R U2")
+        >>> a = Formula("R L' R U2")
         >>> a._optimise_same_steps()
         >>> a
         R2 L' U2
@@ -723,7 +724,7 @@ class Algo(list):
         - No cube rotations (x y z)
         - No repeated steps
 
-        >>> a = Algo("R U r' x2 M' y' D D' L2 R L'")
+        >>> a = Formula("R U r' x2 M' y' D D' L2 R L'")
         >>> a.optimise()
         >>> a
         R U R' F B
@@ -740,7 +741,7 @@ class Algo(list):
         """
         Random n Steps. (default 25)
 
-        >>> a = Algo()
+        >>> a = Formula()
         >>> a.random()
         >>> a
         D' L' U B' D' F2 R D2 L2 F2 U' L' D F2 R' B D R2 B2 D R' U F2 R D
@@ -770,7 +771,7 @@ class Algo(list):
         """
         Mirror the algorithm.
 
-        >>> a = Algo("R U R' U'")
+        >>> a = Formula("R U R' U'")
         >>> a.mirror()
         >>> a
         L' U' L U
@@ -782,7 +783,7 @@ class Algo(list):
         >>> a
         R' D' R D
 
-        >>> a = Algo("R' F R F'")
+        >>> a = Formula("R' F R F'")
         >>> a.mirror("FB")
         >>> a
         R B' R' B

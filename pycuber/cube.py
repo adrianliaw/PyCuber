@@ -1,4 +1,4 @@
-from .algorithm import *
+from .formula import *
 from .util import FrozenDict
 from functools import reduce
 from itertools import permutations
@@ -519,11 +519,11 @@ class Cube(object):
 
     def perform_algo(self, algo):
         """
-        Perform a Rubik's Cube Algorithm.
+        Perform a Rubik's Cube Formula.
         Using "Singmaster notation".
         """
-        algo = Algo(algo)
-        for step in algo:
+        formula = Formula(algo)
+        for step in formula:
             self.perform_step(step)
         return self
 
