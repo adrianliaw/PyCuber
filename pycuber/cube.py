@@ -493,8 +493,10 @@ class Cube(object):
             step_ = Step(s)
             if step.is_inverse: step_ = step_.inverse()
             elif step.is_180: step_ = step_ * 2
-            self._single_layer(step_)
+            _single_layer(self, step_)
         return self
+
+    _other_rotations.__globals__["_single_layer"] = _single_layer
 
     def perform_step(self, step):
         """
@@ -507,9 +509,13 @@ class Cube(object):
         """
         step = Step(step)
         if step.face in "LUFDRBMES":
-            return self._single_layer(step)
+            return _single_layer(self, step)
         else:
-            return self._other_rotations(step)
+            return _other_rotations(self, step)
+
+    perform_step.__globals__["_single_layer"] = _single_layer
+    perform_step.__globals__["_other_rotations"] = _other_rotations
+    del _single_layer, _other_rotations
 
     def perform_algo(self, algo):
         """
