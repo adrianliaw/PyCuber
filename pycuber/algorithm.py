@@ -709,10 +709,10 @@ class Algo(list):
                     self[0] += self[1]
                     del self[1]
             rhs = self[flag:]
-            rhs._optimise_same_steps(is_root=False)
+            _optimise_same_steps(rhs, is_root=False)
             self[flag:] = rhs
         if is_root:
-            while not self.copy() | self._optimise_same_steps(is_root=False):
+            while not self.copy() | _optimise_same_steps(self, is_root=False):
                 pass
         return self
 
@@ -728,8 +728,13 @@ class Algo(list):
         >>> a
         R U R' F B
         """
-        self._optimise_wide_actions()._optimise_rotations()._optimise_same_steps()
+        _optimise_same_steps(_optimise_rotations(_optimise_wide_actions(self)))
         return self
+
+    optimise.__globals__["_optimise_wide_actions"] = _optimise_wide_actions
+    optimise.__globals__["_optimise_rotations"] = _optimise_rotations
+    optimise.__globals__["_optimise_same_steps"] = _optimise_same_steps
+    del _optimise_wide_actions, _optimise_rotations, _optimise_same_steps
 
     def random(self, n=25, clear=True):
         """
