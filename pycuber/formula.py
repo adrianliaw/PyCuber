@@ -1,7 +1,7 @@
 """
 
-This module is to implement the Rubik's Cube algorithms.
-You can deal with Rubik's Cube algorithms easily with Step and Formula.
+This module is to implement the Rubik's Cube formulae.
+You can deal with Rubik's Cube formulae easily with Step and Formula.
 
 Usage:
     >>> a = Formula("R U R' U'")
@@ -266,7 +266,7 @@ class Step(object):
 class Formula(list):
 
     """
-    Representing a Rubik's Cube algorithm.
+    Representing a Rubik's Cube formula.
 
     >>> a = Formula("R U R' U'")
     >>> a
@@ -719,7 +719,7 @@ class Formula(list):
 
     def optimise(self):
         """
-        Optimize the algorithm:
+        Optimize the formula:
         - Only outer layers (LUFDRB)
         - No cube rotations (x y z)
         - No repeated steps
@@ -769,7 +769,7 @@ class Formula(list):
 
     def mirror(self, direction="LR"):
         """
-        Mirror the algorithm.
+        Mirror the formula.
 
         >>> a = Formula("R U R' U'")
         >>> a.mirror()
