@@ -445,7 +445,7 @@ class Cube(object):
             "E": ("UD", "LFRB"), 
             }[step.face]
         if len(movement) == 2: slice_, movement = movement
-        if step.is_inverse: movement = movement[::-1]
+        if step.is_counter_clockwise: movement = movement[::-1]
         if step.face not in "MSE":
             to_move = {c.copy() for c in self.at_face(step.face)}
         else:
@@ -491,7 +491,7 @@ class Cube(object):
             }[step.face]
         for s in movement:
             step_ = Step(s)
-            if step.is_inverse: step_ = step_.inverse()
+            if step.is_counter_clockwise: step_ = step_.inverse()
             elif step.is_180: step_ = step_ * 2
             _single_layer(self, step_)
         return self

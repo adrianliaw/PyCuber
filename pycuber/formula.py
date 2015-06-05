@@ -40,16 +40,16 @@ class Step(object):
     U'
 
     You can check if it's clockwise (ex: U), counter-clockwise (ex: U'), or 180 degrees (ex: U2)
-    >>> r.is_standard
+    >>> r.is_clockwise
     True
-    >>> r.is_inverse
+    >>> r.is_counter_clockwise
     False
     >>> r.is_180
     False
 
-    >>> u_prime.is_standard
+    >>> u_prime.is_clockwise
     False
-    >>> u_prime.is_inverse
+    >>> u_prime.is_counter_clockwise
     True
     >>> u_prime.is_180
     False
@@ -98,19 +98,21 @@ class Step(object):
         try:
             if len(name) >= 2 and name[1] == "w":
                 name = name[0].lower() + name[2:]
+            if "i" in name:
+                name = name.replace("i", "'")
             if name[1:] == "2'":
                 name = name[0] + "2"
             if name[0] in "LUFDRBMSElufdrbxyz":
                 if name[1:] in ["", "'", "2"]:
-                    self.name = name
-                    self.face = name[0]
-                    self.is_inverse = (name[1:] == "'")
-                    self.is_standard = (name[1:] == "")
-                    self.is_180 = (name[1:] == "2")
+                    self.__name = lambda: name
+                    self.__face = lambda: name[0]
+                    self.__is_counter_clockwise = lambda: name[1:] == "'"
+                    self.__is_clockwise = lambda: name[1:] == ""
+                    self.__is_180 = lambda: name[1:] == "2"
                     return
             raise IndexError
         except IndexError:
-            raise ValueError("Invalid action name.")
+            raise ValueError("Invalid action name {0}".format(name))
 
     def __repr__(self):
         """
@@ -189,8 +191,8 @@ class Step(object):
         if type(another) == str:
             another = Step(another)
         if self.face == another.face:
-            status = ((self.is_standard    + self.is_180*2    + self.is_inverse*3) + \
-                      (another.is_standard + another.is_180*2 + another.is_inverse*3)) % 4
+            status = ((self.is_clockwise    + self.is_180*2    + self.is_counter_clockwise*3) + \
+                      (another.is_clockwise + another.is_180*2 + another.is_counter_clockwise*3)) % 4
             try:
                 return Step(self.face + [None, "", "2", "'"][status])
             except TypeError: return None
@@ -234,7 +236,7 @@ class Step(object):
         L2
         """
         if new_face in list("LUFDRBlufdrbMSExyz"):
-            return Step(new_face + "'" * self.is_inverse + "2" * self.is_180)
+            return Step(new_face + "'" * self.is_counter_clockwise + "2" * self.is_180)
         else:
             raise ValueError("Invalid name")
 
@@ -253,13 +255,33 @@ class Step(object):
         >>> s.inverse()
         R2
         """
-        return Step(self.name[0] + ("" if self.is_inverse else "'" if self.is_standard else "2"))
+        return Step(self.name[0] + ("" if self.is_counter_clockwise else "'" if self.is_clockwise else "2"))
     
     def __hash__(self):
         """
         Step object is hashable.
         """
         return hash(self.name)
+
+    @property
+    def name(self):
+        return self.__name()
+
+    @property
+    def is_counter_clockwise(self):
+        return self.__is_counter_clockwise()
+
+    @property
+    def is_clockwise(self):
+        return self.__is_clockwise()
+
+    @property
+    def is_180(self):
+        return self.__is_180()
+
+    @property
+    def face(self):
+        return self.__face()
 
 
 
@@ -653,7 +675,7 @@ class Formula(list):
                 self.insert(0, _self[i])
             else:
                 cr_pattern = pattern[_self[i].face]
-                if _self[i].is_inverse:
+                if _self[i].is_counter_clockwise:
                     cr_pattern = cr_pattern[::-1]
                 for j in range(len(self)):
                     if self[j].face in cr_pattern:

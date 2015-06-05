@@ -9,10 +9,10 @@ with open(os.path.join(os.path.dirname(__file__), "oll_algos.csv"), "r") as f:
     reader = csv.reader(f, delimiter=",")
     algo_dict = {}
     for line in reader:
-        algo_dict[line[1]] = Algo(line[2])
+        algo_dict[line[1]] = Formula(line[2])
         for i in range(1, 4):
-            algo_dict[line[1][-3*i:] + line[1][:-3*i]] = Algo(line[2]).insert(0, Step("U") * i)
-    algo_dict["000000000000"] = Algo()
+            algo_dict[line[1][-3*i:] + line[1][:-3*i]] = Formula(line[2]).insert(0, Step("U") * i)
+    algo_dict["000000000000"] = Formula()
 
 class OLLSolver(object):
     """
@@ -44,7 +44,7 @@ class OLLSolver(object):
 
     def solve(self):
         """
-        Solve the OLL. Returns an Algo.
+        Solve the OLL. Returns an Formula.
         """
         if not isinstance(self.cube, Cube):
             raise ValueError("Use Solver.feed(cube) to feed the cube to solver.")

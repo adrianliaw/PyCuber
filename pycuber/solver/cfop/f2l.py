@@ -109,7 +109,7 @@ class F2LPairSolver(object):
             "B": "ULDR", 
             }[step.face]
         movement = {
-            movement[i]: movement[(i + step.is_standard + (-1 * step.is_inverse) + (2 * step.is_180)) % 4]
+            movement[i]: movement[(i + step.is_clockwise + (-1 * step.is_counter_clockwise) + (2 * step.is_180)) % 4]
             for i in range(4)
             }
         for cubie in pair:
@@ -137,9 +137,9 @@ class F2LPairSolver(object):
         Successors function for finding path of combining F2L pair.
         """
         ((corner, edge), (L, U, F, D, R, B)) = state
-        U_turns = [Algo("U"), Algo("U'"), Algo("U2")] if len(last_action) != 1 else []
-        R_turns = [Algo("R U R'"), Algo("R U' R'"), Algo("R U2 R'")] if "R" not in last_action else []
-        F_turns = [Algo("F' U F"), Algo("F' U' F"), Algo("F' U2 F")] if "F" not in last_action else []
+        U_turns = [Formula("U"), Formula("U'"), Formula("U2")] if len(last_action) != 1 else []
+        R_turns = [Formula("R U R'"), Formula("R U' R'"), Formula("R U2 R'")] if "R" not in last_action else []
+        F_turns = [Formula("F' U F"), Formula("F' U' F"), Formula("F' U2 F")] if "F" not in last_action else []
         for act in (U_turns + R_turns + F_turns):
             new = (corner, edge)
             for q in act:
@@ -164,7 +164,7 @@ class F2LPairSolver(object):
         return sum(path_actions(a_star_search(start, 
                        self.combining_successors, 
                        lambda x: len(x), 
-                       self.combining_goal)), Algo())
+                       self.combining_goal)), Formula())
 
     def combining_setup(self):
         """
@@ -173,25 +173,25 @@ class F2LPairSolver(object):
         (slot_type, (corner_slot, edge_slot), (corner, edge)) = self.get_slot()
         cycle = ["FR", "RB", "BL", "LF"]
         if slot_type == "SLOTFREE":
-            return ("FR", Algo(Step("y") * cycle.index(self.pair) or []))
+            return ("FR", Formula(Step("y") * cycle.index(self.pair) or []))
         elif slot_type == "CSLOTFREE":
             return (cycle[-(cycle.index(edge_slot) - cycle.index(self.pair))], 
-                    Algo(Step("y") * cycle.index(edge_slot) or [])) 
+                    Formula(Step("y") * cycle.index(edge_slot) or [])) 
         elif slot_type in ("ESLOTFREE", "WRONGSLOT"):
             return (cycle[-(cycle.index(corner_slot) - cycle.index(self.pair))], 
-                    Algo(Step("y") * cycle.index(corner_slot) or [])) 
+                    Formula(Step("y") * cycle.index(corner_slot) or [])) 
         elif slot_type == "DIFFSLOT":
             if corner_slot != self.pair: corner_slot, edge_slot = edge_slot, corner_slot
-            result = Algo(Step("y") * cycle.index(edge_slot) or [])
-            result += Algo("R U R'")
-            result += Algo(Step("y'") * cycle.index(edge_slot) or [])
-            result += Algo(Step("y") * cycle.index(corner_slot) or [])
+            result = Formula(Step("y") * cycle.index(edge_slot) or [])
+            result += Formula("R U R'")
+            result += Formula(Step("y'") * cycle.index(edge_slot) or [])
+            result += Formula(Step("y") * cycle.index(corner_slot) or [])
             if result[-1].face == "y" and result[-2].face == "y":
                 result[-2] += result[-1]
                 del result[-1]
             return (cycle[-(cycle.index(corner_slot) - cycle.index(self.pair))], result)
         else:
-            return (cycle[-cycle.index(self.pair)], Algo())
+            return (cycle[-cycle.index(self.pair)], Formula())
 
     def combine(self):
         """
@@ -209,14 +209,14 @@ class F2LPairSolver(object):
         """
         cycle = ["FR", "RB", "BL", "LF"]
         combine = self.combine()
-        put = Algo(Step("y") * cycle.index(self.pair) or [])
+        put = Formula(Step("y") * cycle.index(self.pair) or [])
         self.cube(put)
         self.pair = "FR"
         estimated = self.estimated_position()
-        for U_act in [Algo(), Algo("U"), Algo("U2"), Algo("U'")]:
+        for U_act in [Formula(), Formula("U"), Formula("U2"), Formula("U'")]:
             self.cube(U_act)
-            for put_act in [Algo("R U R'"), Algo("R U' R'"), Algo("R U2 R'"), 
-                            Algo("F' U F"), Algo("F' U' F"), Algo("F' U2 F")]:
+            for put_act in [Formula("R U R'"), Formula("R U' R'"), Formula("R U2 R'"), 
+                            Formula("F' U F"), Formula("F' U' F"), Formula("F' U2 F")]:
                 self.cube(put_act)
                 if self.get_pair() == estimated:
                     return combine + put + U_act + put_act

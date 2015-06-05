@@ -10,11 +10,11 @@ with open(os.path.join(os.path.dirname(__file__), "pll_algos.csv"), "r") as f:
     algo_dict = {}
     for name, rec_id, algo in reader:
         for i in range(4):
-            algo_dict[rec_id[-3*i:] + rec_id[:-3*i]] = Algo(algo).insert(0, Step("U") * i)
+            algo_dict[rec_id[-3*i:] + rec_id[:-3*i]] = Formula(algo).insert(0, Step("U") * i)
     rec_id = "LLLFFFRRRBBB"
     algo = []
     for i in range(4):
-        algo_dict[rec_id[-3*i:] + rec_id[:-3*i]] = Algo(algo).insert(0, Step("U") * i)
+        algo_dict[rec_id[-3*i:] + rec_id[:-3*i]] = Formula(algo).insert(0, Step("U") * i)
 
 class PLLSolver(object):
     """
@@ -52,7 +52,7 @@ class PLLSolver(object):
             rec_id = self.recognise()
             if rec_id in algo_dict:
                 self.cube(algo_dict[rec_id])
-                return Algo((Step("y") * i) or []) + algo_dict[rec_id]
+                return Formula((Step("y") * i) or []) + algo_dict[rec_id]
             self.cube(Step("y"))
         raise ValueError("Invalid cube.")
 

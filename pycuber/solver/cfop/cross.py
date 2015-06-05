@@ -34,7 +34,7 @@ class CrossSolver(object):
             "B": "ULDR", 
             }[step.face]
         movement = {
-            movement[i]: movement[(i + step.is_standard + (-1 * step.is_inverse) + (2 * step.is_180)) % 4]
+            movement[i]: movement[(i + step.is_clockwise + (-1 * step.is_counter_clockwise) + (2 * step.is_180)) % 4]
             for i in range(4)
             }
         for edge in edges:
@@ -147,7 +147,7 @@ class CrossSolver(object):
         """
         Solve the cross.
         """
-        result = Algo(path_actions(a_star_search(
+        result = Formula(path_actions(a_star_search(
             ({f: self.cube[f] for f in "LUFDRB"}, 
              self.cube.select_type("edge") & self.cube.has_colour(self.cube["D"].colour)), 
             self.cross_successors, 

@@ -12,7 +12,7 @@ class CFOPSolver(object):
     def solve(self):
         if not self.cube.is_valid():
             raise ValueError("Invalid Cube.")
-        result = pycuber.Algo()
+        result = pycuber.Formula()
         sys.stdout.write("Solver starts....")
         sys.stdout.write("\rSolving Cross ......")
         solver = CrossSolver(self.cube)
