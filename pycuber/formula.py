@@ -412,8 +412,8 @@ class Formula(list):
         """Makes last input a Formula object."""
         def _func(*args, **kwargs):
             args = list(args[:-1]) + [Formula(args[-1])]
-            return getattr(list, func.__name__)(*args, **kwargs)#"list.{0}(*args, **kwargs)".format(func.__name__))
-        _func.__doc__ = getattr(list, func.__name__).__doc__#eval("list.{0}".format(func.__name__)).__doc__
+            return getattr(list, func.__name__)(*args, **kwargs)
+        _func.__doc__ = getattr(list, func.__name__).__doc__
         _func.__name__ = func.__name__ + " "
         return _func
 
@@ -423,7 +423,7 @@ class Formula(list):
         def _func(*args, **kwargs):
             if " " in func.__name__:
                 return Formula(func(*args, **kwargs))
-            return Formula(getattr(list, func.__name__))
+            return Formula(getattr(list, func.__name__)(*args, **kwargs))
         return _func
 
     def _delattr(func):
