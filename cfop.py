@@ -14,7 +14,7 @@ class CFOPSolver(object):
     def solve(self):
         if not self.cube.is_valid():
             raise ValueError("Invalid Cube.")
-        result = pc.Algo()
+        result = pc.Formula()
         solver = CrossSolver(self.cube)
         cross = solver.solve()
         if cross:

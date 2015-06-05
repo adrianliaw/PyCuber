@@ -20,7 +20,7 @@ def index():
 
 @socketio.on("random", namespace="/socket")
 def random_cube():
-    cube = pc.Cube()(pc.Algo().random())
+    cube = pc.Cube()(pc.Formula().random())
     data = {}
     for face, fname in zip(map(cube.get_face, "LUFDRB"), "LUFDRB"):
         for x, row in enumerate(face):
@@ -43,5 +43,5 @@ def solve_by_cfop(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0")
+    socketio.run(app, host="0.0.0.0", port=4096)
 
