@@ -395,7 +395,7 @@ class Formula(list):
         """
         We don't allow user to set attribute.
         """
-        if name in dir(self) and name not in ["sort", "extend"]:
+        if name in dir(self) and name != "sort" :
             raise AttributeError("'Formula' object attribute '{}' is read-only".format(name))
         else:
             raise AttributeError("'Formula' object has no attribute '{}'".format(name))
@@ -408,7 +408,7 @@ class Formula(list):
             return getattr(list, func.__name__)(*args, **kwargs)
         return _func
 
-    def _algify_input(func):
+    def _formulaize_input(func):
         """Makes last input a Formula object."""
         def _func(*args, **kwargs):
             args = list(args[:-1]) + [Formula(args[-1])]
@@ -417,7 +417,7 @@ class Formula(list):
         _func.__name__ = func.__name__ + " "
         return _func
 
-    def _algify_output(func):
+    def _formulaize_output(func):
         """Makes output a Formula object."""
         @wraps(getattr(list, func.__name__.strip()), assigned=("__name__", "__doc__"))
         def _func(*args, **kwargs):
@@ -441,20 +441,21 @@ class Formula(list):
             return args[0]
         return _func
 
-    @_algify_output
-    @_algify_input
+    @_formulaize_output
+    @_formulaize_input
     def __add__(self, another): pass
     if sys.version_info.major == 2:
-        @_algify_output
+        @_formulaize_output
         def __getslice__(self, i, j): pass
-        @_algify_input
+        @_formulaize_input
         def __setslice__(self, i, j, value): pass
-    @_algify_output
+    @_formulaize_output
     def __mul__(self, i): pass
     def __iadd__(self, another):
         return self.__add__(another)
 
-    @_algify_input
+    @_return_self
+    @_formulaize_input
     def extend(self, another): pass
     
     def __eq__(self, another):
@@ -831,6 +832,6 @@ class Formula(list):
             self[i] = self[i].inverse()
         return self
 
-    del _stepify, _algify_input, _algify_output, _delattr, _return_self
+    del _stepify, _formulaize_input, _formulaize_output, _delattr, _return_self
 
 
