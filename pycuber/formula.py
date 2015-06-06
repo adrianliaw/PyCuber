@@ -265,22 +265,40 @@ class Step(object):
 
     @property
     def name(self):
+        """
+        Name of the Step object (B', R, U2)
+        """
         return self.__name()
 
     @property
     def is_counter_clockwise(self):
+        """
+        True if direction is counter-clockwise (not including 180 degrees)
+        False otherwise
+        """
         return self.__is_counter_clockwise()
 
     @property
     def is_clockwise(self):
+        """
+        True if direction is clockwise (not including 180 degrees)
+        False otherwise
+        """
         return self.__is_clockwise()
 
     @property
     def is_180(self):
+        """
+        True if the action is to turn 180 degrees
+        False otherwise
+        """
         return self.__is_180()
 
     @property
     def face(self):
+        """
+        Face of the step (R, U, l, x, M)
+        """
         return self.__face()
 
 
