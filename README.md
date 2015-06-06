@@ -6,6 +6,7 @@ PyCuber is a Rubik's Cube package in Python 2/3
 
 The cube can be revealed as expanded view in the terminal, 
 so it's easy to visualise the cube, just inside the terminal.
+(Not tested on Windows)
 
 ``` python
 
