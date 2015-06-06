@@ -367,9 +367,10 @@ class Formula(list):
         >>> a[1]
         U
         """
+        result = super(Formula, self).__getitem__(index)
         if isinstance(index, slice):
-            return Formula(list.__getitem__(self, index))
-        return list.__getitem__(self, index)
+            return Formula(result)
+        return result
 
     def __setitem__(self, index, item):
         """
@@ -387,9 +388,9 @@ class Formula(list):
             del self[index]
             return
         if isinstance(index, slice):
-            list.__setitem__(self, index, Formula(item))
+            super(Formula, self).__setitem__(index, Formula(item))
         else:
-            list.__setitem__(self, index, Step(item))
+            super(Formula, self).__setitem__(index, Step(item))
 
     def __setattr__(self, name, value):
         """
