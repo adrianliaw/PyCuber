@@ -546,9 +546,7 @@ class Formula(list):
         """
         Reversed list iterator.
         """
-        rvd = self.reverse().copy()
-        self.reverse()
-        return rvd.__iter__()
+        return self.copy().reverse()
 
     @_stepify
     def __contains__(self, value): pass
