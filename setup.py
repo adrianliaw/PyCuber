@@ -5,7 +5,7 @@ long_desc = """
 PyCuber
 =======
 
-PyCuber is a Rubik's Cube simulator in Python 2/3.
+PyCuber is a Rubik's Cube package in Python 2/3.
 --------------------------------------------------
 
 The cube can be revealed as expanded view in the terminal, so it's easy
@@ -24,25 +24,25 @@ to visualise the cube, just inside the terminal.
 
     >>> print(mycube)
 
-.. image:: https://camo.githubusercontent.com/906f83f4933fe1d0741b7d3ff43bda66fb464cdd/68747470733a2f2f7261772e6769746875622e636f6d2f61647269616e6c6961772f507943756265722f76302e31622f7374617469632f696d672f7465726d696e616c2e706e67
+.. image:: http://i.imgur.com/OI4kbn7.png
 
-We also provided some useful tools to deal with Rubik's Cube algorithms.
+We also provided some useful tools to deal with Rubik's Cube formulae.
 
 .. code-block:: python
 
 
     >>> import pycuber as pc
 
-    >>> # Create an Algo object
-    >>> myalg = pc.Algo("R U R' U' R' F R2 U' R' U' R U R' F'")
+    >>> # Create a Formula object
+    >>> my_formula = pc.Formula("R U R' U' R' F R2 U' R' U' R U R' F'")
 
-    >>> # Reversing an Algo
-    >>> myalg.reverse()
-    >>> print(myalg)
+    >>> # Reversing a Formula
+    >>> my_formula.reverse()
+    >>> print(my_formula)
 
-    >>> # Mirroring an Algo object
+    >>> # Mirroring a Formula
     >>> myalg.mirror("LR")
-    >>> print(myalg)
+    >>> print(my_formula)
 
 
     F R U' R' U R U R2 F' R U R U' R'

@@ -22,7 +22,7 @@ print(mycube)
 ```
 ![alt tag](http://i.imgur.com/OI4kbn7.png)
 
-We also provided some useful tools to deal with Rubik's Cube algorithms.
+We also provided some useful tools to deal with Rubik's Cube formulae.
 
 ``` python
 
