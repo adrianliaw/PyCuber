@@ -1,6 +1,8 @@
 PyCuber
 ====================
 
+### `pip install pycuber`
+
 PyCuber is a Rubik's Cube package in Python 2/3
 --------------------
 
