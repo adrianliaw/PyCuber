@@ -1,15 +1,26 @@
 import sys, time, pycuber
+if sys.version_info > (3,4):
+    import io as generalized_io
+else:
+    import cStringIO as generalized_io
+
 from .cross import CrossSolver
 from .f2l import F2LSolver
 from .oll import OLLSolver
 from .pll import PLLSolver
 
+
 class CFOPSolver(object):
     def __init__(self, cube=None):
         self.cube = cube
+
     def feed(self, cube):
         self.cube = cube
-    def solve(self):
+
+    def solve(self, suppress_progress_messages=False):
+        if suppress_progress_messages:
+            save_stdout = sys.stdout
+            sys.stdout = generalized_io.stringIO()
         if not self.cube.is_valid():
             raise ValueError("Invalid Cube.")
         result = pycuber.Formula()
@@ -36,6 +47,8 @@ class CFOPSolver(object):
         pll = solver.solve()
         result += pll
         sys.stdout.write("\rPLL:  {0}\n".format(pll))
+        if suppress_progress_messages:
+            sys.stdout = save_stdout
         sys.stdout.write("\nFULL: {0}\n".format(result.optimise()))
         return result
 
