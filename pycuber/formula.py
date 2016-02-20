@@ -27,7 +27,6 @@ import sys, random
 
 
 class Step(object):
-
     """
     Representing a Rubik's Cube action.
     
@@ -191,11 +190,12 @@ class Step(object):
         if type(another) == str:
             another = Step(another)
         if self.face == another.face:
-            status = ((self.is_clockwise    + self.is_180*2    + self.is_counter_clockwise*3) + \
-                      (another.is_clockwise + another.is_180*2 + another.is_counter_clockwise*3)) % 4
+            status = ((self.is_clockwise + self.is_180 * 2 + self.is_counter_clockwise * 3) + \
+                      (another.is_clockwise + another.is_180 * 2 + another.is_counter_clockwise * 3)) % 4
             try:
                 return Step(self.face + [None, "", "2", "'"][status])
-            except TypeError: return None
+            except TypeError:
+                return None
         raise ValueError("Should be the same side action.")
 
     def __mul__(self, i):
@@ -215,11 +215,11 @@ class Step(object):
         >>> s * 10
         U2
         """
-        i = i % 4
+        i %= 4
         if i == 0:
             return None
         result = Step(self.name)
-        for j in range(i-1):
+        for j in range(i - 1):
             result += Step(self.name)
         return result
 
@@ -256,7 +256,7 @@ class Step(object):
         R2
         """
         return Step(self.name[0] + ("" if self.is_counter_clockwise else "'" if self.is_clockwise else "2"))
-    
+
     def __hash__(self):
         """
         Step object is hashable.
@@ -302,9 +302,7 @@ class Step(object):
         return self.__face()
 
 
-
 class Formula(list):
-
     """
     Representing a Rubik's Cube formula.
 
@@ -414,69 +412,86 @@ class Formula(list):
         """
         We don't allow user to set attribute.
         """
-        if name in dir(self) and name != "sort" :
+        if name in dir(self) and name != "sort":
             raise AttributeError("'Formula' object attribute '{}' is read-only".format(name))
         else:
             raise AttributeError("'Formula' object has no attribute '{}'".format(name))
 
     def _stepify(func):
         """Makes last input a Step object."""
+
         @wraps(getattr(list, func.__name__), assigned=("__name__", "__doc__"))
         def _func(*args, **kwargs):
             args = list(args[:-1]) + [Step(args[-1])]
             return getattr(list, func.__name__)(*args, **kwargs)
+
         return _func
 
     def _formulaize_input(func):
         """Makes last input a Formula object."""
+
         def _func(*args, **kwargs):
             args = list(args[:-1]) + [Formula(args[-1])]
             return getattr(list, func.__name__)(*args, **kwargs)
+
         _func.__doc__ = getattr(list, func.__name__).__doc__
         _func.__name__ = func.__name__ + " "
         return _func
 
     def _formulaize_output(func):
         """Makes output a Formula object."""
+
         @wraps(getattr(list, func.__name__.strip()), assigned=("__name__", "__doc__"))
         def _func(*args, **kwargs):
             if " " in func.__name__:
                 return Formula(func(*args, **kwargs))
             return Formula(getattr(list, func.__name__)(*args, **kwargs))
+
         return _func
 
     def _delattr(func):
         """Raise error when calling some not needed method."""
+
         def _func(*args, **kwargs):
             raise AttributeError("'Formula' object has no attribute '{0}'".format(func.__name__))
+
         return _func
-    
+
     def _return_self(func):
         """Make function returns self."""
+
         @wraps(func, assigned=("__name__", "__doc__"))
         def _func(*args, **kwargs):
             if args[-1] != None:
                 func(*args, **kwargs)
             return args[0]
+
         return _func
 
     @_formulaize_output
     @_formulaize_input
-    def __add__(self, another): pass
+    def __add__(self, another):
+        pass
+
     if sys.version_info.major == 2:
         @_formulaize_output
         def __getslice__(self, i, j): pass
+
         @_formulaize_input
         def __setslice__(self, i, j, value): pass
+
     @_formulaize_output
-    def __mul__(self, i): pass
+    def __mul__(self, i):
+        pass
+
     def __iadd__(self, another):
         return self.__add__(another)
 
     @_return_self
     @_formulaize_input
-    def extend(self, another): pass
-    
+    def extend(self, another):
+        pass
+
     def __eq__(self, another):
         """
         Check if length of this Formula is equal to another.
@@ -568,23 +583,35 @@ class Formula(list):
         return self.copy().reverse()
 
     @_stepify
-    def __contains__(self, value): pass
+    def __contains__(self, value):
+        pass
+
     @_return_self
     @_stepify
-    def append(self, another): pass
+    def append(self, another):
+        pass
+
     @_stepify
-    def count(self, value): pass
+    def count(self, value):
+        pass
+
     @_stepify
-    def index(self, start, stop): pass
+    def index(self, start, stop):
+        pass
+
     @_return_self
     @_stepify
-    def insert(self, index, obj): pass
+    def insert(self, index, obj):
+        pass
+
     @_return_self
     @_stepify
-    def remove(self, value): pass
+    def remove(self, value):
+        pass
 
     @_delattr
-    def sort(*args): pass
+    def sort(*args):
+        pass
 
     def __or__(self, another):
         """
@@ -606,7 +633,7 @@ class Formula(list):
             else:
                 return True
         return False
-    
+
     def reverse(self):
         """
         Reverse this Formula.
@@ -617,13 +644,13 @@ class Formula(list):
         U R U' R'
         """
         if len(self) == 0: return self
-        for i in range(int((len(self)+1)/2)):
+        for i in range(int((len(self) + 1) / 2)):
             self[i] = self[i].inverse()
-            if i != len(self)-i-1:
-                self[-i-1] = self[-i-1].inverse()
-            self[i], self[-i-1] = self[-i-1], self[i]
+            if i != len(self) - i - 1:
+                self[-i - 1] = self[-i - 1].inverse()
+            self[i], self[-i - 1] = self[-i - 1], self[i]
         return self
-    
+
     def clear(self):
         """L.clear() -> None -- remove all items from L"""
         self[:] = ""
@@ -644,14 +671,14 @@ class Formula(list):
         L x D' y' R2 L2 x2
         """
         pattern = {
-            "r": "L x", 
-            "l": "R x'", 
-            "u": "D y", 
-            "d": "U y'", 
-            "f": "B z", 
-            "b": "F z'", 
-            "M": "R L' x'", 
-            "S": "F' B z", 
+            "r": "L x",
+            "l": "R x'",
+            "u": "D y",
+            "d": "U y'",
+            "f": "B z",
+            "b": "F z'",
+            "M": "R L' x'",
+            "S": "F' B z",
             "E": "U D' y'"
         }
         _self = Formula(self)
@@ -665,12 +692,12 @@ class Formula(list):
                             replacement[i] *= -1
                         else:
                             replacement[i] *= 2
-                self[index:index+1] = replacement
+                self[index:index + 1] = replacement
                 index += len(replacement)
             else:
                 index += 1
         return self
-    
+
     def _optimise_rotations(self):
         """
         Helper function for Formula.optimise()
@@ -682,13 +709,13 @@ class Formula(list):
         L B' D2 U2
         """
         pattern = {
-            "x": "UFDB", 
-            "y": "FRBL", 
+            "x": "UFDB",
+            "y": "FRBL",
             "z": "ULDR"
         }
         _self = Formula(self)
         self.clear()
-        for i in range(len(_self)-1, -1, -1):
+        for i in range(len(_self) - 1, -1, -1):
             if _self[i].face not in pattern:
                 self.insert(0, _self[i])
             else:
@@ -718,7 +745,7 @@ class Formula(list):
         >>> a
         R2 L' U2
         """
-        opposite = {"U":"D", "L":"R", "F":"B", "D":"U", "R":"L", "B":"F"}
+        opposite = {"U": "D", "L": "R", "F": "B", "D": "U", "R": "L", "B": "F"}
         if len(self) < 2:
             return self
         elif len(self) == 2:
@@ -732,7 +759,7 @@ class Formula(list):
         else:
             flag = True
             if self[0].face == self[2].face and opposite[self[0].face] == self[1].face:
-                if self[0] + self[2] == None:
+                if self[0] + self[2] is None:
                     self[0] += self[2]
                     del self[1]
                     if len(self) == 1:
@@ -742,7 +769,7 @@ class Formula(list):
                     self[0] += self[2]
                     del self[2]
             if self[0].face == self[1].face:
-                if self[0] + self[1] == None:
+                if self[0] + self[1] is None:
                     self[0] += self[1]
                     del self[0]
                     flag = False
@@ -790,7 +817,7 @@ class Formula(list):
         >>> a
         F' R D B2 R' F' L2 D2 F2 L2 D2 B' U F2 L
         """
-        opposite = {"U":"D", "L":"R", "F":"B", "D":"U", "R":"L", "B":"F"}
+        opposite = {"U": "D", "L": "R", "F": "B", "D": "U", "R": "L", "B": "F"}
         if clear:
             self.clear()
         for i in range(n):
@@ -798,8 +825,8 @@ class Formula(list):
             try:
                 while True:
                     if self[-1].face != self[-2].face and \
-                            self[-1].face != self[-3].face and \
-                            opposite[self[-1].face] != self[-2].face:
+                                    self[-1].face != self[-3].face and \
+                                    opposite[self[-1].face] != self[-2].face:
                         break
                     del self[-1]
                     self.append(random.choice("LUFDRB") + random.choice(["", "'", "2"]))
@@ -828,11 +855,11 @@ class Formula(list):
         >>> a
         R B' R' B
         """
-        opposite = {"U":"D", "L":"R", "F":"B", "D":"U", "R":"L", "B":"F"}
+        opposite = {"U": "D", "L": "R", "F": "B", "D": "U", "R": "L", "B": "F"}
         direction = set(direction)
         specials = {
-            frozenset("LR"): ("x", "M"), 
-            frozenset("FB"): ("z", "S"), 
+            frozenset("LR"): ("x", "M"),
+            frozenset("FB"): ("z", "S"),
             frozenset("UD"): ("y", "E")
         }[frozenset(direction)]
         if direction not in (set("LR"), set("UD"), set("FB")):
@@ -850,5 +877,3 @@ class Formula(list):
         return self
 
     del _stepify, _formulaize_input, _formulaize_output, _delattr, _return_self
-
-
