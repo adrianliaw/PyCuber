@@ -17,7 +17,7 @@ class CFOPSolver(object):
     def feed(self, cube):
         self.cube = cube
 
-    def solve(self, suppress_progress_messages):
+    def solve(self, suppress_progress_messages=False):
         if suppress_progress_messages:
             save_stdout = sys.stdout
             sys.stdout = generalized_io.StringIO()
@@ -32,15 +32,12 @@ class CFOPSolver(object):
         sys.stdout.write("\rCross: {0}\n".format(cross))
 
         solver = F2LSolver(self.cube)
-        try:
-            f2lall = solver.solve()
-            for i in range(4):
-                sys.stdout.write("\rSolving F2L#{0} ......".format(i))
-                f2l = next(f2lall)
-                result += f2l[1]
-                sys.stdout.write("\rF2L{0}: {1}\n".format(*f2l))
-        except StopIteration:
-            sys.stdout.write('\nCube might be already solved? \n')
+        f2lall = solver.solve()
+        for i, f2l in enumerate(f2lall):
+            sys.stdout.write("\rSolving F2L#{0} ......".format(i))
+            result += f2l[1]
+            sys.stdout.write("\rF2L{0}: {1}\n".format(*f2l))
+        
         solver = OLLSolver(self.cube)
         sys.stdout.write("\rSolving OLL ......")
         oll = solver.solve()
