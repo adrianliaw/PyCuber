@@ -245,7 +245,7 @@ class F2LSolver(object):
 
     def solve(self):
         """
-        Solve the entier F2L. (Generator)
+        Solve the entire F2L. (Generator)
         """
         for i in range(4):
             for slot in ["FR", "RB", "BL", "LF"]:

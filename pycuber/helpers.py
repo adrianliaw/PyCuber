@@ -20,6 +20,7 @@ def fill_unknowns(s):
                 }))
     return new
 
+
 def extract(l):
     """
     extract([[1, 2, 3], [[2, 3, 4], [5, 6, 7]], 4])
@@ -32,6 +33,7 @@ def extract(l):
         else:
             result.append(element)
     return result
+
 
 def array_to_cubies(l):
     """
