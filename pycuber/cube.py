@@ -36,6 +36,20 @@ class Square(object):
                    "unknown": "\x1b[40m",
                }[self.colour] + "  \x1b[49m"
 
+    def __str__(self):
+        """
+        Return self as the raw color represented by a single character
+        """
+        return {
+                "red": "[r]",
+                "yellow": "[y]",
+                "green": "[g]",
+                "white": "[w]",
+                "orange": "[o]",
+                "blue": "[b]",
+                "unknown": "[u]",
+            }[self.colour]
+
     def __eq__(self, another):
         """
         Check if the colour is as same as another.
@@ -291,13 +305,36 @@ class Cube(object):
             "B": self.B,
         }
         for i in range(3):
-            result += "      " + "".join(str(square) for square in _["U"][i]) + "\n"
+            result += "      " + "".join(repr(square) for square in _["U"][i]) + "\n"
+        for i in range(3):
+            for side in "LFRB":
+                result += "".join(repr(square) for square in _[side][i])
+            result += "\n"
+        for i in range(3):
+            result += "      " + "".join(repr(square) for square in _["D"][i]) + "\n"
+        return result
+
+    def __str__(self):
+        """
+        Draw the Cube as expanded view using string representation of color.
+        """
+        result = ""
+        _ = {
+            "L": self.L,
+            "U": self.U,
+            "F": self.F,
+            "D": self.D,
+            "R": self.R,
+            "B": self.B,
+        }
+        for i in range(3):
+            result += "         " + "".join(str(square) for square in _["U"][i]) + "\n"
         for i in range(3):
             for side in "LFRB":
                 result += "".join(str(square) for square in _[side][i])
             result += "\n"
         for i in range(3):
-            result += "      " + "".join(str(square) for square in _["D"][i]) + "\n"
+            result += "         " + "".join(str(square) for square in _["D"][i]) + "\n"
         return result
 
     def __getitem__(self, key):
