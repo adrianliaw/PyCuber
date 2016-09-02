@@ -7,8 +7,7 @@ class Cubie(np.ndarray):
         if isinstance(side_colour_map, Cubie):
             return side_colour_map
 
-        if not isinstance(side_colour_map, np.ndarray):
-            side_colour_map = np.array(side_colour_map)
+        side_colour_map = np.array(side_colour_map)
 
         if side_colour_map.shape == (6,):
             return side_colour_map
@@ -18,6 +17,22 @@ class Cubie(np.ndarray):
         ret[side_colour_map[:, 0]] = side_colour_map[:, 1]
 
         return ret
+
+U, L, F, R, B, D = range(6)
+
+ROT = np.zeros((3, 6, 6), int)
+
+X, Y, Z = range(3)
+
+rotation_patterns = np.array([
+    [[F, U], [U, B], [B, D], [D, F], [L, L], [R, R]],
+    [[L, B], [B, R], [R, F], [F, L], [U, U], [D, D]],
+    [[L, U], [U, R], [R, D], [D, L], [F, F], [B, B]],
+])
+
+for i, pattern in enumerate(rotation_patterns):
+    ROT[i][pattern[:, 0], pattern[:, 1]] = 1
+print(ROT)
 
 
 if __name__ == "__main__":
