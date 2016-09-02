@@ -40,12 +40,14 @@ class Cubie(np.ndarray):
             ret = ret.dot(ROT[X])
         return ret
 
+    def rotate_on_Y(self, n=1):
+        ret = self
+        for i in range(n % 4):
+            ret = ret.dot(ROT[Y])
+        return ret
 
-if __name__ == "__main__":
-    # mapping = np.array([[0, 0], [1, 1], [2, 2]])
-    cubie = Cubie([[0, 0], [1, 1], [2, 2]])
-    print(cubie.rotate_on_X())
-    # print(cubie)
-    # print(Cubie(cubie))
-    # print(Cubie(np.array([0, 1, 2, -1, -1, -1])))
-    # print(Cubie([0, 1, 2, -1, -1, -1]))
+    def rotate_on_Z(self, n=1):
+        ret = self
+        for i in range(n % 4):
+            ret = ret.dot(ROT[Z])
+        return ret
