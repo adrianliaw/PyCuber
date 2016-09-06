@@ -17,37 +17,47 @@ for i, pattern in enumerate(rotation_patterns):
     ROT[i][pattern[:, 0], pattern[:, 1]] = 1
 
 
-class Cubie(np.ndarray):
+def make_cubie(side_colour_map, **kwargs):
+    side_colour_map = np.array(side_colour_map)
 
-    def __new__(subtype, side_colour_map, **kwargs):
-        if isinstance(side_colour_map, Cubie):
-            return side_colour_map
+    cubie = np.ndarray((6,), "int8", **kwargs)
 
-        side_colour_map = np.array(side_colour_map)
+    if side_colour_map.shape == (6,):
+        cubie[:] = side_colour_map
+    else:
+        cubie.fill(-1)
+        if side_colour_map.shape != (0,):
+            cubie[side_colour_map[:, 0]] = side_colour_map[:, 1]
 
-        if side_colour_map.shape == (6,):
-            return side_colour_map
+    assert_is_cubie(cubie)
 
-        ret = np.ndarray.__new__(subtype, (6, ), "int8", **kwargs)
-        ret.fill(-1)
-        ret[side_colour_map[:, 0]] = side_colour_map[:, 1]
+    return cubie
 
-        return ret
 
-    def rotate_on_X(self, n=1):
-        ret = self
-        for i in range(n % 4):
-            ret = ret.dot(ROT[X])
-        return ret
+def assert_is_cubie(cubie):
+    assert cubie.shape == (6,)
+    assert (cubie != -1).sum() <= 3
 
-    def rotate_on_Y(self, n=1):
-        ret = self
-        for i in range(n % 4):
-            ret = ret.dot(ROT[Y])
-        return ret
+    cubie_values = cubie[cubie != -1]
+    assert np.in1d(cubie_values, np.arange(6)).all()
+    assert cubie_values.shape == (0,) or \
+        np.unique(cubie_values).shape == cubie_values.shape
 
-    def rotate_on_Z(self, n=1):
-        ret = self
-        for i in range(n % 4):
-            ret = ret.dot(ROT[Z])
-        return ret
+
+def rotate_on_X(self, n=1):
+    ret = self
+    for i in range(n % 4):
+        ret = ret.dot(ROT[X])
+    return ret
+
+def rotate_on_Y(self, n=1):
+    ret = self
+    for i in range(n % 4):
+        ret = ret.dot(ROT[Y])
+    return ret
+
+def rotate_on_Z(self, n=1):
+    ret = self
+    for i in range(n % 4):
+        ret = ret.dot(ROT[Z])
+    return ret
