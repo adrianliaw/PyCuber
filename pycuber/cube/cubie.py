@@ -44,20 +44,26 @@ def assert_is_cubie(cubie):
         np.unique(cubie_values).shape == cubie_values.shape
 
 
-def rotate_on_X(self, n=1):
-    ret = self
+def rotate_on(axis, original, n=1):
+    return [rotate_on_X, rotate_on_Y, rotate_on_Z][axis](original, n)
+
+
+def rotate_on_X(original, n=1):
+    ret = original
     for i in range(n % 4):
         ret = ret.dot(ROT[X])
     return ret
 
-def rotate_on_Y(self, n=1):
-    ret = self
+
+def rotate_on_Y(original, n=1):
+    ret = original
     for i in range(n % 4):
         ret = ret.dot(ROT[Y])
     return ret
 
-def rotate_on_Z(self, n=1):
-    ret = self
+
+def rotate_on_Z(original, n=1):
+    ret = original
     for i in range(n % 4):
         ret = ret.dot(ROT[Z])
     return ret
