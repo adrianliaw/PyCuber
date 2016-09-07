@@ -1,11 +1,10 @@
 import numpy as np
+from .constants import U, L, F, R, B, D, \
+                       X, Y, Z
 
-
-U, L, F, R, B, D = range(6)
 
 ROT = np.zeros((3, 6, 6), int)
 
-X, Y, Z = range(3)
 
 rotation_patterns = np.array([
     [[F, U], [U, B], [B, D], [D, F], [L, L], [R, R]],
@@ -44,26 +43,26 @@ def assert_is_cubie(cubie):
         np.unique(cubie_values).shape == cubie_values.shape
 
 
-def rotate_on(axis, original, n=1):
-    return [rotate_on_X, rotate_on_Y, rotate_on_Z][axis](original, n)
+def rotate_on(axis, original, k=1):
+    return [rotate_on_X, rotate_on_Y, rotate_on_Z][axis](original, k)
 
 
-def rotate_on_X(original, n=1):
+def rotate_on_X(original, k=1):
     ret = original
-    for i in range(n % 4):
+    for i in range(k % 4):
         ret = ret.dot(ROT[X])
     return ret
 
 
-def rotate_on_Y(original, n=1):
+def rotate_on_Y(original, k=1):
     ret = original
-    for i in range(n % 4):
+    for i in range(k % 4):
         ret = ret.dot(ROT[Y])
     return ret
 
 
-def rotate_on_Z(original, n=1):
+def rotate_on_Z(original, k=1):
     ret = original
-    for i in range(n % 4):
+    for i in range(k % 4):
         ret = ret.dot(ROT[Z])
     return ret

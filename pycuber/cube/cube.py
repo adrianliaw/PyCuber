@@ -1,10 +1,7 @@
 import numpy as np
 from itertools import product
 from . import cubie
-
-
-U, L, F, R, B, D = range(6)
-X, Y, Z = range(3)
+from .constants import U, L, F, R, B, D
 
 
 class Cube(np.ndarray):
@@ -31,10 +28,3 @@ class Cube(np.ndarray):
         selector[axis] = layer
         self[selector] = np.rot90(self[selector], k)
         self[selector] = cubie.rotate_on(axis, self[selector], k)
-
-
-if __name__ == "__main__":
-    cube = Cube()
-    print(cube)
-    cube.twist(X, 0)
-    print(cube)
