@@ -5,11 +5,10 @@ from .constants import U, L, F, R, B, D, \
 
 ROT = np.zeros((3, 6, 6), int)
 
-
 rotation_patterns = np.array([
-    [[F, U], [U, B], [B, D], [D, F], [L, L], [R, R]],
-    [[L, B], [B, R], [R, F], [F, L], [U, U], [D, D]],
-    [[L, U], [U, R], [R, D], [D, L], [F, F], [B, B]],
+    [[F, D], [D, B], [B, U], [U, F], [L, L], [R, R]],
+    [[L, F], [F, R], [R, B], [B, L], [U, U], [D, D]],
+    [[L, D], [D, R], [R, U], [U, L], [F, F], [B, B]],
 ])
 
 for i, pattern in enumerate(rotation_patterns):
