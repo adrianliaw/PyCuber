@@ -38,8 +38,20 @@ def assert_is_cubie(cubie):
 
     cubie_values = cubie[cubie != -1]
     assert np.in1d(cubie_values, np.arange(6)).all()
-    assert cubie_values.shape == (0,) or \
-        np.unique(cubie_values).shape == cubie_values.shape
+    assert np.unique(cubie_values).shape == cubie_values.shape
+
+
+def is_valid_cubie(cubie):
+    if cubie.shape != (6,) or (cubie != -1).sum() > 3:
+        return False
+
+    cubie_values = cubie[cubie != -1]
+    if np.in1d(cubie_values, np.arange(6)).any():
+        return False
+    if np.unique(cubie_values).shape != cubie_values.shape:
+        return False
+
+    return True
 
 
 def rotate_on(axis, original, k=1):
