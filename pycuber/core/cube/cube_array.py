@@ -4,13 +4,13 @@ from . import cubie_array as cubie
 from .constants import U, L, F, R, B, D, Y
 
 
-class Cube(np.ndarray):
+class CubeArray(np.ndarray):
 
     def __new__(subtype, *args, **kwargs):
         if len(args) > 0:
             cube = np.array(args[0])
             if cube.shape == (3, 3, 3, 6):
-                return cube.view(Cube)
+                return cube.view(CubeArray)
 
         cube = np.ndarray.__new__(subtype, (3, 3, 3, 6), "int8")
         poses = zip(
