@@ -1,6 +1,6 @@
 import numpy as np
 from itertools import product
-from . import cubie
+from . import cubie_array as cubie
 from .constants import U, L, F, R, B, D, Y
 
 
