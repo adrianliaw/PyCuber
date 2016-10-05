@@ -18,6 +18,11 @@ rotation_parameters = {
     Step("B"): (Z, 2, 1),
 }
 
+for step in list(rotation_parameters.keys()):
+    axis, layer, k = rotation_parameters[step]
+    rotation_parameters[step.inverse()] = (axis, layer, k * -1)
+    rotation_parameters[step * 2] = (axis, layer, k * 2)
+
 combinations = {
     Step("l"): [Step("L"), Step("M")],
     Step("r"): [Step("M'"), Step("R")],
@@ -32,6 +37,10 @@ combinations = {
     Step("z"): [Step("F"), Step("S"), Step("B'")],
 }
 
+for step, comb in list(combinations.items()):
+    combinations[step.inverse()] = [s.inverse() for s in comb]
+    combinations[step * 2] = [s * 2 for s in comb]
+
 
 class CubieCube(CubeABC):
 
@@ -41,19 +50,10 @@ class CubieCube(CubeABC):
 
     def do_step(self, step):
         if step.face.isupper():
-            axis, layer, k = rotation_parameters[Step(step.face)]
-            if step.is_counter_clockwise:
-                k *= -1
-            elif step.is_180:
-                k *= 2
-            self.__data.twist(axis, layer, k)
+            self.__data.twist(*rotation_parameters[step])
         else:
-            separated = combinations[Step(step.face)]
-            k = -1 * step.is_counter_clockwise + \
-                2 * step.is_180 + \
-                1 * step.is_clockwise
-            for individual_step in separated:
-                self.do_step(individual_step * k)
+            for s in combinations[step]:
+                self.__data.twist(*rotation_parameters[s])
         return self
 
     def do_formula(self, formula):
