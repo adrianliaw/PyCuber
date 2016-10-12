@@ -42,7 +42,7 @@ for step, comb in list(combinations.items()):
     combinations[step * 2] = [s * 2 for s in comb]
 
 
-class CubieCube(CubeABC):
+class CubieCube(object):
 
     def __init__(self):
         super().__init__()
@@ -65,3 +65,6 @@ class CubieCube(CubeABC):
         if isinstance(face, str):
             face = "ULFRBD".index(face)
         return self.__data.get_face(face)
+
+
+CubeABC.register(CubieCube)
