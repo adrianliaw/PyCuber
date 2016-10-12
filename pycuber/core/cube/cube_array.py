@@ -26,10 +26,10 @@ class CubeArray(np.ndarray):
     def twist(self, axis, layer, k=1):
         selector = [slice(0, 3), slice(0, 3), slice(0, 3)]
         selector[axis] = layer
+        self[selector] = cubie.rotate_on(axis, self[selector], k)
         if axis == Y:
             k *= -1
         self[selector] = np.rot90(self[selector], k)
-        self[selector] = cubie.rotate_on(axis, self[selector], k)
 
     def get_face_colours(self):
         return self[
