@@ -60,3 +60,8 @@ class CubieCube(CubeABC):
         for step in formula:
             self.do_step(step)
         return self
+
+    def get_face(self, face):
+        if isinstance(face, str):
+            face = "ULFRBD".index(face)
+        return self.__data.get_face(face)

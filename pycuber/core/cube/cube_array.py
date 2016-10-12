@@ -33,17 +33,18 @@ class CubeArray(np.ndarray):
 
     def get_face(self, face):
         if face == U:
-            return np.rot90(self[:, 2, :, U])
+            result = np.rot90(self[:, 2, :, U])
         elif face == L:
-            return np.rot90(self[0, :, :, L], 2)
+            result = np.rot90(self[0, :, :, L], 2)
         elif face == F:
-            return np.rot90(self[:, :, 0, F])
+            result = np.rot90(self[:, :, 0, F])
         elif face == R:
-            return np.flipud(self[2, :, : R])
+            result = np.flipud(self[2, :, : R])
         elif face == B:
-            return np.fliplr(np.rot90(self[:, : 2, B]))
+            result = np.fliplr(np.rot90(self[:, : 2, B]))
         elif face == D:
-            return np.transpose(self[: 0, : D])
+            result = np.transpose(self[: 0, : D])
+        return result.view(np.ndarray)
 
     def get_face_colours(self):
         return self[
