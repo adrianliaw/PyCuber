@@ -1,3 +1,4 @@
+import numpy as np
 from colorama import Back
 from .cube_array import CubeArray
 from .cube_abc import CubeABC
@@ -91,5 +92,21 @@ class CubieCube(object):
             s += Back.RESET + "\n"
         return s
 
+    def get_cubie(self, face_indexed_position):
+        selector = [1, 1, 1]
+        for face in face_indexed_position:
+            if face in (L, R):
+                selector[X] = [L, None, R].index(face)
+            elif face in (D, U):
+                selector[Y] = [D, None, U].index(face)
+            elif face in (F, B):
+                selector[Z] = [F, None, B].index(face)
+        return self.__data[tuple(selector)].view(np.ndarray)
+
 
 CubeABC.register(CubieCube)
+
+
+if __name__ == "__main__":
+    c = CubieCube()
+    print(c.get_cubie([L, U, F]))
