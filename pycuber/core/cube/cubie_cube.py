@@ -1,6 +1,7 @@
+from colorama import Back
 from .cube_array import CubeArray
 from .cube_abc import CubeABC
-from .constants import X, Y, Z
+from .constants import X, Y, Z, U, L, F, R, B, D
 from ..formula import Step
 
 
@@ -42,6 +43,16 @@ for step, comb in list(combinations.items()):
     combinations[step * 2] = [s * 2 for s in comb]
 
 
+default_colours = {
+    U: Back.YELLOW,
+    L: Back.RED,
+    F: Back.GREEN,
+    R: Back.MAGENTA,
+    B: Back.BLUE,
+    D: Back.WHITE,
+}
+
+
 class CubieCube(object):
 
     def __init__(self):
@@ -65,6 +76,22 @@ class CubieCube(object):
         if isinstance(face, str):
             face = "ULFRBD".index(face)
         return self.__data.get_face(face)
+
+    def get_drawing(self, **colours):
+        colours = {**default_colours, **colours}
+        faces = {face: self.get_face(face) for face in [U, L, F, R, B, D]}
+        s = ""
+        for row in faces[U]:
+            s += "      " + "".join("%s  " % colours[p] for p in row)
+            s += Back.RESET + "\n"
+        for zipped_rows in zip(faces[L], faces[F], faces[R], faces[B]):
+            for row in zipped_rows:
+                s += "".join("%s  " % colours[p] for p in row)
+            s += Back.RESET + "\n"
+        for row in faces[D]:
+            s += "      " + "".join("%s  " % colours[p] for p in row)
+            s += Back.RESET + "\n"
+        return s
 
 
 CubeABC.register(CubieCube)
