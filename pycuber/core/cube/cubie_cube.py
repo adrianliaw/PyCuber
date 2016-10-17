@@ -60,7 +60,7 @@ class CubieCube(object):
         super().__init__()
         self.__data = CubeArray()
 
-    def do_step(self, step):
+    def _do_step(self, step):
         if step.face.isupper():
             self.__data.twist(*rotation_parameters[step])
         else:
@@ -68,15 +68,15 @@ class CubieCube(object):
                 self.__data.twist(*rotation_parameters[s])
         return self
 
-    def do_formula(self, formula):
+    def _do_formula(self, formula):
         for step in formula:
             self.do_step(step)
         return self
 
-    def get_face(self, face):
+    def _get_face(self, face):
         return self.__data.get_face(face)
 
-    def get_drawing(self, **colours):
+    def _get_drawing(self, **colours):
         colours = {**default_colours, **colours}
         faces = {face: self.get_face(face) for face in [U, L, F, R, B, D]}
         s = ""
@@ -92,7 +92,7 @@ class CubieCube(object):
             s += Back.RESET + "\n"
         return s
 
-    def get_cubie(self, face_indexed_position):
+    def _get_cubie(self, face_indexed_position):
         selector = [1, 1, 1]
         for face in face_indexed_position:
             if face in (L, R):
@@ -105,8 +105,3 @@ class CubieCube(object):
 
 
 CubeABC.register(CubieCube)
-
-
-if __name__ == "__main__":
-    c = CubieCube()
-    print(c.get_cubie([L, U, F]))
