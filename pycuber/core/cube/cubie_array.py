@@ -55,25 +55,7 @@ def is_valid_cubie(cubie):
 
 
 def rotate_on(axis, original, k=1):
-    return [rotate_on_X, rotate_on_Y, rotate_on_Z][axis](original, k)
-
-
-def rotate_on_X(original, k=1):
     ret = original
     for i in range(k % 4):
-        ret = ret.dot(ROT[X])
-    return ret
-
-
-def rotate_on_Y(original, k=1):
-    ret = original
-    for i in range(k % 4):
-        ret = ret.dot(ROT[Y])
-    return ret
-
-
-def rotate_on_Z(original, k=1):
-    ret = original
-    for i in range(k % 4):
-        ret = ret.dot(ROT[Z])
+        ret = ret.dot(ROT[axis])
     return ret
