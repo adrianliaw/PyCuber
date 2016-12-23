@@ -8,7 +8,7 @@ ROT = np.zeros((3, 6, 6), int)
 rotation_patterns = np.array([
     [[F, U], [U, B], [B, D], [D, F], [L, L], [R, R]],
     [[L, B], [B, R], [R, F], [F, L], [U, U], [D, D]],
-    [[L, D], [D, R], [R, U], [U, L], [F, F], [B, B]],
+    [[L, U], [U, R], [R, D], [D, L], [F, F], [B, B]],
 ])
 
 for i, pattern in enumerate(rotation_patterns):
@@ -55,6 +55,7 @@ def is_valid_cubie(cubie):
 
 
 def rotate_on(axis, original, k=1):
+    assert axis in (X, Y, Z)
     ret = original
     for i in range(k % 4):
         ret = ret.dot(ROT[axis])

@@ -1,5 +1,6 @@
 import numpy as np
 from itertools import product
+from colorama import Back
 from . import cubie_array as cubie
 from .constants import U, L, F, R, B, D, Y
 
@@ -14,7 +15,7 @@ class CubeArray(np.ndarray):
 
         cube = np.ndarray.__new__(subtype, (3, 3, 3, 6), "int8")
         poses = zip(
-            product((L, None, R), (D, None, U), (F, None, B)),
+            product((L, None, R), (D, None, U), (B, None, F)),
             product(*[range(3)]*3)
         )
         for faces, (x, y, z) in poses:
@@ -27,29 +28,29 @@ class CubeArray(np.ndarray):
         selector = [slice(0, 3), slice(0, 3), slice(0, 3)]
         selector[axis] = layer
         self[selector] = cubie.rotate_on(axis, self[selector], k)
-        if axis == Y:
+        if axis != Y:
             k *= -1
         self[selector] = np.rot90(self[selector], k)
 
     def get_face(self, face):
         if face == U:
-            result = np.rot90(self[:, 2, :, U])
+            result = np.flipud(np.rot90(self[:, 2, :, U]))
         elif face == L:
-            result = np.rot90(self[0, :, :, L], 2)
+            result = np.rot90(np.transpose(self[0, :, :, L]))
         elif face == F:
-            result = np.rot90(self[:, :, 0, F])
+            result = np.rot90(self[:, :, 2, F])
         elif face == R:
-            result = np.flipud(self[2, :, :, R])
+            result = np.rot90(self[2, :, :, R], 2)
         elif face == B:
-            result = np.fliplr(np.rot90(self[:, :, 2, B]))
+            result = np.fliplr(np.rot90(self[:, :, 0, B]))
         elif face == D:
-            result = np.transpose(self[:, 0, :, D])
+            result = np.rot90(self[:, 0, :, D])
         return result.view(np.ndarray)
 
     def get_face_colours(self):
         return self[
             [1, 0, 1, 2, 1, 1],
             [2, 1, 1, 1, 1, 0],
-            [1, 1, 0, 1, 2, 1],
+            [1, 1, 2, 1, 0, 1],
             [U, L, F, R, B, D],
         ].view(np.ndarray)
