@@ -37,26 +37,34 @@ class CubeArray(np.ndarray):
             k *= -1
         self[selector] = np.rot90(self[selector], k)
 
-    def get_face(self, face):
+    def get_face(self, face, transform=True):
         first, last = 0, self.layers - 1
-        if face == U:
-            result = np.flipud(np.rot90(self[:, last, :, U]))
-        elif face == L:
-            result = np.rot90(np.transpose(self[first, :, :, L]))
-        elif face == F:
-            result = np.rot90(self[:, :, last, F])
-        elif face == R:
-            result = np.rot90(self[last, :, :, R], 2)
-        elif face == B:
-            result = np.fliplr(np.rot90(self[:, :, first, B]))
-        elif face == D:
-            result = np.rot90(self[:, first, :, D])
-        return result.view(np.ndarray)
 
-    # def get_face_colours(self):
-    #     return self[
-    #         [1, 0, 1, 2, 1, 1],
-    #         [2, 1, 1, 1, 1, 0],
-    #         [1, 1, 2, 1, 0, 1],
-    #         [U, L, F, R, B, D],
-    #     ].view(np.ndarray)
+        if face == L:
+            result = self[first, :, :, L]
+            if transform:
+                result = np.rot90(np.transpose(result))
+        elif face == R:
+            result = self[last, :, :, R]
+            if transform:
+                result = np.rot90(result, 2)
+
+        elif face == D:
+            result = self[:, first, :, D]
+            if transform:
+                result = np.rot90(result)
+        elif face == U:
+            result = self[:, last, :, U]
+            if transform:
+                result = np.flipud(np.rot90(result))
+
+        elif face == B:
+            result = self[:, :, first, B]
+            if transform:
+                result = np.fliplr(np.rot90(result))
+        elif face == F:
+            result = self[:, :, last, F]
+            if transform:
+                result = np.rot90(result)
+
+        return result.view(np.ndarray)
