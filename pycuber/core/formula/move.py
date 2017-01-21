@@ -4,9 +4,9 @@ import re
 
 MOVE_RE = re.compile("([ULFRBD]w?|[MSEulfrbdxyz])(\'|i|2|2\'|)")
 
-CLOCKWISE = 0
-COUNTER = 1
+CLOCKWISE = 1
 HALFTURN = 2
+COUNTER = 3
 
 
 class Move(object):
@@ -15,10 +15,17 @@ class Move(object):
 
     def __new__(cls, representation):
         self = super().__new__(cls)
+
         if isinstance(representation, Move):
             symbol = representation.symbol
             sign = representation.sign
-        else:
+
+        elif isinstance(representation, tuple) and len(representation) == 2:
+            symbol, sign = representation
+            assert symbol in "ULFRBDMSEulfrbdxyz" and sign in (1, 2, 3),
+                "Invalid Move initialisation: {}".format(representation)
+
+        elif isinstance(representation, str):
             match = MOVE_RE.match(representation.strip())
             if match is None:
                 raise ValueError("Invalid move: {}".format(representation))
@@ -28,13 +35,41 @@ class Move(object):
             if sign == "2'":
                 sign = "2"
 
+        else:
+            raise ValueError("Can only accept Move, str, or 2-element tuple")
+
         self.symbol = symbol
-        self.sign = ["", "'", "2"].index(sign)
+        self.sign = [None, "", "2", "'"].index(sign)
 
         return self
 
     def __repr__(self):
-        return self.symbol + ["", "'", "2"][self.sign]
+        return self.symbol + [None, "", "2", "'"][self.sign]
 
     def __hash__(self):
         return hash(str(self))
+
+    def __eq__(self, move):
+        if not isinstance(move, Move):
+            move = Move(move)
+        return self.symbol == move.symbol and self.sign == move.sign
+
+    def __ne__(self, move):
+        return not self.__eq__(move)
+
+    def __add__(self, move):
+        if not isinstance(move, Move):
+            move = Move(move)
+        assert self.symbol == move.symbol, "Can't operate addition on two "
+                                           "Moves with different symbols"
+        sign = (self.sign + move.sign) % 4
+        if sign == 0:
+            return 0
+        return Move((self.symbol, sign))
+
+    def __mul__(self, i):
+        assert isinstance(i, int), "Can only multiply with an integer"
+        sign = (self.sign * i) % 4
+        if sign == 0:
+            return 0
+        return Move((self.symbol, sign))
