@@ -18,7 +18,7 @@ class GenericCubicMove(tuple):
     __regex__ = GENERIC_MOVE_RE
 
     def __new__(cls, representation):
-        if isinstance(representation, Move):
+        if isinstance(representation, GenericCubicMove):
             symbol = representation.symbol
             sign = representation.sign
             level = representation.level
@@ -34,11 +34,14 @@ class GenericCubicMove(tuple):
             if match is None:
                 raise ValueError("Invalid move: {}".format(representation))
             level, symbol, sign = match.groups()
-            if level == "":
-                level = "1"
-            level = int(level)
             if "w" in symbol:
                 symbol = symbol[0].lower()
+            if level == "":
+                if symbol in "ulfrbd":
+                    level = "2"
+                else:
+                    level = "1"
+            level = int(level)
             if sign == "2'":
                 sign = "2"
             if sign == "i":
@@ -46,7 +49,12 @@ class GenericCubicMove(tuple):
             sign = [None, "", "2", "'"].index(sign)
 
         else:
-            raise ValueError("Can only accept Move, str, or 2-element tuple")
+            raise ValueError("Can only accept Move, str, or 3-element tuple")
+
+        if symbol in "ulfrbd" and level == 1:
+            symbol = symbol.upper()
+        if symbol in "MSExyz":
+            level = 1
 
         return super().__new__(cls, (level, symbol, sign))
 
@@ -55,44 +63,48 @@ class GenericCubicMove(tuple):
     sign = property(itemgetter(2))
 
     def __repr__(self):
-        return self.symbol + [None, "", "2", "'"][self.sign]
+        level = self.level
+        if level == 1 or (self.symbol in "ulfrbd" and level == 2):
+            level = ""
+        return str(level) + self.symbol + [None, "", "2", "'"][self.sign]
 
     def __hash__(self):
         return hash(str(self))
 
     def __eq__(self, move):
-        if not isinstance(move, Move):
-            move = Move(move)
-        return self.symbol == move.symbol and self.sign == move.sign
+        if not isinstance(move, self.__class__):
+            move = self.__class__(move)
+        return super().__eq__(move)
 
     def __ne__(self, move):
         return not self.__eq__(move)
 
     def __add__(self, move):
-        if not isinstance(move, Move):
-            move = Move(move)
-        assert self.symbol == move.symbol, "Can't operate addition on two " \
-                                           "Moves with different symbols"
+        if not isinstance(move, self.__class__):
+            move = self.__class__(move)
+        assert self.symbol == move.symbol and self.level == move.level, \
+            "Can't operate addition on two Moves with different symbols"
         sign = (self.sign + move.sign) % 4
         if sign == 0:
             return 0
-        return Move((self.symbol, sign))
+        return self.__class__((self.level, self.symbol, sign))
 
     def __mul__(self, i):
         assert isinstance(i, int), "Can only multiply with an integer"
         sign = (self.sign * i) % 4
         if sign == 0:
             return 0
-        return Move((self.symbol, sign))
+        return self.__class__((self.level, self.symbol, sign))
 
     def inverse(self):
-        return Move((self.symbol, 4 - self.sign))
+        return self.__class__((self.level, self.symbol, 4 - self.sign))
 
 
 if __name__ == "__main__":
+    Move = GenericCubicMove
     m = Move("R")
     assert m * 3 == m.inverse() == Move("R'")
     assert m + Move("R'") == 0
     assert m + Move("R") == Move("R2")
-    assert Move("l'") == Move("li") == Move(("l", 3)) == Move(Move("l'"))
+    assert Move("l'") == Move("li") == Move((2, "l", 3)) == Move(Move("l'"))
     assert {Move("M'"): 4}["M'"] == 4
