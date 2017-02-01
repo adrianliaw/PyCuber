@@ -27,7 +27,7 @@ class GenericCubicMove(tuple):
             level, symbol, sign = representation
             assert isinstance(level, int) and level > 0 and \
                 symbol in "ULFRBDMSEulfrbdxyz" and sign in (1, 2, 3), \
-                "Invalid Move initialisation: {}".format(representation)
+                "Invalid move: {}".format(representation)
 
         elif isinstance(representation, str):
             match = cls.__regex__.match(representation.strip())
@@ -100,8 +100,26 @@ class GenericCubicMove(tuple):
         return self.__class__((self.level, self.symbol, 4 - self.sign))
 
 
+class Move(GenericCubicMove):
+    __regex__ = MOVE_RE
+
+    def __new__(cls, representation):
+        if isinstance(representation, tuple):
+            if len(representation) == 3:
+                level, symbol, sign = representation
+                if (symbol in "ULFRBDMSExyz" and level != 1) or \
+                        (symbol in "ulfrbd" and level != 2):
+                    raise ValueError("Bad Move: {}"
+                                     .format(representation))
+            elif len(representation) == 2:
+                if symbol in "ULFRBDMSExyz":
+                    representation = (1, *representation)
+                else:
+                    representation = (2, *representation)
+        return super().__new__(cls, representation)
+
+
 if __name__ == "__main__":
-    Move = GenericCubicMove
     m = Move("R")
     assert m * 3 == m.inverse() == Move("R'")
     assert m + Move("R'") == 0
