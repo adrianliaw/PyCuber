@@ -3,32 +3,40 @@ import re
 from operator import itemgetter
 
 
-MOVE_RE = re.compile("([ULFRBD]w?|[MSEulfrbdxyz])(\'|i|2|2\'|)")
+GENERIC_MOVE_RE = re.compile(
+    "([1-9][0-9]*|)([ULFRBD]w?|[MSEulfrbdxyz])(\'|i|2|2\'|)")
+MOVE_RE = re.compile("()([ULFRBD]w?|[MSEulfrbdxyz])(\'|i|2|2\'|)")
 
 CLOCKWISE = 1
 HALFTURN = 2
 COUNTER = 3
 
 
-class Move(tuple):
+class GenericCubicMove(tuple):
 
     __slots__ = ()
+    __regex__ = GENERIC_MOVE_RE
 
     def __new__(cls, representation):
         if isinstance(representation, Move):
             symbol = representation.symbol
             sign = representation.sign
+            level = representation.level
 
-        elif isinstance(representation, tuple) and len(representation) == 2:
-            symbol, sign = representation
-            assert symbol in "ULFRBDMSEulfrbdxyz" and sign in (1, 2, 3), \
+        elif isinstance(representation, tuple) and len(representation) == 3:
+            level, symbol, sign = representation
+            assert isinstance(level, int) and level > 0 and \
+                symbol in "ULFRBDMSEulfrbdxyz" and sign in (1, 2, 3), \
                 "Invalid Move initialisation: {}".format(representation)
 
         elif isinstance(representation, str):
-            match = MOVE_RE.match(representation.strip())
+            match = cls.__regex__.match(representation.strip())
             if match is None:
                 raise ValueError("Invalid move: {}".format(representation))
-            symbol, sign = match.groups()
+            level, symbol, sign = match.groups()
+            if level == "":
+                level = "1"
+            level = int(level)
             if "w" in symbol:
                 symbol = symbol[0].lower()
             if sign == "2'":
@@ -40,10 +48,11 @@ class Move(tuple):
         else:
             raise ValueError("Can only accept Move, str, or 2-element tuple")
 
-        return super().__new__(cls, (symbol, sign))
+        return super().__new__(cls, (level, symbol, sign))
 
-    symbol = property(itemgetter(0))
-    sign = property(itemgetter(1))
+    level = property(itemgetter(0))
+    symbol = property(itemgetter(1))
+    sign = property(itemgetter(2))
 
     def __repr__(self):
         return self.symbol + [None, "", "2", "'"][self.sign]
@@ -86,3 +95,4 @@ if __name__ == "__main__":
     assert m + Move("R'") == 0
     assert m + Move("R") == Move("R2")
     assert Move("l'") == Move("li") == Move(("l", 3)) == Move(Move("l'"))
+    assert {Move("M'"): 4}["M'"] == 4
