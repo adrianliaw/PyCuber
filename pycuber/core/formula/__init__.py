@@ -22,7 +22,7 @@ Usage:
 
 """
 
-from .step import *
-from .formula import *
+from .move import GenericCubicMove, Move
+from .formula import GenericCubicFormula, Formula
 
-__all__ = ["Step", "Formula"]
+__all__ = ["GenericCubicMove", "Move", "GenericCubicFormula", "Formula"]
