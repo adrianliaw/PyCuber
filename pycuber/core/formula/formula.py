@@ -86,6 +86,17 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
         else:
             self._data[index] = self.__move__(item)
 
+    def __reversed__(self):
+        for i in reversed(range(len(self))):
+            yield self[i].inverse()
+
+    def reverse(self):
+        n = len(self)
+        for i in range(n // 2):
+            self[i], self[n-i-1] = self[n-i-1].inverse(), self[i].inverse()
+        if n % 2 == 1:
+            self[n // 2] = self[n // 2].inverse()
+
 
 class GenericCubicFormula(BaseFormula):
     __move__ = GenericCubicMove
@@ -93,6 +104,3 @@ class GenericCubicFormula(BaseFormula):
 
 class Formula(BaseFormula):
     __move__ = Move
-
-
-print(Formula("R U R' U'") + "R U r' U'")
