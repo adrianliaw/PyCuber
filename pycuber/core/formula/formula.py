@@ -86,6 +86,24 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
         else:
             self._data[index] = self.__move__(item)
 
+    def __eq__(self, formula):
+        return len(self) == len(self.__class__(formula))
+
+    def __lt__(self, formula):
+        return len(self) < len(self.__class__(formula))
+
+    def __le__(self, formula):
+        return len(self) <= len(self.__class__(formula))
+
+    def __gt__(self, formula):
+        return len(self) > len(self.__class__(formula))
+
+    def __ge__(self, formula):
+        return len(self) >= len(self.__class__(formula))
+
+    def __or__(self, formula):
+        return self._data == self.__class__(formula)._data
+
     def __reversed__(self):
         for i in reversed(range(len(self))):
             yield self[i].inverse()
