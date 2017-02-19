@@ -16,11 +16,14 @@ def formula_method_wrapper(method_func, spec):
     def func(self, *args):
         inputs, output = spec
         class_mapping = {MOVE: self.__move__, FORMULA: self.__class__}
+        args = list(args)
 
         for i, tp in enumerate(inputs):
-            if tp in class_mapping:
-                if not isinstance(args[i], class_mapping[tp]):
-                    args[i] = class_mapping[tp](args[i])
+            if tp in class_mapping and \
+                    not isinstance(args[i], class_mapping[tp]):
+                args[i] = class_mapping[tp](args[i])
+                if tp == FORMULA:
+                    args[i] = list(args[i])
 
         result = method_func(self._data, *args)
         if output in class_mapping:
@@ -50,6 +53,8 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
     __delitem__ = ([SKIP], SKIP)
     __len__ = ([], SKIP)
     __contains__ = ([MOVE], SKIP)
+    __mul__ = ([SKIP], FORMULA)
+    __add__ = ([FORMULA], FORMULA)
     index = ([MOVE], SKIP)
     count = ([MOVE], SKIP)
     insert = ([SKIP, MOVE], SKIP)
@@ -62,6 +67,9 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
         elif isinstance(formula, self.__move__):
             formula = [formula]
         self._data = [self.__move__(m) for m in formula]
+
+    def __repr__(self):
+        return " ".join(map(repr, self._data))
 
     def __getitem__(self, index):
         item = self._data[index]
@@ -85,3 +93,6 @@ class GenericCubicFormula(BaseFormula):
 
 class Formula(BaseFormula):
     __move__ = Move
+
+
+print(Formula("R U R' U'") + "R U r' U'")
