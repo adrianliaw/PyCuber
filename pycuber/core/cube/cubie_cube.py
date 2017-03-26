@@ -3,21 +3,21 @@ from colorama import Back
 from .cube_array import CubeArray
 from .cube_abc import CubeABC
 from .constants import X, Y, Z, U, L, F, R, B, D
-from ..formula import Step
+from ..formula import Move
 
 
 rotation_parameters = {
-    Step("L"): (X, 0, -1),
-    Step("M"): (X, 1, -1),
-    Step("R"): (X, 2, 1),
+    Move("L"): (X, 0, -1),
+    Move("M"): (X, 1, -1),
+    Move("R"): (X, 2, 1),
 
-    Step("D"): (Y, 0, -1),
-    Step("E"): (Y, 1, -1),
-    Step("U"): (Y, 2, 1),
+    Move("D"): (Y, 0, -1),
+    Move("E"): (Y, 1, -1),
+    Move("U"): (Y, 2, 1),
 
-    Step("F"): (Z, 0, -1),
-    Step("S"): (Z, 1, -1),
-    Step("B"): (Z, 2, 1),
+    Move("F"): (Z, 0, -1),
+    Move("S"): (Z, 1, -1),
+    Move("B"): (Z, 2, 1),
 }
 
 for step in list(rotation_parameters.keys()):
@@ -26,17 +26,17 @@ for step in list(rotation_parameters.keys()):
     rotation_parameters[step * 2] = (axis, layer, k * 2)
 
 combinations = {
-    Step("l"): [Step("L"), Step("M")],
-    Step("r"): [Step("M'"), Step("R")],
-    Step("x"): [Step("L'"), Step("M'"), Step("R")],
+    Move("l"): [Move("L"), Move("M")],
+    Move("r"): [Move("M'"), Move("R")],
+    Move("x"): [Move("L'"), Move("M'"), Move("R")],
 
-    Step("d"): [Step("D"), Step("E")],
-    Step("u"): [Step("E'"), Step("U")],
-    Step("y"): [Step("D'"), Step("E'"), Step("U")],
+    Move("d"): [Move("D"), Move("E")],
+    Move("u"): [Move("E'"), Move("U")],
+    Move("y"): [Move("D'"), Move("E'"), Move("U")],
 
-    Step("f"): [Step("F"), Step("S")],
-    Step("b"): [Step("S'"), Step("B")],
-    Step("z"): [Step("F"), Step("S"), Step("B'")],
+    Move("f"): [Move("F"), Move("S")],
+    Move("b"): [Move("S'"), Move("B")],
+    Move("z"): [Move("F"), Move("S"), Move("B'")],
 }
 
 for step, comb in list(combinations.items()):

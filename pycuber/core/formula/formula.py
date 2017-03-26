@@ -1,6 +1,6 @@
 from collections.abc import MutableSequence
 from abc import ABCMeta
-from functools import wraps
+from functools import wraps, total_ordering
 
 from .move import GenericCubicMove, Move
 
@@ -10,43 +10,43 @@ MOVE = 1
 FORMULA = 2
 
 
-def formula_method_wrapper(method_func, spec):
-
-    @wraps(method_func)
-    def func(self, *args):
-        inputs, output = spec
-        class_mapping = {MOVE: self.__move__, FORMULA: self.__class__}
-        args = list(args)
-
-        for i, tp in enumerate(inputs):
-            if tp in class_mapping and \
-                    not isinstance(args[i], class_mapping[tp]):
-                args[i] = class_mapping[tp](args[i])
-                if tp == FORMULA:
-                    args[i] = list(args[i])
-
-        result = method_func(self._data, *args)
-        if output in class_mapping:
-            result = class_mapping[output](result)
-        return result
-
-    return func
-
-
 class FormulaMeta(ABCMeta):
+
+    @staticmethod
+    def formula_method_wrapper(method_func, spec):
+
+        @wraps(method_func)
+        def func(self, *args):
+            inputs, output = spec
+            class_mapping = {MOVE: self._move, FORMULA: self.__class__}
+            args = list(args)
+
+            for i, tp in enumerate(inputs):
+                if tp in class_mapping and \
+                        not isinstance(args[i], class_mapping[tp]):
+                    args[i] = class_mapping[tp](args[i])
+                    if tp == FORMULA:
+                        args[i] = list(args[i])
+
+            result = method_func(self._data, *args)
+            if output in class_mapping:
+                result = class_mapping[output](result)
+            return result
+
+        return func
 
     def __new__(cls, name, bases, namespace, **kwargs):
         base = bases[0]
         for method, spec in list(namespace.items()):
             if isinstance(spec, tuple):
                 if method in base.__abstractmethods__ or \
-                        method not in dir(base):
-                    method_func = getattr(list, method)
+                        getattr(base, method, None) is None:
+                    method_f = getattr(list, method)
                 else:
-                    method_func = getattr(base, method)
-                namespace[method] = formula_method_wrapper(method_func, spec)
-        result = type.__new__(cls, name, bases, namespace)
-        return result
+                    method_f = getattr(base, method)
+                new_method = FormulaMeta.formula_method_wrapper(method_f, spec)
+                namespace[method] = new_method
+        return super().__new__(cls, name, bases, namespace)
 
 
 class BaseFormula(MutableSequence, metaclass=FormulaMeta):
@@ -64,9 +64,9 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
     def __init__(self, formula):
         if isinstance(formula, str):
             formula = formula.split()
-        elif isinstance(formula, self.__move__):
+        elif isinstance(formula, self._move):
             formula = [formula]
-        self._data = [self.__move__(m) for m in formula]
+        self._data = [self._move(m) for m in formula]
 
     def __repr__(self):
         return " ".join(map(repr, self._data))
@@ -76,7 +76,7 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
         if isinstance(index, slice):
             return self.__class__(item)
         else:
-            return self.__move__(item)
+            return self._move(item)
 
     def __setitem__(self, index, item):
         if item is None:
@@ -84,22 +84,13 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
         elif isinstance(index, slice):
             self._data[index] = self.__class__(item)
         else:
-            self._data[index] = self.__move__(item)
+            self._data[index] = self._move(item)
 
     def __eq__(self, formula):
         return len(self) == len(self.__class__(formula))
 
     def __lt__(self, formula):
         return len(self) < len(self.__class__(formula))
-
-    def __le__(self, formula):
-        return len(self) <= len(self.__class__(formula))
-
-    def __gt__(self, formula):
-        return len(self) > len(self.__class__(formula))
-
-    def __ge__(self, formula):
-        return len(self) >= len(self.__class__(formula))
 
     def __or__(self, formula):
         return self._data == self.__class__(formula)._data
@@ -110,15 +101,13 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
 
     def reverse(self):
         n = len(self)
-        for i in range(n // 2):
+        for i in range(n // 2 + 1):
             self[i], self[n-i-1] = self[n-i-1].inverse(), self[i].inverse()
-        if n % 2 == 1:
-            self[n // 2] = self[n // 2].inverse()
 
 
 class GenericCubicFormula(BaseFormula):
-    __move__ = GenericCubicMove
+    _move = GenericCubicMove
 
 
 class Formula(BaseFormula):
-    __move__ = Move
+    _move = Move
