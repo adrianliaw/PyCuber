@@ -11,8 +11,8 @@ rotation_patterns = np.array([
     [[L, U], [U, R], [R, D], [D, L], [F, F], [B, B]],
 ])
 
-for i, pattern in enumerate(rotation_patterns):
-    ROT[i][pattern[:, 0], pattern[:, 1]] = 1
+for axis, pattern in enumerate(rotation_patterns):
+    ROT[axis][pattern[:, 0], pattern[:, 1]] = 1
 
 
 def make_cubie(side_colour_map, **kwargs):
