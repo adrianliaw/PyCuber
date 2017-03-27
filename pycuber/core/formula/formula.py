@@ -1,6 +1,7 @@
 from collections.abc import MutableSequence
 from abc import ABCMeta
 from functools import wraps, total_ordering
+from itertools import zip_longest
 
 from .move import GenericCubicMove, Move
 
@@ -12,26 +13,22 @@ FORMULA = 2
 
 class FormulaMeta(ABCMeta):
 
-    @staticmethod
-    def formula_method_wrapper(method_func, spec):
+    def make_method(method_func, spec):
+        inputs, output = spec
 
         @wraps(method_func)
         def func(self, *args):
-            inputs, output = spec
-            class_mapping = {MOVE: self._move, FORMULA: self.__class__}
-            args = list(args)
+            class_mapping = {MOVE: self._move,
+                             FORMULA: self.__class__,
+                             SKIP: lambda x: x}
 
-            for i, tp in enumerate(inputs):
-                if tp in class_mapping and \
-                        not isinstance(args[i], class_mapping[tp]):
-                    args[i] = class_mapping[tp](args[i])
-                    if tp == FORMULA:
-                        args[i] = list(args[i])
+            args = [class_mapping[tp](arg)
+                    for tp, arg in zip(inputs, args)]
 
-            result = method_func(self._data, *args)
-            if output in class_mapping:
-                result = class_mapping[output](result)
-            return result
+            args = [list(arg) if tp == FORMULA else arg
+                    for tp, arg in zip(inputs, args)]
+
+            return class_mapping[output](method_func(self._data, *args))
 
         return func
 
@@ -44,24 +41,21 @@ class FormulaMeta(ABCMeta):
                     method_f = getattr(list, method)
                 else:
                     method_f = getattr(base, method)
-                new_method = FormulaMeta.formula_method_wrapper(method_f, spec)
+                new_method = FormulaMeta.make_method(method_f, spec)
                 namespace[method] = new_method
         return super().__new__(cls, name, bases, namespace)
 
 
+@total_ordering
 class BaseFormula(MutableSequence, metaclass=FormulaMeta):
     __delitem__ = ([SKIP], SKIP)
     __len__ = ([], SKIP)
-    __contains__ = ([MOVE], SKIP)
     __mul__ = ([SKIP], FORMULA)
     __add__ = ([FORMULA], FORMULA)
-    index = ([MOVE], SKIP)
-    count = ([MOVE], SKIP)
     insert = ([SKIP, MOVE], SKIP)
-    extend = ([FORMULA], SKIP)
     copy = ([], FORMULA)
 
-    def __init__(self, formula):
+    def __init__(self, formula=""):
         if isinstance(formula, str):
             formula = formula.split()
         elif isinstance(formula, self._move):
@@ -92,7 +86,7 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
     def __lt__(self, formula):
         return len(self) < len(self.__class__(formula))
 
-    def __or__(self, formula):
+    def equals(self, formula):
         return self._data == self.__class__(formula)._data
 
     def __reversed__(self):
