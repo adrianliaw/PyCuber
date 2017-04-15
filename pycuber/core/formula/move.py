@@ -99,6 +99,15 @@ class GenericCubicMove(tuple):
     def inverse(self):
         return self.__class__((self.level, self.symbol, 4 - self.sign))
 
+    def with_level(self, level=1):
+        return self.__class__((level, self.symbol, self.sign))
+
+    def with_symbol(self, symbol):
+        return self.__class__((self.level, symbol, self.sign))
+
+    def with_sign(self, sign=1):
+        return self.__class__((self.level, self.symbol, sign))
+
 
 class Move(GenericCubicMove):
     __regex__ = MOVE_RE

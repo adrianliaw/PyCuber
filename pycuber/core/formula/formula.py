@@ -10,6 +10,12 @@ SKIP = 0
 MOVE = 1
 FORMULA = 2
 
+# This is for mirroring
+MIRROR_ACTION = {
+    "LR": (["x", "M"], {"L": "R", "R": "L"}),
+    "UD": (["y", "E"], {"U": "D", "D": "U"}),
+    "FB": (["z", "S"], {"F": "B", "B": "F"}),
+}
 
 class FormulaMeta(ABCMeta):
 
@@ -97,6 +103,18 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
         n = len(self)
         for i in range(n // 2 + 1):
             self[i], self[n-i-1] = self[n-i-1].inverse(), self[i].inverse()
+
+    def mirror(self, direction="LR"):
+        stays, change = MIRROR_ACTION[direction]
+        for i in range(len(self)):
+            move = self[i]
+            new_symbol = change.get(move.symbol.upper(), move.symbol)
+            if move.symbol.islower():
+                new_symbol = new_symbol.lower()
+            new_move = move.with_symbol(new_symbol)
+            if move.symbol not in stays:
+                new_move = new_move.inverse()
+            self[i] = new_move
 
 
 class GenericCubicFormula(BaseFormula):
