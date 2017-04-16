@@ -11,10 +11,10 @@ MOVE = 1
 FORMULA = 2
 
 # This is for mirroring
-MIRROR_ACTION = {
-    "LR": (["x", "M"], {"L": "R", "R": "L"}),
-    "UD": (["y", "E"], {"U": "D", "D": "U"}),
-    "FB": (["z", "S"], {"F": "B", "B": "F"}),
+STAYS_WHEN_MIRROR = {
+    "LR": ["x", "M"],
+    "UD": ["y", "E"],
+    "FB": ["z", "S"],
 }
 
 class FormulaMeta(ABCMeta):
@@ -105,16 +105,25 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
             self[i], self[n-i-1] = self[n-i-1].inverse(), self[i].inverse()
 
     def mirror(self, direction="LR"):
-        stays, change = MIRROR_ACTION[direction]
+        assert direction in ["LR", "RL", "UD", "DU", "FB", "BF"], \
+            "direction must be one of LR, UD or FB"
+
+        if direction in ["RL", "DU", "BF"]:
+            direction = direction[::-1]
+        stays = STAYS_WHEN_MIRROR[direction]
+
         for i in range(len(self)):
             move = self[i]
-            new_symbol = change.get(move.symbol.upper(), move.symbol)
-            if move.symbol.islower():
-                new_symbol = new_symbol.lower()
-            new_move = move.with_symbol(new_symbol)
+
+            if move.symbol.upper() in direction:
+                new_symbol = direction[not direction.index(move.symbol.upper())]
+                if move.symbol.islower():
+                    new_symbol = new_symbol.lower()
+                move = move.with_symbol(new_symbol)
+
             if move.symbol not in stays:
-                new_move = new_move.inverse()
-            self[i] = new_move
+                move = move.inverse()
+            self[i] = move
 
 
 class GenericCubicFormula(BaseFormula):
