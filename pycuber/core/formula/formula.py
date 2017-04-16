@@ -1,7 +1,6 @@
 from collections.abc import MutableSequence
 from abc import ABCMeta
 from functools import wraps, total_ordering
-from itertools import zip_longest
 
 from .move import GenericCubicMove, Move
 
@@ -16,6 +15,7 @@ STAYS_WHEN_MIRROR = {
     "UD": ["y", "E"],
     "FB": ["z", "S"],
 }
+
 
 class FormulaMeta(ABCMeta):
 
@@ -104,19 +104,19 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
         for i in range(n // 2 + 1):
             self[i], self[n-i-1] = self[n-i-1].inverse(), self[i].inverse()
 
-    def mirror(self, direction="LR"):
-        assert direction in ["LR", "RL", "UD", "DU", "FB", "BF"], \
-            "direction must be one of LR, UD or FB"
+    def mirror(self, on="LR"):
+        assert on in ["LR", "RL", "UD", "DU", "FB", "BF"], \
+            """"on" parameter must be one of LR, UD or FB"""
 
-        if direction in ["RL", "DU", "BF"]:
-            direction = direction[::-1]
-        stays = STAYS_WHEN_MIRROR[direction]
+        if on in ["RL", "DU", "BF"]:
+            on = on[::-1]
+        stays = STAYS_WHEN_MIRROR[on]
 
         for i in range(len(self)):
             move = self[i]
 
-            if move.symbol.upper() in direction:
-                new_symbol = direction[not direction.index(move.symbol.upper())]
+            if move.symbol.upper() in on:
+                new_symbol = on[1 - on.index(move.symbol.upper())]
                 if move.symbol.islower():
                     new_symbol = new_symbol.lower()
                 move = move.with_symbol(new_symbol)
