@@ -24,7 +24,7 @@ default_colours = {
 
 class CubieCube(object):
 
-    __formula_class__ = GenericCubicFormula
+    _formula_class = GenericCubicFormula
 
     def __init__(self, cube=None, layers=3):
         super().__init__()
@@ -61,6 +61,8 @@ class CubieCube(object):
         return self
 
     def do_move(self, move):
+        if not isinstance(move, self._formula_class._move):
+            move = self._formula_class._move(move)
         if not move.is_rotate():
 
             for axis, (head, mid, bottom) in rotations_on_axis.items():
@@ -90,8 +92,8 @@ class CubieCube(object):
                 self.__data.twist(axis, i, move.sign)
 
     def do_formula(self, formula):
-        if not isinstance(formula, self.__formula_class__):
-            formula = self.__formula_class__(formula)
+        if not isinstance(formula, self._formula_class):
+            formula = self._formula_class(formula)
         for step in formula:
             self.do_step(step)
         return self

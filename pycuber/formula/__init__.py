@@ -30,7 +30,7 @@ class GenericCubicFormula(BaseFormula):
     _move = GenericCubicMove
 
 
-class Formula(BaseFormula):
+class Formula(GenericCubicFormula):
     _move = Move
 
 
