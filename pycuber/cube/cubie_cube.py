@@ -3,6 +3,7 @@ from colorama import Back
 from .cube_array import CubeArray
 from .cube_abc import CubeABC
 from .constants import X, Y, Z, U, L, F, R, B, D
+from .components import Face
 from ..formula import GenericCubicFormula
 
 
@@ -10,15 +11,6 @@ rotations_on_axis = {
     X: ("L", "M", "R"),
     Y: ("D", "E", "U"),
     Z: ("F", "S", "B"),
-}
-
-default_colours = {
-    U: Back.YELLOW,
-    L: Back.RED,
-    F: Back.GREEN,
-    R: Back.MAGENTA,
-    B: Back.BLUE,
-    D: Back.WHITE,
 }
 
 
@@ -41,19 +33,14 @@ class CubieCube(object):
         self.layers = self.__data.layers
 
     def __repr__(self):
-        colours = default_colours
-        faces = {face: self._get_face(face) for face in [U, L, F, R, B, D]}
+        faces = {f: repr(self.get_face(f)) for f in [U, L, F, R, B, D]}
         s = ""
-        for row in faces[U]:
-            s += "  " * self.layers + "".join("%s  " % colours[p] for p in row)
-            s += Back.RESET + "\n"
-        for zipped_rows in zip(faces[L], faces[F], faces[R], faces[B]):
-            for row in zipped_rows:
-                s += "".join("%s  " % colours[p] for p in row)
-            s += Back.RESET + "\n"
-        for row in faces[D]:
-            s += "  " * self.layers + "".join("%s  " % colours[p] for p in row)
-            s += Back.RESET + "\n"
+        for row in faces[U].split("\n"):
+            s += "  " * self.layers + row + "\n"
+        for zipped_rows in zip(*(faces[f].split("\n") for f in [L, F, R, B])):
+            s += "".join(zipped_rows) + Back.RESET + "\n"
+        for row in faces[D].split("\n"):
+            s += "  " * self.layers + row + "\n"
         return s
 
     def __call__(self, formula):
@@ -94,11 +81,13 @@ class CubieCube(object):
     def do_formula(self, formula):
         if not isinstance(formula, self._formula_class):
             formula = self._formula_class(formula)
-        for step in formula:
-            self.do_step(step)
+        for move in formula:
+            self.do_move(move)
 
     def get_face(self, face):
-        return self.__data.get_face(face)
+        if isinstance(face, str):
+            face = ["U", "L", "F", "R", "B", "D"].index(face)
+        return Face(self.__data.get_face(face), face)
 
     def _get_cubie(self, face_indexed_position):
         selector = [1, 1, 1]
