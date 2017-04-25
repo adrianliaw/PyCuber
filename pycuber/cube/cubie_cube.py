@@ -3,6 +3,7 @@ from colorama import Back
 from .cube_array import CubeArray
 from .cube_abc import CubeABC
 from .constants import X, Y, Z, U, L, F, R, B, D
+from ..formula import GenericCubicFormula
 
 
 rotations_on_axis = {
@@ -23,6 +24,8 @@ default_colours = {
 
 class CubieCube(object):
 
+    __formula_class__ = GenericCubicFormula
+
     def __init__(self, cube=None, layers=3):
         super().__init__()
         if isinstance(cube, CubieCube):
@@ -36,6 +39,26 @@ class CubieCube(object):
             self.__data = CubeArray(layers=layers)
 
         self.layers = self.__data.layers
+
+    def __repr__(self):
+        colours = default_colours
+        faces = {face: self._get_face(face) for face in [U, L, F, R, B, D]}
+        s = ""
+        for row in faces[U]:
+            s += "  " * self.layers + "".join("%s  " % colours[p] for p in row)
+            s += Back.RESET + "\n"
+        for zipped_rows in zip(faces[L], faces[F], faces[R], faces[B]):
+            for row in zipped_rows:
+                s += "".join("%s  " % colours[p] for p in row)
+            s += Back.RESET + "\n"
+        for row in faces[D]:
+            s += "  " * self.layers + "".join("%s  " % colours[p] for p in row)
+            s += Back.RESET + "\n"
+        return s
+
+    def __call__(self, formula):
+        self.do_formula(formula)
+        return self
 
     def do_move(self, move):
         if not move.is_rotate():
@@ -67,28 +90,14 @@ class CubieCube(object):
                 self.__data.twist(axis, i, move.sign)
 
     def do_formula(self, formula):
+        if not isinstance(formula, self.__formula_class__):
+            formula = self.__formula_class__(formula)
         for step in formula:
             self.do_step(step)
         return self
 
     def get_face(self, face):
         return self.__data.get_face(face)
-
-    def _get_drawing(self, **colours):
-        colours = {**default_colours, **colours}
-        faces = {face: self._get_face(face) for face in [U, L, F, R, B, D]}
-        s = ""
-        for row in faces[U]:
-            s += "  " * self.layers + "".join("%s  " % colours[p] for p in row)
-            s += Back.RESET + "\n"
-        for zipped_rows in zip(faces[L], faces[F], faces[R], faces[B]):
-            for row in zipped_rows:
-                s += "".join("%s  " % colours[p] for p in row)
-            s += Back.RESET + "\n"
-        for row in faces[D]:
-            s += "  " * self.layers + "".join("%s  " % colours[p] for p in row)
-            s += Back.RESET + "\n"
-        return s
 
     def _get_cubie(self, face_indexed_position):
         selector = [1, 1, 1]
