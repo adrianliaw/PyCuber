@@ -96,7 +96,6 @@ class CubieCube(object):
             formula = self._formula_class(formula)
         for step in formula:
             self.do_step(step)
-        return self
 
     def get_face(self, face):
         return self.__data.get_face(face)
