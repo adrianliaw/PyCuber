@@ -107,19 +107,23 @@ class GenericCubicMove(tuple):
     def with_sign(self, sign=1):
         return self.__class__((self.level, self.symbol, sign))
 
+    def is_single(self):
+        return self.symbol.isupper()
+
     def is_face(self):
-        return self.symbol.isupper() and not self.is_slice()
+        return self.is_single() and self.level == 1
 
     def is_slice(self):
-        return (self.level > 1 and self.symbol.isupper()) or \
-            (self.symbol in ("M", "E", "S"))
+        return (self.level > 1 and self.is_single()) or self.is_middle()
 
     def is_rotate(self):
         return self.symbol in ("x", "y", "z")
 
+    def is_middle(self):
+        return self.symbol in ("M", "E", "S")
+
     def is_wide(self):
-        return self.level > 1 and self.symbol.islower() and \
-            not self.is_rotate()
+        return not self.is_single() and self.level > 1 and not self.is_rotate()
 
 
 class Move(GenericCubicMove):

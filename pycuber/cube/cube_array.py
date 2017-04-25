@@ -9,8 +9,10 @@ class CubeArray(np.ndarray):
     def __new__(subtype, *args, layers=3, **kwargs):
         if len(args) > 0:
             cube = np.array(args[0])
-            if cube.shape == (layers, layers, layers, 6):
-                return cube.view(CubeArray)
+            assert cube.shape[0] == cube.shape[1] == cube.shape[2]
+            assert cube.shape[3] == 6
+            layers = cube.shape[0]
+            return cube.view(CubeArray)
 
         cube = np.ndarray.__new__(subtype, (layers, layers, layers, 6), "int8")
         cube.layers = layers
