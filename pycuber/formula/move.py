@@ -1,4 +1,3 @@
-# Intend to replace the original Step
 import re
 from operator import itemgetter
 
@@ -126,12 +125,3 @@ class Move(GenericCubicMove):
                 else:
                     representation = (2, *representation)
         return super().__new__(cls, representation)
-
-
-if __name__ == "__main__":
-    m = Move("R")
-    assert m * 3 == m.inverse() == Move("R'")
-    assert m + Move("R'") == 0
-    assert m + Move("R") == Move("R2")
-    assert Move("l'") == Move("li") == Move((2, "l", 3)) == Move(Move("l'"))
-    assert {Move("M'"): 4}["M'"] == 4

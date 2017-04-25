@@ -23,6 +23,15 @@ Usage:
 """
 
 from .move import GenericCubicMove, Move
-from .formula import GenericCubicFormula, Formula
+from .formula import BaseFormula
+
+
+class GenericCubicFormula(BaseFormula):
+    _move = GenericCubicMove
+
+
+class Formula(BaseFormula):
+    _move = Move
+
 
 __all__ = ["GenericCubicMove", "Move", "GenericCubicFormula", "Formula"]

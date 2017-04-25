@@ -2,12 +2,10 @@ from collections.abc import MutableSequence
 from abc import ABCMeta
 from functools import wraps, total_ordering
 
-from .move import GenericCubicMove, Move
 
-
-SKIP = 0
-MOVE = 1
-FORMULA = 2
+SKIP = "SKIP"
+MOVE = "MOVE"
+FORMULA = "FORMULA"
 
 # This is for mirroring
 STAYS_WHEN_MIRROR = {
@@ -124,11 +122,3 @@ class BaseFormula(MutableSequence, metaclass=FormulaMeta):
             if move.symbol not in stays:
                 move = move.inverse()
             self[i] = move
-
-
-class GenericCubicFormula(BaseFormula):
-    _move = GenericCubicMove
-
-
-class Formula(BaseFormula):
-    _move = Move
